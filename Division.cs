@@ -12,11 +12,11 @@ namespace sq1code
         }
 
         public bool SameAs(Division other) {
-            return left.SameAs(other.left) && right.SameAs(other.right);
+            return (left == other.left) && (right == other.right);
         }
 
         public bool UTurnAs(Division other) {
-            return left.SameAs(other.right) && right.SameAs(other.left);
+            return (left == other.right) && (right == other.left);
         }
 
         public override string ToString() {

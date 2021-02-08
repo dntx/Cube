@@ -12,7 +12,7 @@ namespace sq1code
         }
 
         public bool isIdenticalRotation() {
-            return up.left.SameAs(down.left) || up.right.SameAs(down.right);
+            return (up.left == down.left) || (up.right == down.right);
         }
 
         public override string ToString() {

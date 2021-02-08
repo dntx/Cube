@@ -40,19 +40,45 @@ namespace sq1code
             return sum - 6;
         }
 
-        public bool SameAs(Half other) {
-            if (cells.Count != other.cells.Count) {
+        public static bool operator == (Half lhs, Half rhs) {
+            if (lhs.cells.Count != rhs.cells.Count) {
                 return false;
             }
 
-            for (int i = 0; i < cells.Count; i++) {
-                if (cells[i] != other.cells[i]) {
+            for (int i = 0; i < lhs.cells.Count; i++) {
+                if (lhs.cells[i] != rhs.cells[i]) {
                     return false;
                 }
             }
 
             return true;
         }
+
+        public static bool operator != (Half lhs, Half rhs) {
+            return !(lhs == rhs);
+        }
+
+        // override object.Equals
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+            
+            return this == (obj as Half);
+        }
+        
+        // override object.GetHashCode
+        public override int GetHashCode()
+        {
+            int code = 0;
+            foreach (int cell in cells) {
+                code = code * 10 + cell;
+            }
+            return code;
+        }
+
         public static Half Square = new Half(new List<int>{1,2,1,2});
         public static Half Hexagram = new Half(new List<int>{2,2,2});    
     }
