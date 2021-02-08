@@ -12,7 +12,7 @@ namespace sq1code
         }
 
         public bool SameAs(Cube other) {
-            return (up.SameAs(other.up) && down.SameAs(other.down)) || (up.SameAs(other.down) && down.SameAs(other.up));
+            return (up == other.up && down == other.down) || (up == other.down && down == other.up);
         }
 
         public bool isHexagram() {

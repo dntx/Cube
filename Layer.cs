@@ -21,33 +21,58 @@ namespace sq1code
             return left.ToString() + "-" + right.ToString();
         }
 
-        public bool SameAs(Layer other) {
-            if (cells.Count != other.cells.Count) {
+        public static bool operator == (Layer lhs, Layer rhs) {
+            if (lhs.cells.Count != rhs.cells.Count) {
                 return false;
             }
 
-            for (int shift = 0; shift < cells.Count; shift++) {
-                bool sameAs = true;
-                for (int i = 0; i < cells.Count; i++) {
-                    int j = (i + shift) % cells.Count;
-                    if (cells[i] != other.cells[j]) {
-                        sameAs = false;
+            for (int shift = 0; shift < lhs.cells.Count; shift++) {
+                bool isEqual = true;
+                for (int i = 0; i < lhs.cells.Count; i++) {
+                    int j = (i + shift) % rhs.cells.Count;
+                    if (lhs.cells[i] != rhs.cells[j]) {
+                        isEqual = false;
                         break;
                     }
                 }
-                if (sameAs) {
+                if (isEqual) {
                     return true;
                 }
             }
             return false;
         }
 
+        public static bool operator != (Layer lhs, Layer rhs) {
+            return !(lhs == rhs);
+        }
+
+        // override object.Equals
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+            
+            return this == (obj as Layer);
+        }
+        
+        // override object.GetHashCode
+        public override int GetHashCode()
+        {
+            int code = 0;
+            foreach (int cell in cells) {
+                code = code * 10 + cell;
+            }
+            return code;
+        }
+
         public bool isHexagram() {
-            return SameAs(Hexagram);
+            return this == Hexagram;
         }
 
         public bool isSquare() {
-            return SameAs(Square);
+            return this == Square;
         }
 
         public List<Division> GetDivisions(bool dedupUTurn) {
