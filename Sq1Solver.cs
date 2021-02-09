@@ -37,7 +37,7 @@ namespace sq1code
 
         private static bool isNewCube(Queue<State> stateQueue, Cube cube) {
             foreach (State state in stateQueue) {
-                if (state.cube.SameAs(cube)) {
+                if (state.cube == cube) {
                     return false;
                 }
             }

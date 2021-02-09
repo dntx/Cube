@@ -11,8 +11,29 @@ namespace sq1code
             this.down = down;
         }
 
-        public bool SameAs(Cube other) {
-            return (up == other.up && down == other.down) || (up == other.down && down == other.up);
+        public static bool operator == (Cube lhs, Cube rhs) {
+            return (lhs.up == rhs.up && lhs.down == rhs.down) || (lhs.up == rhs.down && lhs.down == rhs.up);
+        }
+
+        public static bool operator != (Cube lhs, Cube rhs) {
+            return !(lhs == rhs);
+        }
+
+        // override object.Equals
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+            
+            return this == (obj as Cube);
+        }
+        
+        // override object.GetHashCode
+        public override int GetHashCode()
+        {
+            return up.GetHashCode() * 1000000000 + down.GetHashCode();
         }
 
         public bool isHexagram() {
