@@ -107,12 +107,12 @@ namespace sq1code
         private void TryAddDivision(List<Division> divisions, Division division, bool dedupUTurn) {
             bool isNew = true;
             foreach (Division existing in divisions) {
-                if (existing.SameAs(division)) {
+                if (existing == division) {
                     isNew = false;
                     break;
                 }
 
-                if (dedupUTurn && existing.UTurnAs(division)) {
+                if (dedupUTurn && existing == -division) {
                     isNew = false;
                     break;
                 }
