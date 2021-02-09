@@ -7,14 +7,16 @@ namespace sq1code
         public static void Run() {
             Console.WriteLine("hello");
 
+            int id = 0;
             Queue<State> openQueue = new Queue<State>();
-            openQueue.Enqueue(new State(Cube.Square));
+            openQueue.Enqueue(new State(id, Cube.Square));
             Queue<State> closedQueue = new Queue<State>();
             do {
                 State current = openQueue.Dequeue();
                 closedQueue.Enqueue(current);
                 if (current.cube.isHexagram()) {
-                    Console.WriteLine(current.ToString());
+                    outputState(current);
+                    Console.WriteLine();
                 }
 
                 Cube cube = current.cube;
@@ -24,7 +26,8 @@ namespace sq1code
                     Cube nextCube = cube.ApplyRotation(rotation);
                     if (isNewCube(openQueue, nextCube) && isNewCube(closedQueue, nextCube)) {
                         //Console.WriteLine("new cube: {0}", nextCube.ToString());
-                        State nextState = new State(current, rotation, nextCube);
+                        id++;
+                        State nextState = new State(id, current, rotation, nextCube);
                         openQueue.Enqueue(nextState);
                     }
                 }
@@ -33,6 +36,22 @@ namespace sq1code
             } while (openQueue.Count > 0); 
 
             Console.WriteLine("end");
+        }
+
+        private static void outputState(State state) {
+            Console.Write("states: ");
+            List<Rotation> rotations = state.cube.GetRotations();
+            foreach (Rotation rotation in rotations) {
+                Console.Write("{0} | ", rotation);
+            }
+            Console.WriteLine();
+
+            Console.Write("depth：{0}", state.depth);
+            do {
+                Console.Write(" ==> {0}({1})", state.cube, state.id);
+                state = state.fromState;
+            } while (state != null);
+            Console.WriteLine();
         }
 
         private static bool isNewCube(Queue<State> stateQueue, Cube cube) {
