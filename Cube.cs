@@ -33,7 +33,13 @@ namespace sq1code
         // override object.GetHashCode
         public override int GetHashCode()
         {
-            return up.GetHashCode() * 1000000000 + down.GetHashCode();
+            int upHashCode = up.GetHashCode();
+            int downHashCode = down.GetHashCode();
+            if (upHashCode <= downHashCode) {
+                return upHashCode * Layer.HashCodeUpperBound + downHashCode;
+            } else {
+                return downHashCode * Layer.HashCodeUpperBound + upHashCode;
+            }
         }
 
         public bool isHexagram() {

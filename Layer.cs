@@ -60,12 +60,21 @@ namespace sq1code
         // override object.GetHashCode
         public override int GetHashCode()
         {
-            int code = 0;
-            foreach (int cell in cells) {
-                code = code * 10 + cell;
+            int countOf1 = 0;
+            int countOfChange = 0;
+            for (int i = 0; i < cells.Count; i++) {
+                if (cells[i] == 1) {
+                    countOf1++;
+                }
+                int j = (i == 0)? (cells.Count - 1) : (i - 1);
+                if (cells[i] != cells[j]) {
+                    countOfChange++;
+                }
             }
-            return code;
+            return countOf1 * 10 + countOfChange;
         }
+
+        public static int HashCodeUpperBound = 100;
 
         public bool isHexagram() {
             return this == Hexagram;

@@ -41,16 +41,7 @@ namespace sq1code
         // override object.GetHashCode
         public override int GetHashCode()
         {
-            int code = 0;
-            foreach (int cell in left.cells) {
-                code = code * 10 + cell;
-            }
-            code *= 10;
-
-            foreach (int cell in right.cells) {
-                code = code * 10 + cell;
-            }
-            return code;
+            return left.GetHashCode() * Half.MaxHashCodeUpperBound + right.GetHashCode();
         }
 
         public override string ToString() {

@@ -112,6 +112,8 @@ namespace sq1code
             return code;
         }
 
+        public static int MaxHashCodeUpperBound = 10^10;
+
         public static Half Square = new Half(new List<int>{1,2,1,2});
         public static Half Hexagram = new Half(new List<int>{2,2,2});    
     }
