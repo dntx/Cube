@@ -22,13 +22,14 @@ namespace sq1code {
         }
 
         public override string ToString() {
-            string s = "start: ";
+            string s = "depth：" + depth + "> ";
  
             List<Rotation> rotations = cube.GetRotations();
             foreach (Rotation rotation in rotations) {
                 s += rotation.ToString();
                 s += " | ";
             }
+            s += "start: ";
             s += cube.ToString();
 
             State from = fromState;
