@@ -94,7 +94,7 @@ namespace sq1code
                     remaining.AddRange(cells.GetRange(0, start));
                     Half remainingHalf = new Half(remaining);
 
-                    Division divisionRaw = new Division(selectedHalf, remainingHalf, false);
+                    Division divisionRaw = new Division(selectedHalf, remainingHalf);
                     Division divisionNormalized = new Division(selectedHalf, remainingHalf, true);
                     TryAddDivision(divisions, divisionNormalized);
                     if (!normalizedOnly) {

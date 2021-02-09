@@ -6,6 +6,9 @@ namespace sq1code
         public Half left { get; }
         public Half right { get; }
 
+        public Division(Half left, Half right) : this (left, right, false) {
+        }
+
         public Division(Half first, Half second, bool normalize) {
             if (!normalize || first <= second) {
                 this.left = first;
@@ -22,10 +25,6 @@ namespace sq1code
 
         public static bool operator != (Division lhs, Division rhs) {
             return !(lhs == rhs);
-        }
-
-        public static Division operator - (Division me) {
-            return new Division(me.right, me.left, false);
         }
 
         // override object.Equals
