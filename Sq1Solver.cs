@@ -7,33 +7,36 @@ namespace sq1code
         public static void Run() {
             Console.WriteLine("hello");
 
+            Queue<State> openStates = new Queue<State>();
+            ISet<Cube> seenCubes = new HashSet<Cube>();
+
             int id = 0;
-            Queue<State> openQueue = new Queue<State>();
-            openQueue.Enqueue(new State(id, Cube.Square));
-            Queue<State> closedQueue = new Queue<State>();
+            Cube startCube = Cube.Square;
+            openStates.Enqueue(new State(id, startCube));
+            seenCubes.Add(startCube);
             do {
-                State current = openQueue.Dequeue();
-                closedQueue.Enqueue(current);
-                if (current.cube.isHexagram()) {
-                    outputState(current);
+                State state = openStates.Dequeue();
+                Cube cube = state.cube;
+                if (cube.isHexagram()) {
+                    outputState(state);
                     Console.WriteLine();
                 }
 
-                Cube cube = current.cube;
                 List<Rotation> rotations = cube.GetRotations();
                 foreach (Rotation rotation in rotations) {
                     //Console.WriteLine("rotation: " + rotation.ToString());
                     Cube nextCube = cube.ApplyRotation(rotation);
-                    if (isNewCube(openQueue, nextCube) && isNewCube(closedQueue, nextCube)) {
+                    if (!seenCubes.Contains(nextCube)) {
                         //Console.WriteLine("new cube: {0}", nextCube.ToString());
                         id++;
-                        State nextState = new State(id, current, rotation, nextCube);
-                        openQueue.Enqueue(nextState);
+                        State nextState = new State(id, state, rotation, nextCube);
+                        openStates.Enqueue(nextState);
+                        seenCubes.Add(nextCube);
                     }
                 }
                 //Console.WriteLine();
                 //Console.WriteLine("open: {0}, closed: {1}", openQueue.Count, closedQueue.Count);
-            } while (openQueue.Count > 0); 
+            } while (openStates.Count > 0); 
 
             Console.WriteLine("end");
         }
@@ -52,15 +55,6 @@ namespace sq1code
                 state = state.fromState;
             } while (state != null);
             Console.WriteLine();
-        }
-
-        private static bool isNewCube(Queue<State> stateQueue, Cube cube) {
-            foreach (State state in stateQueue) {
-                if (state.cube == cube) {
-                    return false;
-                }
-            }
-            return true;
         }
     }
 }
