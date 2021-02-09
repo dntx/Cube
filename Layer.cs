@@ -75,7 +75,7 @@ namespace sq1code
             return this == Square;
         }
 
-        public List<Division> GetDivisions(bool dedupUTurn) {
+        public List<Division> GetDivisions(bool normalizedOnly) {
             List<Division> divisions = new List<Division>();
 
             for (int start = 0; start < cells.Count - 1; start++) {
@@ -87,16 +87,18 @@ namespace sq1code
                     } else if (result > 0) {
                         break;
                     }
+                    Half selectedHalf = new Half(selected);
 
                     List<int> remaining = new List<int>();
                     remaining.AddRange(cells.GetRange(end, cells.Count - end));
                     remaining.AddRange(cells.GetRange(0, start));
-                    Division division = new Division(selected, remaining);
-                    TryAddDivision(divisions, division, dedupUTurn);
+                    Half remainingHalf = new Half(remaining);
 
-                    if (!dedupUTurn) {
-                        Division divisionUTurn = new Division(remaining, selected);
-                        TryAddDivision(divisions, divisionUTurn, true);
+                    Division divisionRaw = new Division(selectedHalf, remainingHalf, false);
+                    Division divisionNormalized = new Division(selectedHalf, remainingHalf, true);
+                    TryAddDivision(divisions, divisionNormalized);
+                    if (!normalizedOnly) {
+                        TryAddDivision(divisions, divisionRaw);
                     }
                 }
             }
@@ -104,15 +106,10 @@ namespace sq1code
             return divisions;
         }
 
-        private void TryAddDivision(List<Division> divisions, Division division, bool dedupUTurn) {
+        private void TryAddDivision(List<Division> divisions, Division division) {
             bool isNew = true;
             foreach (Division existing in divisions) {
                 if (existing == division) {
-                    isNew = false;
-                    break;
-                }
-
-                if (dedupUTurn && existing == -division) {
                     isNew = false;
                     break;
                 }

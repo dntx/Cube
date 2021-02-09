@@ -6,14 +6,14 @@ namespace sq1code
         public Half left { get; }
         public Half right { get; }
 
-        private Division(Half left, Half right) {
-            this.left = left;
-            this.right = right;
-        }
-
-        public Division(List<int> leftCells, List<int> rightCells) {
-            this.left = new Half(leftCells);
-            this.right = new Half(rightCells);
+        public Division(Half first, Half second, bool normalize) {
+            if (!normalize || first <= second) {
+                this.left = first;
+                this.right = second;
+            } else {
+                this.left = second;
+                this.right = first;
+            }
         }
 
         public static bool operator == (Division lhs, Division rhs) {
@@ -25,7 +25,7 @@ namespace sq1code
         }
 
         public static Division operator - (Division me) {
-            return new Division(me.right, me.left);
+            return new Division(me.right, me.left, false);
         }
 
         // override object.Equals

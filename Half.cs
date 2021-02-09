@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace sq1code
@@ -56,6 +57,38 @@ namespace sq1code
 
         public static bool operator != (Half lhs, Half rhs) {
             return !(lhs == rhs);
+        }
+
+        public static bool operator < (Half lhs, Half rhs) {
+            int minCount = Math.Min(lhs.cells.Count, rhs.cells.Count);
+            for (int i = 0; i < minCount; i++) {
+                if (lhs.cells[i] < rhs.cells[i]) {
+                    return true;
+                } else if (lhs.cells[i] > rhs.cells[i]) {
+                    return false;
+                }
+            }
+            return (lhs.cells.Count == minCount) && (rhs.cells.Count > minCount);
+        }
+
+        public static bool operator > (Half lhs, Half rhs) {
+            int minCount = Math.Min(lhs.cells.Count, rhs.cells.Count);
+            for (int i = 0; i < minCount; i++) {
+                if (lhs.cells[i] < rhs.cells[i]) {
+                    return false;
+                } else if (lhs.cells[i] > rhs.cells[i]) {
+                    return true;
+                }
+            }
+            return (lhs.cells.Count > minCount) && (rhs.cells.Count == minCount);
+        }
+
+        public static bool operator <= (Half lhs, Half rhs) {
+            return !(lhs > rhs);
+        }
+
+        public static bool operator >= (Half lhs, Half rhs) {
+            return !(lhs < rhs);
         }
 
         // override object.Equals
