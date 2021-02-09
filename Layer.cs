@@ -75,8 +75,8 @@ namespace sq1code
             return this == Square;
         }
 
-        public List<Division> GetDivisions(bool normalizedOnly) {
-            List<Division> divisions = new List<Division>();
+        public ISet<Division> GetDivisions(bool normalizedOnly) {
+            ISet<Division> divisions = new HashSet<Division>();
 
             for (int start = 0; start < cells.Count - 1; start++) {
                 for (int end = start + 1; end < cells.Count; end++) {
@@ -94,29 +94,17 @@ namespace sq1code
                     remaining.AddRange(cells.GetRange(0, start));
                     Half remainingHalf = new Half(remaining);
 
-                    Division divisionRaw = new Division(selectedHalf, remainingHalf);
                     Division divisionNormalized = new Division(selectedHalf, remainingHalf, true);
-                    TryAddDivision(divisions, divisionNormalized);
+                    divisions.Add(divisionNormalized);
+
                     if (!normalizedOnly) {
-                        TryAddDivision(divisions, divisionRaw);
+                        Division divisionRaw = new Division(selectedHalf, remainingHalf);
+                        divisions.Add(divisionRaw);
                     }
                 }
             }
 
             return divisions;
-        }
-
-        private void TryAddDivision(List<Division> divisions, Division division) {
-            bool isNew = true;
-            foreach (Division existing in divisions) {
-                if (existing == division) {
-                    isNew = false;
-                    break;
-                }
-            }
-            if (isNew) {
-                divisions.Add(division);
-            }
         }
 
         public static Layer Square = new Layer(Half.Square, Half.Square);
