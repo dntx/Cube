@@ -41,9 +41,9 @@ namespace sq1code
         private static void outputState(State state) {
             Console.WriteLine("cube: {0}", state.Cube);
 
-            Console.Write("depth：{0}", state.Depth);
+            Console.WriteLine("depth：{0}", state.Depth);
             do {
-                Console.Write(" ==> {0}({1})", state.Cube.ToString(withFromInfo: true), state.Id);
+                Console.WriteLine(" ==> {0}({1})", state.Cube.ToString(verbose: true), state.Id);
                 state = state.From;
             } while (state != null);
             Console.WriteLine();

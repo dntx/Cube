@@ -16,7 +16,7 @@ namespace sq1code
             return result;
         }
 
-        protected string ToString(string halfSeparator) {
+        protected string ToString(int bar, string separator) {
             StringBuilder sb = new StringBuilder();
             int countOf1 = 0;
             int sum = 0;
@@ -28,14 +28,14 @@ namespace sq1code
                         sum += countOf1;
                         sb.Append(countOf1);
                         countOf1 = 0;
-                        if (sum == 6) {
-                            sb.Append(halfSeparator);
+                        if (sum == bar) {
+                            sb.Append(separator);
                         }
                     }
                     sb.Append("0");
                     sum += cell;
-                    if (sum == 6) {
-                        sb.Append(halfSeparator);
+                    if (sum == bar) {
+                        sb.Append(separator);
                     }
                 }
             });
@@ -49,7 +49,7 @@ namespace sq1code
         }
 
         public override string ToString() {
-            return ToString(halfSeparator: "");
+            return ToString(0, separator: "");
         }
 
         public static bool operator == (Cells lhs, Cells rhs) {

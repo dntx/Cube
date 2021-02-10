@@ -29,14 +29,14 @@ namespace sq1code
 
         public override string ToString()
         {
-            return ToString(withFromInfo:false);
+            return ToString(verbose:false);
         }
 
-        public string ToString(bool withFromInfo) {
-            if (withFromInfo) {
+        public string ToString(bool verbose) {
+            if (verbose) {
                 return string.Format("{0}-{1}", left, right);
             } else {
-                return ToString(halfSeparator: "-");
+                return ToString(bar: 6, separator: "-");
             }
         }
 

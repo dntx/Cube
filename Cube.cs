@@ -73,12 +73,12 @@ namespace sq1code
 
         public override string ToString()
         {
-            return ToString(withFromInfo: false);
+            return ToString(verbose: false);
         }
 
-        public string ToString(bool withFromInfo)
+        public string ToString(bool verbose)
         {
-            return string.Format("{0},{1}", up.ToString(withFromInfo), down.ToString(withFromInfo));
+            return string.Format("{0},{1}", up.ToString(verbose), down.ToString(verbose));
         }
 
         public static Cube Square = new Cube(Layer.Square, Layer.Square);
