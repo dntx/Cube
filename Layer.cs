@@ -6,23 +6,25 @@ namespace sq1code
         Half left;
         Half right;
 
-        public Layer(Half left, Half right) : base(left.cells, right.cells) {
+        public Layer(Half left, Half right) : base(GetNormalizedCells(new Cells(left, right))) {
             this.left = left;
             this.right = right;
-            Normalize();
         }
 
-        private void Normalize() {
-            Cells minCells = new Cells(this.cells);
+        private static Cells GetNormalizedCells(Cells cells) {
+            Cells minCells = cells;
             for (int start = 1; start < cells.Count; start++) {
-                if (cells[start - 1] != 1 && cells[start] == 1) {
-                    Cells shiftedCells = new Cells(cells.GetRange(start, cells.Count - start), cells.GetRange(0, start));
-                    if (shiftedCells < minCells) {
-                        minCells = shiftedCells;
-                    }
+                // should start from a brand new 1
+                if (cells[start - 1] == 1 || cells[start] != 1) {
+                    continue;
+                }
+
+                Cells shiftedCells = new Cells(cells.GetRange(start, cells.Count - start), cells.GetRange(0, start));
+                if (shiftedCells < minCells) {
+                    minCells = shiftedCells;
                 }
             }
-            this.cells = minCells.cells;
+            return minCells;
         }
 
         public override string ToString()
@@ -50,18 +52,18 @@ namespace sq1code
 
         public ISet<Division> GetDivisions(bool ascendingOnly) {
             ISet<Division> divisions = new HashSet<Division>();
-            for (int start = 0; start < cells.Count - 1; start++) {
+            for (int start = 0; start < Count - 1; start++) {
                 int sum = 0;
                 int count = 0;
-                for (int i = start; i < cells.Count && sum < 6; i++) {
-                    sum += cells[i];
+                for (int i = start; i < Count && sum < 6; i++) {
+                    sum += this[i];
                     count++;
                 }
 
                 if (sum == 6) {
                     int end = start + count;
-                    Half first = new Half(cells.GetRange(start, count));
-                    Half second = new Half(cells.GetRange(end, cells.Count - end), cells.GetRange(0, start));
+                    Half first = new Half(GetRange(start, count));
+                    Half second = new Half(GetRange(end, Count - end), GetRange(0, start));
 
                     if (first > second) {
                         Half temp = first;

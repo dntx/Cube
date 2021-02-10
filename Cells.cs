@@ -4,25 +4,23 @@ using System.Collections.Generic;
 
 namespace sq1code
 {
-    class Cells {
-        // todo: property should be in upper case
-        public List<int> cells { get; protected set; }
+    class Cells : List<int> {
+        public Cells(List<int> cells) : base(cells) {}
 
-        public Cells(List<int> cells) {
-            this.cells = new List<int>(cells);
-        }
+        public Cells(List<int> first, List<int> second) : base(MergeList(first, second)) {}
 
-        public Cells(List<int> first, List<int> second) {
-            this.cells = new List<int>();
-            this.cells.AddRange(first);
-            this.cells.AddRange(second);
+        private static List<int> MergeList(List<int> first, List<int> second) {
+            List<int> result = new List<int>();
+            result.AddRange(first);
+            result.AddRange(second);
+            return result;
         }
 
         protected string ToString(string halfSeparator) {
             StringBuilder sb = new StringBuilder();
             int countOf1 = 0;
             int sum = 0;
-            foreach (int cell in cells) {
+            ForEach(cell => {
                 if (cell == 1) {
                     countOf1++;
                 } else {    // cell == 2
@@ -40,7 +38,7 @@ namespace sq1code
                         sb.Append(halfSeparator);
                     }
                 }
-            }
+            });
 
             if (countOf1 > 0) {
                 sb.Append(countOf1);
@@ -55,12 +53,12 @@ namespace sq1code
         }
 
         public static bool operator == (Cells lhs, Cells rhs) {
-            if (lhs.cells.Count != rhs.cells.Count) {
+            if (lhs.Count != rhs.Count) {
                 return false;
             }
 
-            for (int i = 0; i < lhs.cells.Count; i++) {
-                if (lhs.cells[i] != rhs.cells[i]) {
+            for (int i = 0; i < lhs.Count; i++) {
+                if (lhs[i] != rhs[i]) {
                     return false;
                 }
             }
@@ -73,27 +71,27 @@ namespace sq1code
         }
 
         public static bool operator < (Cells lhs, Cells rhs) {
-            int minCount = Math.Min(lhs.cells.Count, rhs.cells.Count);
+            int minCount = Math.Min(lhs.Count, rhs.Count);
             for (int i = 0; i < minCount; i++) {
-                if (lhs.cells[i] < rhs.cells[i]) {
+                if (lhs[i] < rhs[i]) {
                     return true;
-                } else if (lhs.cells[i] > rhs.cells[i]) {
+                } else if (lhs[i] > rhs[i]) {
                     return false;
                 }
             }
-            return (lhs.cells.Count == minCount) && (rhs.cells.Count > minCount);
+            return (lhs.Count == minCount) && (rhs.Count > minCount);
         }
 
         public static bool operator > (Cells lhs, Cells rhs) {
-            int minCount = Math.Min(lhs.cells.Count, rhs.cells.Count);
+            int minCount = Math.Min(lhs.Count, rhs.Count);
             for (int i = 0; i < minCount; i++) {
-                if (lhs.cells[i] < rhs.cells[i]) {
+                if (lhs[i] < rhs[i]) {
                     return false;
-                } else if (lhs.cells[i] > rhs.cells[i]) {
+                } else if (lhs[i] > rhs[i]) {
                     return true;
                 }
             }
-            return (lhs.cells.Count > minCount) && (rhs.cells.Count == minCount);
+            return (lhs.Count > minCount) && (rhs.Count == minCount);
         }
 
         public static bool operator <= (Cells lhs, Cells rhs) {
@@ -117,9 +115,7 @@ namespace sq1code
         public override int GetHashCode()
         {
             int code = 0;
-            foreach (int cell in cells) {
-                code = code * 10 + cell;
-            }
+            ForEach(cell => code = code * 10 + cell);
             return code;
         }
     }
