@@ -3,16 +3,16 @@ using System.Collections.Generic;
 namespace sq1code
 {
     class Cube {
-        Layer up;
-        Layer down;
+        public Layer Up { get; }
+        public Layer Down { get; }
 
         public Cube(Layer up, Layer down) {
-            this.up = up;
-            this.down = down;
+            Up = up;
+            Down = down;
         }
 
         public static bool operator == (Cube lhs, Cube rhs) {
-            return (lhs.up == rhs.up && lhs.down == rhs.down) || (lhs.up == rhs.down && lhs.down == rhs.up);
+            return (lhs.Up == rhs.Up && lhs.Down == rhs.Down) || (lhs.Up == rhs.Down && lhs.Down == rhs.Up);
         }
 
         public static bool operator != (Cube lhs, Cube rhs) {
@@ -33,8 +33,8 @@ namespace sq1code
         // override object.GetHashCode
         public override int GetHashCode()
         {
-            int upHashCode = up.GetHashCode();
-            int downHashCode = down.GetHashCode();
+            int upHashCode = Up.GetHashCode();
+            int downHashCode = Down.GetHashCode();
             if (upHashCode <= downHashCode) {
                 return upHashCode * Layer.HashCodeUpperBound + downHashCode;
             } else {
@@ -43,14 +43,14 @@ namespace sq1code
         }
 
         public bool IsHexagram() {
-            return up.IsHexagram() || down.IsHexagram();
+            return Up.IsHexagram() || Down.IsHexagram();
         }
 
         public List<Rotation> GetRotations() {
             List<Rotation> rotations = new List<Rotation>();
 
-            ISet<Division> upDivisions = up.GetDivisions(ascendingOnly: true);
-            ISet<Division> downDivisions = down.GetDivisions(ascendingOnly: false);
+            ISet<Division> upDivisions = Up.GetDivisions(ascendingOnly: true);
+            ISet<Division> downDivisions = Down.GetDivisions(ascendingOnly: false);
 
             foreach (Division upDivision in upDivisions) {
                 foreach (Division downDivsion in downDivisions) {
@@ -78,7 +78,7 @@ namespace sq1code
 
         public string ToString(bool verbose)
         {
-            return string.Format("{0},{1}", up.ToString(verbose), down.ToString(verbose));
+            return string.Format("{0},{1}", Up.ToString(verbose), Down.ToString(verbose));
         }
 
         public static Cube Square = new Cube(Layer.Square, Layer.Square);

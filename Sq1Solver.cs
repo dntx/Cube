@@ -4,32 +4,69 @@ using System.Collections.Generic;
 namespace sq1code
 {
     class Sq1Solver {
-        public static void Run() {
+        Dictionary<Cube, int> seenCubes = new Dictionary<Cube, int>();
+        Dictionary<Layer, int> seenLayers = new Dictionary<Layer, int>();
+        Dictionary<Half, int> seenHalfs = new Dictionary<Half, int>();
+
+        public Sq1Solver() {
+            seenCubes = new Dictionary<Cube, int>();
+            seenLayers = new Dictionary<Layer, int>();
+            seenHalfs = new Dictionary<Half, int>();
+        }
+
+        private bool VisitCube(Cube cube) {
+            if (seenCubes.ContainsKey(cube)) {
+                return false;
+            }
+            
+            seenCubes.Add(cube, seenCubes.Count);
+            VisitLayer(cube.Up);
+            VisitLayer(cube.Down);
+            return true;
+        }
+
+        private bool VisitLayer(Layer layer) {
+            if (seenLayers.ContainsKey(layer)) {
+                return false;
+            }
+
+            seenLayers.Add(layer, seenLayers.Count);
+            VisitHalf(layer.Left);
+            VisitHalf(layer.Right);
+            return true;
+        }
+
+        private bool VisitHalf(Half half) {
+            if (seenHalfs.ContainsKey(half)) {
+                return false;
+            }
+
+            seenHalfs.Add(half, seenHalfs.Count);
+            return true;
+        }
+
+        public void Run() {
             Console.WriteLine("hello");
+            Cube startCube = Cube.Square;
+            VisitCube(startCube);
 
             Queue<State> openStates = new Queue<State>();
-            ISet<Cube> seenCubes = new HashSet<Cube>();
-
-            int id = 0;
-            Cube startCube = Cube.Square;
-            openStates.Enqueue(new State(id, startCube));
-            seenCubes.Add(startCube);
+            openStates.Enqueue(new State(startCube));
             do {
                 State state = openStates.Dequeue();
                 Cube cube = state.Cube;
                 if (cube.IsHexagram()) {
-                    outputState(state);
+                    OutputState(state);
                     Console.WriteLine();
                 }
 
                 List<Rotation> rotations = cube.GetRotations();
                 foreach (Rotation rotation in rotations) {
                     Cube nextCube = cube.ApplyRotation(rotation);
-                    if (!seenCubes.Contains(nextCube)) {
-                        id++;
-                        State nextState = new State(id, state, nextCube);
+                    bool isNew = VisitCube(nextCube);
+                    if (isNew) {
+                        State nextState = new State(nextCube, state);
                         openStates.Enqueue(nextState);
-                        seenCubes.Add(nextCube);
                     }
                 }
             } while (openStates.Count > 0); 
@@ -38,15 +75,23 @@ namespace sq1code
             Console.WriteLine("end");
         }
 
-        private static void outputState(State state) {
+        private void OutputState(State state) {
             Console.WriteLine("cube: {0}", state.Cube);
-
             Console.WriteLine("depth：{0}", state.Depth);
             do {
-                Console.WriteLine(" ==> {0}({1})", state.Cube.ToString(verbose: true), state.Id);
+                Console.WriteLine(
+                    " ==> {0} | {1} | {2},{3} | {4}-{5},{6}-{7}", 
+                    state.Cube.ToString(verbose: true), 
+                    seenCubes[state.Cube],
+                    seenLayers[state.Cube.Up], 
+                    seenLayers[state.Cube.Down],
+                    seenHalfs[state.Cube.Up.Left],
+                    seenHalfs[state.Cube.Up.Right],
+                    seenHalfs[state.Cube.Down.Left],
+                    seenHalfs[state.Cube.Down.Right]
+                    );
                 state = state.From;
             } while (state != null);
-            Console.WriteLine();
         }
-    }
+   }
 }

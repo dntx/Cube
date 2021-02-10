@@ -3,12 +3,12 @@ using System.Collections.Generic;
 namespace sq1code
 {
     class Layer : Cells {
-        Half left;
-        Half right;
+        public Half Left { get; }
+        public Half Right { get; }
 
         public Layer(Half left, Half right) : base(GetNormalizedCells(new Cells(left, right))) {
-            this.left = left;
-            this.right = right;
+            Left = left;
+            Right = right;
         }
 
         private static Cells GetNormalizedCells(Cells cells) {
@@ -34,7 +34,7 @@ namespace sq1code
 
         public string ToString(bool verbose) {
             if (verbose) {
-                return string.Format("{0}-{1}", left, right);
+                return string.Format("{0}-{1}", Left, Right);
             } else {
                 return ToString(bar: 6, separator: "-");
             }

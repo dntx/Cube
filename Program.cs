@@ -7,7 +7,7 @@ namespace sq1code
     {
         static void Main(string[] args)
         {
-            Sq1Solver.Run();
+            new Sq1Solver().Run();
         }
     }
 }
