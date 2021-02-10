@@ -42,8 +42,8 @@ namespace sq1code
             }
         }
 
-        public bool isHexagram() {
-            return up.isHexagram() || down.isHexagram();
+        public bool IsHexagram() {
+            return up.IsHexagram() || down.IsHexagram();
         }
 
         public List<Rotation> GetRotations() {
@@ -55,7 +55,7 @@ namespace sq1code
             foreach (Division upDivision in upDivisions) {
                 foreach (Division downDivsion in downDivisions) {
                     Rotation rotation = new Rotation(upDivision, downDivsion);
-                    if (!rotation.isIdenticalRotation()) {
+                    if (!rotation.IsIdentical()) {
                         rotations.Add(rotation);
                     }
                 }
@@ -78,7 +78,7 @@ namespace sq1code
 
         public string ToString(bool withFromInfo)
         {
-            return up.ToString(withFromInfo) + "," + down.ToString(withFromInfo);
+            return string.Format("{0},{1}", up.ToString(withFromInfo), down.ToString(withFromInfo));
         }
 
         public static Cube Square = new Cube(Layer.Square, Layer.Square);

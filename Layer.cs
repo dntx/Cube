@@ -34,7 +34,7 @@ namespace sq1code
 
         public string ToString(bool withFromInfo) {
             if (withFromInfo) {
-                return left.ToString() + "-" + right.ToString();
+                return string.Format("{0}-{1}", left, right);
             } else {
                 return ToString(halfSeparator: "-");
             }
@@ -42,11 +42,11 @@ namespace sq1code
 
         public static int HashCodeUpperBound = 10^10;
 
-        public bool isHexagram() {
+        public bool IsHexagram() {
             return this == Hexagram;
         }
 
-        public bool isSquare() {
+        public bool IsSquare() {
             return this == Square;
         }
 

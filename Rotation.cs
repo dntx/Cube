@@ -11,12 +11,12 @@ namespace sq1code
             Down = down;
         }
 
-        public bool isIdenticalRotation() {
+        public bool IsIdentical() {
             return (Up.Left == Down.Left) || (Up.Right == Down.Right);
         }
 
         public override string ToString() {
-            return Up.ToString() + "," + Down.ToString();
+            return string.Format("{0},{1}", Up, Down);
         }
     }
 
