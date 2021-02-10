@@ -2,16 +2,11 @@ using System.Collections.Generic;
 
 namespace sq1code
 {
-    class Layer {
-        public List<int> cells { get; }
+    class Layer : Cells {
         Half left;
         Half right;
 
-        public Layer(Half left, Half right) {
-            this.cells = new List<int>();
-            this.cells.AddRange(left.cells);
-            this.cells.AddRange(right.cells);
-            
+        public Layer(Half left, Half right) : base(left.cells, right.cells) {
             this.left = left;
             this.right = right;
         }
@@ -84,31 +79,30 @@ namespace sq1code
             return this == Square;
         }
 
-        public ISet<Division> GetDivisions(bool normalizedOnly) {
+        public ISet<Division> GetDivisions(bool ascendingOnly) {
             ISet<Division> divisions = new HashSet<Division>();
-
-            // todo: refine sum logic
             for (int start = 0; start < cells.Count - 1; start++) {
-                for (int end = start + 1; end < cells.Count; end++) {
-                    Half selectedHalf = new Half(cells.GetRange(start, end - start));
-                    int sum = selectedHalf.GetSum();
-                    if (sum < 6) {
-                        continue;
-                    } else if (sum > 6) {
-                        break;
+                int sum = 0;
+                int count = 0;
+                for (int i = start; i < cells.Count && sum < 6; i++) {
+                    sum += cells[i];
+                    count++;
+                }
+
+                if (sum == 6) {
+                    int end = start + count;
+                    Half first = new Half(cells.GetRange(start, count));
+                    Half second = new Half(cells.GetRange(end, cells.Count - end), cells.GetRange(0, start));
+
+                    if (first > second) {
+                        Half temp = first;
+                        first = second;
+                        second = temp;
                     }
 
-                    List<int> remaining = new List<int>();
-                    remaining.AddRange(cells.GetRange(end, cells.Count - end));
-                    remaining.AddRange(cells.GetRange(0, start));
-                    Half remainingHalf = new Half(remaining);
-
-                    Division divisionNormalized = new Division(selectedHalf, remainingHalf, true);
-                    divisions.Add(divisionNormalized);
-
-                    if (!normalizedOnly) {
-                        Division divisionRaw = new Division(selectedHalf, remainingHalf);
-                        divisions.Add(divisionRaw);
+                    divisions.Add(new Division(first, second));
+                    if (!ascendingOnly && first != second) {
+                        divisions.Add(new Division(second, first));
                     }
                 }
             }

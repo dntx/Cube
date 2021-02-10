@@ -38,6 +38,7 @@ namespace sq1code
                 //Console.WriteLine("open: {0}, closed: {1}", openQueue.Count, closedQueue.Count);
             } while (openStates.Count > 0); 
 
+            Console.WriteLine("total: {0}", seenCubes.Count);
             Console.WriteLine("end");
         }
 

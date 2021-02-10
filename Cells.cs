@@ -108,13 +108,5 @@ namespace sq1code
             }
             return code;
         }
-
-        public int GetSum() {
-            int sum = 0;
-            foreach (int cell in cells) {
-                sum += cell;
-            }
-            return sum;
-        }
     }
 }

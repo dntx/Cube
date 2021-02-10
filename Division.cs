@@ -1,29 +1,12 @@
-using System.Collections.Generic;
-
 namespace sq1code
 {
     class Division {
-        public Half left { get; private set; }
-        public Half right { get; private set; }
+        public Half left { get; }
+        public Half right { get; }
 
-        public Division(Half left, Half right) : this (left, right, false) {
-        }
-
-        // todo: normalze should be called as ascending
-        public Division(Half first, Half second, bool needNormalize) {
+        public Division(Half first, Half second) {
             this.left = first;
             this.right = second;
-            if (needNormalize) {
-                Normalize();
-            }
-        }
-
-        private void Normalize() {
-            if (left > right) {
-                Half temp = left;
-                left = right;
-                right = temp;
-            }
         }
 
         public static bool operator == (Division lhs, Division rhs) {
