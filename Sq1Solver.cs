@@ -43,16 +43,11 @@ namespace sq1code
         }
 
         private static void outputState(State state) {
-            Console.Write("states: ");
-            List<Rotation> rotations = state.cube.GetRotations();
-            foreach (Rotation rotation in rotations) {
-                Console.Write("{0} | ", rotation);
-            }
-            Console.WriteLine();
+            Console.WriteLine("cube: {0}", state.cube);
 
             Console.Write("depth：{0}", state.depth);
             do {
-                Console.Write(" ==> {0}({1})", state.cube, state.id);
+                Console.Write(" ==> {0}({1})", state.cube.ToString(withFromInfo: true), state.id);
                 state = state.fromState;
             } while (state != null);
             Console.WriteLine();

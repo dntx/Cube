@@ -9,67 +9,36 @@ namespace sq1code
         public Layer(Half left, Half right) : base(left.cells, right.cells) {
             this.left = left;
             this.right = right;
+            Normalize();
+        }
+
+        private void Normalize() {
+            Cells minCells = new Cells(this.cells);
+            for (int start = 1; start < cells.Count; start++) {
+                if (cells[start - 1] != 1 && cells[start] == 1) {
+                    Cells shiftedCells = new Cells(cells.GetRange(start, cells.Count - start), cells.GetRange(0, start));
+                    if (shiftedCells < minCells) {
+                        minCells = shiftedCells;
+                    }
+                }
+            }
+            this.cells = minCells.cells;
         }
 
         public override string ToString()
         {
-            return left.ToString() + "-" + right.ToString();
+            return ToString(withFromInfo:false);
         }
 
-        public static bool operator == (Layer lhs, Layer rhs) {
-            if (lhs.cells.Count != rhs.cells.Count) {
-                return false;
+        public string ToString(bool withFromInfo) {
+            if (withFromInfo) {
+                return left.ToString() + "-" + right.ToString();
+            } else {
+                return ToString(halfSeparator: "-");
             }
-
-            for (int shift = 0; shift < lhs.cells.Count; shift++) {
-                bool isEqual = true;
-                for (int i = 0; i < lhs.cells.Count; i++) {
-                    int j = (i + shift) % rhs.cells.Count;
-                    if (lhs.cells[i] != rhs.cells[j]) {
-                        isEqual = false;
-                        break;
-                    }
-                }
-                if (isEqual) {
-                    return true;
-                }
-            }
-            return false;
         }
 
-        public static bool operator != (Layer lhs, Layer rhs) {
-            return !(lhs == rhs);
-        }
-
-        // override object.Equals
-        public override bool Equals(object obj)
-        {
-            if (obj == null || GetType() != obj.GetType())
-            {
-                return false;
-            }
-            
-            return this == (obj as Layer);
-        }
-        
-        // override object.GetHashCode
-        public override int GetHashCode()
-        {
-            int countOf1 = 0;
-            int countOfChange = 0;
-            for (int i = 0; i < cells.Count; i++) {
-                if (cells[i] == 1) {
-                    countOf1++;
-                }
-                int j = (i == 0)? (cells.Count - 1) : (i - 1);
-                if (cells[i] != cells[j]) {
-                    countOfChange++;
-                }
-            }
-            return countOf1 * 10 + countOfChange;
-        }
-
-        public static int HashCodeUpperBound = 100;
+        public static int HashCodeUpperBound = 10^10;
 
         public bool isHexagram() {
             return this == Hexagram;

@@ -49,8 +49,8 @@ namespace sq1code
         public List<Rotation> GetRotations() {
             List<Rotation> rotations = new List<Rotation>();
 
-            ISet<Division> upDivisions = up.GetDivisions(true);
-            ISet<Division> downDivisions = down.GetDivisions(false);
+            ISet<Division> upDivisions = up.GetDivisions(ascendingOnly: true);
+            ISet<Division> downDivisions = down.GetDivisions(ascendingOnly: false);
 
             foreach (Division upDivision in upDivisions) {
                 foreach (Division downDivsion in downDivisions) {
@@ -73,7 +73,12 @@ namespace sq1code
 
         public override string ToString()
         {
-            return up.ToString() + "," + down.ToString();
+            return ToString(withFromInfo: false);
+        }
+
+        public string ToString(bool withFromInfo)
+        {
+            return up.ToString(withFromInfo) + "," + down.ToString(withFromInfo);
         }
 
         public static Cube Square = new Cube(Layer.Square, Layer.Square);

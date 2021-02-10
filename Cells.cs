@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.Collections.Generic;
 
 namespace sq1code
@@ -17,27 +18,40 @@ namespace sq1code
             this.cells.AddRange(second);
         }
 
-        public override string ToString() {
-            string s = "";
+        protected string ToString(string halfSeparator) {
+            StringBuilder sb = new StringBuilder();
             int countOf1 = 0;
+            int sum = 0;
             foreach (int cell in cells) {
                 if (cell == 1) {
                     countOf1++;
                 } else {    // cell == 2
                     if (countOf1 > 0) {
-                        s += countOf1;
+                        sum += countOf1;
+                        sb.Append(countOf1);
                         countOf1 = 0;
+                        if (sum == 6) {
+                            sb.Append(halfSeparator);
+                        }
                     }
-                    s += "0";
-                } 
+                    sb.Append("0");
+                    sum += cell;
+                    if (sum == 6) {
+                        sb.Append(halfSeparator);
+                    }
+                }
             }
 
             if (countOf1 > 0) {
-                s += countOf1;
+                sb.Append(countOf1);
                 countOf1 = 0;
             }
 
-            return s;
+            return sb.ToString();
+        }
+
+        public override string ToString() {
+            return ToString(halfSeparator: "");
         }
 
         public static bool operator == (Cells lhs, Cells rhs) {
