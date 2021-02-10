@@ -1,16 +1,16 @@
 namespace sq1code
 {
     class Division {
-        public Half left { get; }
-        public Half right { get; }
+        public Half Left { get; }
+        public Half Right { get; }
 
-        public Division(Half first, Half second) {
-            this.left = first;
-            this.right = second;
+        public Division(Half left, Half right) {
+            Left = left;
+            Right = right;
         }
 
         public static bool operator == (Division lhs, Division rhs) {
-            return (lhs.left == rhs.left) && (lhs.right == rhs.right);
+            return (lhs.Left == rhs.Left) && (lhs.Right == rhs.Right);
         }
 
         public static bool operator != (Division lhs, Division rhs) {
@@ -31,11 +31,11 @@ namespace sq1code
         // override object.GetHashCode
         public override int GetHashCode()
         {
-            return left.GetHashCode() * Half.HashCodeUpperBound + right.GetHashCode();
+            return Left.GetHashCode() * Half.HashCodeUpperBound + Right.GetHashCode();
         }
 
         public override string ToString() {
-            return left.ToString() + "-" + right.ToString();
+            return Left.ToString() + "-" + Right.ToString();
         }
     }
 

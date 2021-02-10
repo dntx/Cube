@@ -65,8 +65,8 @@ namespace sq1code
         }
 
         public Cube ApplyRotation(Rotation rotation) {
-            Layer up = new Layer(rotation.up.left, rotation.down.right);
-            Layer down = new Layer(rotation.down.left, rotation.up.right);
+            Layer up = new Layer(rotation.Up.Left, rotation.Down.Right);
+            Layer down = new Layer(rotation.Down.Left, rotation.Up.Right);
 
             return new Cube(up, down);
         }

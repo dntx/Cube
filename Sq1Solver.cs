@@ -16,7 +16,7 @@ namespace sq1code
             seenCubes.Add(startCube);
             do {
                 State state = openStates.Dequeue();
-                Cube cube = state.cube;
+                Cube cube = state.Cube;
                 if (cube.isHexagram()) {
                     outputState(state);
                     Console.WriteLine();
@@ -29,7 +29,7 @@ namespace sq1code
                     if (!seenCubes.Contains(nextCube)) {
                         //Console.WriteLine("new cube: {0}", nextCube.ToString());
                         id++;
-                        State nextState = new State(id, state, rotation, nextCube);
+                        State nextState = new State(id, state, nextCube);
                         openStates.Enqueue(nextState);
                         seenCubes.Add(nextCube);
                     }
@@ -43,12 +43,12 @@ namespace sq1code
         }
 
         private static void outputState(State state) {
-            Console.WriteLine("cube: {0}", state.cube);
+            Console.WriteLine("cube: {0}", state.Cube);
 
-            Console.Write("depth：{0}", state.depth);
+            Console.Write("depth：{0}", state.Depth);
             do {
-                Console.Write(" ==> {0}({1})", state.cube.ToString(withFromInfo: true), state.id);
-                state = state.fromState;
+                Console.Write(" ==> {0}({1})", state.Cube.ToString(withFromInfo: true), state.Id);
+                state = state.From;
             } while (state != null);
             Console.WriteLine();
         }

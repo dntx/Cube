@@ -3,20 +3,20 @@ using System.Collections.Generic;
 namespace sq1code
 {
     class Rotation {
-        public Division up { get; }
-        public Division down { get; }
+        public Division Up { get; }
+        public Division Down { get; }
 
         public Rotation(Division up, Division down) {
-            this.up = up;
-            this.down = down;
+            Up = up;
+            Down = down;
         }
 
         public bool isIdenticalRotation() {
-            return (up.left == down.left) || (up.right == down.right);
+            return (Up.Left == Down.Left) || (Up.Right == Down.Right);
         }
 
         public override string ToString() {
-            return up.ToString() + "," + down.ToString();
+            return Up.ToString() + "," + Down.ToString();
         }
     }
 
