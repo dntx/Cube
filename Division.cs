@@ -3,19 +3,26 @@ using System.Collections.Generic;
 namespace sq1code
 {
     class Division {
-        public Half left { get; }
-        public Half right { get; }
+        public Half left { get; private set; }
+        public Half right { get; private set; }
 
         public Division(Half left, Half right) : this (left, right, false) {
         }
 
-        public Division(Half first, Half second, bool normalize) {
-            if (!normalize || first <= second) {
-                this.left = first;
-                this.right = second;
-            } else {
-                this.left = second;
-                this.right = first;
+        // todo: normalze should be called as ascending
+        public Division(Half first, Half second, bool needNormalize) {
+            this.left = first;
+            this.right = second;
+            if (needNormalize) {
+                Normalize();
+            }
+        }
+
+        private void Normalize() {
+            if (left > right) {
+                Half temp = left;
+                left = right;
+                right = temp;
             }
         }
 
@@ -41,7 +48,7 @@ namespace sq1code
         // override object.GetHashCode
         public override int GetHashCode()
         {
-            return left.GetHashCode() * Half.MaxHashCodeUpperBound + right.GetHashCode();
+            return left.GetHashCode() * Half.HashCodeUpperBound + right.GetHashCode();
         }
 
         public override string ToString() {

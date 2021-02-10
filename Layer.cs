@@ -87,16 +87,16 @@ namespace sq1code
         public ISet<Division> GetDivisions(bool normalizedOnly) {
             ISet<Division> divisions = new HashSet<Division>();
 
+            // todo: refine sum logic
             for (int start = 0; start < cells.Count - 1; start++) {
                 for (int end = start + 1; end < cells.Count; end++) {
-                    List<int> selected = cells.GetRange(start, end - start);
-                    int result = Half.CompareToHalf(selected);
-                    if (result < 0) {
+                    Half selectedHalf = new Half(cells.GetRange(start, end - start));
+                    int sum = selectedHalf.GetSum();
+                    if (sum < 6) {
                         continue;
-                    } else if (result > 0) {
+                    } else if (sum > 6) {
                         break;
                     }
-                    Half selectedHalf = new Half(selected);
 
                     List<int> remaining = new List<int>();
                     remaining.AddRange(cells.GetRange(end, cells.Count - end));
