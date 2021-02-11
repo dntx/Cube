@@ -35,7 +35,7 @@ namespace sq1code
         }
 
         public override string ToString() {
-            return string.Format("{0}-{1}", Left, Right);
+            return string.Format("{0,4}-{1,-4}", Left, Right);
         }
     }
 

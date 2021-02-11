@@ -5,9 +5,13 @@ using System.Collections.Generic;
 namespace sq1code
 {
     class Cells : List<int> {
-        public Cells(List<int> cells) : base(cells) {}
+        bool isCompact;
 
-        public Cells(List<int> first, List<int> second) : base(MergeList(first, second)) {}
+        public Cells(List<int> cells) : base(cells) {
+            isCompact = cells.TrueForAll(cell => cell < 2);
+        }
+
+        public Cells(List<int> first, List<int> second) : this(MergeList(first, second)) {}
 
         private static List<int> MergeList(List<int> first, List<int> second) {
             List<int> result = new List<int>();
@@ -17,6 +21,10 @@ namespace sq1code
         }
 
         protected string ToString(int degreeBar, string separator) {
+            return isCompact? ToCompactString(degreeBar, separator) : ToLiteralString(degreeBar, separator);
+        }
+
+        private string ToCompactString(int degreeBar, string separator) {
             StringBuilder sb = new StringBuilder();
             int countOf30 = 0;
             int degreeSum = 0;
@@ -34,7 +42,7 @@ namespace sq1code
                         }
                     }
 
-                    sb.Append("0");
+                    sb.Append(cell);
                     degreeSum += degree;
                     if (degreeSum == degreeBar) {
                         sb.Append(separator);
@@ -46,6 +54,21 @@ namespace sq1code
                 sb.Append(countOf30);
                 countOf30 = 0;
             }
+
+            return sb.ToString();
+        }
+
+        private string ToLiteralString(int degreeBar, string separator) {
+            StringBuilder sb = new StringBuilder();
+            int degreeSum = 0;
+            ForEach(cell => {
+                int degree = GetDegree(cell);
+                sb.Append(cell);
+                degreeSum += degree;
+                if (degreeSum == degreeBar) {
+                    sb.Append(separator);
+                }
+            });
 
             return sb.ToString();
         }

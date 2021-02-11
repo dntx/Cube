@@ -122,7 +122,7 @@ namespace sq1code
             Console.WriteLine("depth：{0}", state.Depth);
             do {
                 Console.WriteLine(
-                    " ==> {0} | {1}({2}) | {3},{4} | {5}-{6},{7}-{8}", 
+                    " ==> {0} | {1,2}({2}) | {3,2},{4,-2} | {5,2}-{6,-2},{7,2}-{8,-2}", 
                     state.Cube.ToString(verbose: true),
                     seenCubes[state.Cube],
                     state.Solutions.Count, 

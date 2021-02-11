@@ -29,7 +29,7 @@ namespace sq1code
 
         public string ToString(bool verbose) {
             if (verbose) {
-                return string.Format("{0}-{1}", Left, Right);
+                return string.Format("{0,4}-{1,-4}", Left, Right);
             } else {
                 return ToString(degreeBar: 180, separator: "-");
             }
