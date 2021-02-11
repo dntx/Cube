@@ -16,36 +16,42 @@ namespace sq1code
             return result;
         }
 
-        protected string ToString(int bar, string separator) {
+        protected string ToString(int degreeBar, string separator) {
             StringBuilder sb = new StringBuilder();
-            int countOf1 = 0;
-            int sum = 0;
+            int countOf30 = 0;
+            int degreeSum = 0;
             ForEach(cell => {
-                if (cell == 1) {
-                    countOf1++;
-                } else {    // cell == 2
-                    if (countOf1 > 0) {
-                        sum += countOf1;
-                        sb.Append(countOf1);
-                        countOf1 = 0;
-                        if (sum == bar) {
+                int degree = GetDegree(cell);
+                if (degree == 30) {
+                    degreeSum += degree;
+                    countOf30++;
+                } else {
+                    if (countOf30 > 0) {
+                        sb.Append(countOf30);
+                        countOf30 = 0;
+                        if (degreeSum == degreeBar) {
                             sb.Append(separator);
                         }
                     }
+
                     sb.Append("0");
-                    sum += cell;
-                    if (sum == bar) {
+                    degreeSum += degree;
+                    if (degreeSum == degreeBar) {
                         sb.Append(separator);
                     }
                 }
             });
 
-            if (countOf1 > 0) {
-                sb.Append(countOf1);
-                countOf1 = 0;
+            if (countOf30 > 0) {
+                sb.Append(countOf30);
+                countOf30 = 0;
             }
 
             return sb.ToString();
+        }
+
+        protected static int GetDegree(int cell) {
+            return (cell % 2 == 1) ? 30 : 60;
         }
 
         public override string ToString() {

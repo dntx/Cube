@@ -9,7 +9,7 @@ namespace sq1code
 
         public static int HashCodeUpperBound = 10^6;
 
-        public static Half Square = new Half(new List<int>{1,2,1,2});
-        public static Half Hexagram = new Half(new List<int>{2,2,2});    
+        public static Half Square = new Half(new List<int>{0,1,0,1});
+        public static Half Hexagram = new Half(new List<int>{0,0,0});    
     }
 }

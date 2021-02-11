@@ -14,11 +14,6 @@ namespace sq1code
         private static Cells GetNormalizedCells(Cells cells) {
             Cells minCells = cells;
             for (int start = 1; start < cells.Count; start++) {
-                // should start from a brand new 1
-                if (cells[start - 1] == 1 || cells[start] != 1) {
-                    continue;
-                }
-
                 Cells shiftedCells = new Cells(cells.GetRange(start, cells.Count - start), cells.GetRange(0, start));
                 if (shiftedCells < minCells) {
                     minCells = shiftedCells;
@@ -36,7 +31,7 @@ namespace sq1code
             if (verbose) {
                 return string.Format("{0}-{1}", Left, Right);
             } else {
-                return ToString(bar: 6, separator: "-");
+                return ToString(degreeBar: 180, separator: "-");
             }
         }
 
@@ -53,14 +48,14 @@ namespace sq1code
         public ISet<Division> GetDivisions(bool ascendingOnly) {
             ISet<Division> divisions = new HashSet<Division>();
             for (int start = 0; start < Count - 1; start++) {
-                int sum = 0;
+                int degreeSum = 0;
                 int count = 0;
-                for (int i = start; i < Count && sum < 6; i++) {
-                    sum += this[i];
+                for (int i = start; i < Count && degreeSum < 180; i++) {
+                    degreeSum += GetDegree(this[i]);
                     count++;
                 }
 
-                if (sum == 6) {
+                if (degreeSum == 180) {
                     int end = start + count;
                     Half first = new Half(GetRange(start, count));
                     Half second = new Half(GetRange(end, Count - end), GetRange(0, start));
