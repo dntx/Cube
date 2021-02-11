@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace sq1code
 {
@@ -14,15 +15,16 @@ namespace sq1code
             seenHalfs = new Dictionary<Half, int>();
         }
 
-        private bool VisitCube(Cube cube) {
+        private int VisitCube(Cube cube) {
             if (seenCubes.ContainsKey(cube)) {
-                return false;
+                return seenCubes[cube];
             }
             
-            seenCubes.Add(cube, seenCubes.Count);
+            int cubeId = seenCubes.Count;
+            seenCubes.Add(cube, cubeId);
             VisitLayer(cube.Up);
             VisitLayer(cube.Down);
-            return true;
+            return cubeId;
         }
 
         private bool VisitLayer(Layer layer) {
@@ -45,33 +47,73 @@ namespace sq1code
             return true;
         }
 
+        private void VisitSolution(State state, Cube cubeSolution) {
+            state.Solutions.Add(cubeSolution);
+            state.Froms.ForEach(from => VisitSolution(from, cubeSolution));
+        }
+
         public void Run() {
             Console.WriteLine("hello");
             Cube startCube = Cube.Square;
             VisitCube(startCube);
 
+            int totalEdgeCount = 0;
+            int netEdgeCount = 0;
             Queue<State> openStates = new Queue<State>();
-            openStates.Enqueue(new State(startCube));
+            List<State> seenStates = new List<State>();
+
+            State startState = new State(startCube, 0);
+            openStates.Enqueue(startState);
+            seenStates.Add(startState);
             do {
                 State state = openStates.Dequeue();
                 Cube cube = state.Cube;
-                if (cube.IsHexagram()) {
-                    OutputState(state);
-                    Console.WriteLine();
-                }
 
                 List<Rotation> rotations = cube.GetRotations();
+                int nextDepth = state.Depth + 1;
                 foreach (Rotation rotation in rotations) {
                     Cube nextCube = cube.ApplyRotation(rotation);
-                    bool isNew = VisitCube(nextCube);
-                    if (isNew) {
-                        State nextState = new State(nextCube, state);
+                    totalEdgeCount++;
+                    int nextCubeId = VisitCube(nextCube);
+                    if (nextCubeId < seenStates.Count) {    
+                        // existing cube
+                        State existingState = seenStates[nextCubeId];
+                        if (nextDepth < existingState.Depth) {
+                            // a better path found, should not happen as we are using BFS
+                            Debug.Assert(false);
+                        } else if (nextDepth == existingState.Depth) {
+                            // an alternative path may found, update if necessary
+                            if (!existingState.Froms.Contains(state)) {
+                                existingState.Froms.Add(state);
+                                netEdgeCount++;
+                            }
+                        }
+                    } else {    
+                        // new cube
+                        State nextState = new State(nextCube, nextCubeId, state);
+                        netEdgeCount++;
                         openStates.Enqueue(nextState);
+                        seenStates.Add(nextState);
                     }
                 }
             } while (openStates.Count > 0); 
 
-            Console.WriteLine("total: {0}", seenCubes.Count);
+            seenStates.ForEach(state => {
+                if (state.Cube.IsHexagram()) {
+                    VisitSolution(state, state.Cube);
+                }
+            });
+
+            seenStates.ForEach(state => state.CalculateBestFrom());
+
+            seenStates.ForEach(state => {
+                if (state.Cube.IsHexagram()) {
+                    OutputState(state);
+                    Console.WriteLine();
+                }
+            });
+
+            Console.WriteLine("cubes: {0}, total edges: {1}, net edges: {2}", seenCubes.Count, totalEdgeCount, netEdgeCount);
             Console.WriteLine("end");
         }
 
@@ -80,9 +122,10 @@ namespace sq1code
             Console.WriteLine("depth：{0}", state.Depth);
             do {
                 Console.WriteLine(
-                    " ==> {0} | {1} | {2},{3} | {4}-{5},{6}-{7}", 
-                    state.Cube.ToString(verbose: true), 
+                    " ==> {0} | {1}({2}) | {3},{4} | {5}-{6},{7}-{8}", 
+                    state.Cube.ToString(verbose: true),
                     seenCubes[state.Cube],
+                    state.Solutions.Count, 
                     seenLayers[state.Cube.Up], 
                     seenLayers[state.Cube.Down],
                     seenHalfs[state.Cube.Up.Left],
@@ -90,7 +133,7 @@ namespace sq1code
                     seenHalfs[state.Cube.Down.Left],
                     seenHalfs[state.Cube.Down.Right]
                     );
-                state = state.From;
+                state = state.BestFrom;
             } while (state != null);
         }
    }
