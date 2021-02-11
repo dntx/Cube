@@ -22,6 +22,20 @@ namespace sq1code
             return minCells;
         }
 
+        public bool IsHexagram() {
+            return Count == 6 && TrueForAll(cell => GetDegree(cell) == 60);
+        }
+
+        public bool IsSquare() {
+            int previousDegree = 0;
+            return Count == 8 && TrueForAll(cell => {
+                int thisDegree = GetDegree(cell);
+                bool isChanged = (thisDegree != previousDegree);
+                previousDegree = thisDegree;
+                return isChanged;
+            });
+        }
+
         public override string ToString()
         {
             return ToString(verbose:false);

@@ -52,14 +52,15 @@ namespace sq1code
             state.Froms.ForEach(from => VisitSolution(from, cubeSolution));
         }
 
+        public delegate bool IsTargetFunc(Cube cube);
+
         public void Run() {
             Console.WriteLine("hello");
-            SolveUnicolorCube();
+            SolveSq1Cube(Cube.UnicolorCube, cube => cube.IsHexagram(), 100);
             Console.WriteLine("end");
         }
 
-        private void SolveUnicolorCube() {
-            Cube startCube = Cube.UnicolorSquare;
+        private void SolveSq1Cube(Cube startCube, IsTargetFunc IsTarget, int maxDepth) {
             VisitCube(startCube);
 
             int totalEdgeCount = 0;
@@ -72,6 +73,9 @@ namespace sq1code
             seenStates.Add(startState);
             do {
                 State state = openStates.Dequeue();
+                if (state.Depth > maxDepth) {
+                    break;
+                }
                 Cube cube = state.Cube;
 
                 List<Rotation> rotations = cube.GetRotations();
@@ -104,7 +108,7 @@ namespace sq1code
             } while (openStates.Count > 0); 
 
             seenStates.ForEach(state => {
-                if (state.Cube.IsHexagram()) {
+                if (IsTarget(state.Cube)) {
                     VisitSolution(state, state.Cube);
                 }
             });
@@ -112,7 +116,7 @@ namespace sq1code
             seenStates.ForEach(state => state.CalculateBestFrom());
 
             seenStates.ForEach(state => {
-                if (state.Cube.IsHexagram()) {
+                if (IsTarget(state.Cube)) {
                     OutputState(state);
                     Console.WriteLine();
                 }

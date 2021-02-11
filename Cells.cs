@@ -77,20 +77,6 @@ namespace sq1code
             return (cell % 2 == 1) ? 30 : 60;
         }
 
-        public bool IsHexagram() {
-            return TrueForAll(cell => GetDegree(cell) == 60);
-        }
-
-        public bool IsSquare() {
-            int previousDegree = 0;
-            return TrueForAll(cell => {
-                int thisDegree = GetDegree(cell);
-                bool isChanged = (thisDegree != previousDegree);
-                previousDegree = thisDegree;
-                return isChanged;
-            });
-        }
-
         public override string ToString() {
             return ToString(0, separator: "");
         }
