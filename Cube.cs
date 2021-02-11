@@ -81,7 +81,8 @@ namespace sq1code
             return string.Format("{0},{1}", Up.ToString(verbose), Down.ToString(verbose));
         }
 
-        public static Cube Square = new Cube(Layer.Square, Layer.Square);
+        public static Cube UnicolorSquare = new Cube(Layer.UnicolorSquare, Layer.UnicolorSquare);
+        public static Cube BicolorSquare = new Cube(Layer.WhiteSquare, Layer.YellowSquare);
     }
 
 }

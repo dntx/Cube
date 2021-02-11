@@ -37,14 +37,6 @@ namespace sq1code
 
         public static int HashCodeUpperBound = 10^10;
 
-        public bool IsHexagram() {
-            return this == Hexagram;
-        }
-
-        public bool IsSquare() {
-            return this == Square;
-        }
-
         public ISet<Division> GetDivisions(bool ascendingOnly) {
             ISet<Division> divisions = new HashSet<Division>();
             for (int start = 0; start < Count - 1; start++) {
@@ -76,7 +68,8 @@ namespace sq1code
             return divisions;
         }
 
-        public static Layer Square = new Layer(Half.Square, Half.Square);
-        public static Layer Hexagram = new Layer(Half.Hexagram, Half.Hexagram);
+        public static Layer UnicolorSquare = new Layer(Half.UnicolorSquare, Half.UnicolorSquare);
+        public static Layer WhiteSquare = new Layer(Half.WhiteSquare, Half.WhiteSquare);
+        public static Layer YellowSquare = new Layer(Half.YellowSquare, Half.YellowSquare);
     }
 }

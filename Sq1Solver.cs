@@ -54,7 +54,12 @@ namespace sq1code
 
         public void Run() {
             Console.WriteLine("hello");
-            Cube startCube = Cube.Square;
+            SolveUnicolorCube();
+            Console.WriteLine("end");
+        }
+
+        private void SolveUnicolorCube() {
+            Cube startCube = Cube.UnicolorSquare;
             VisitCube(startCube);
 
             int totalEdgeCount = 0;
@@ -114,7 +119,6 @@ namespace sq1code
             });
 
             Console.WriteLine("cubes: {0}, total edges: {1}, net edges: {2}", seenCubes.Count, totalEdgeCount, netEdgeCount);
-            Console.WriteLine("end");
         }
 
         private void OutputState(State state) {

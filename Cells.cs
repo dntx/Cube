@@ -5,10 +5,10 @@ using System.Collections.Generic;
 namespace sq1code
 {
     class Cells : List<int> {
-        bool isCompact;
+        bool isUnicolor;
 
         public Cells(List<int> cells) : base(cells) {
-            isCompact = cells.TrueForAll(cell => cell < 2);
+            isUnicolor = cells.TrueForAll(cell => cell < 2);
         }
 
         public Cells(List<int> first, List<int> second) : this(MergeList(first, second)) {}
@@ -21,10 +21,10 @@ namespace sq1code
         }
 
         protected string ToString(int degreeBar, string separator) {
-            return isCompact? ToCompactString(degreeBar, separator) : ToLiteralString(degreeBar, separator);
+            return isUnicolor? ToUnicolorString(degreeBar, separator) : ToLiteralString(degreeBar, separator);
         }
 
-        private string ToCompactString(int degreeBar, string separator) {
+        private string ToUnicolorString(int degreeBar, string separator) {
             StringBuilder sb = new StringBuilder();
             int countOf30 = 0;
             int degreeSum = 0;
@@ -75,6 +75,20 @@ namespace sq1code
 
         protected static int GetDegree(int cell) {
             return (cell % 2 == 1) ? 30 : 60;
+        }
+
+        public bool IsHexagram() {
+            return TrueForAll(cell => GetDegree(cell) == 60);
+        }
+
+        public bool IsSquare() {
+            int previousDegree = 0;
+            return TrueForAll(cell => {
+                int thisDegree = GetDegree(cell);
+                bool isChanged = (thisDegree != previousDegree);
+                previousDegree = thisDegree;
+                return isChanged;
+            });
         }
 
         public override string ToString() {
