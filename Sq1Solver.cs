@@ -49,7 +49,7 @@ namespace sq1code
 
         private void VisitSolution(State state, Cube cubeSolution) {
             state.Solutions.Add(cubeSolution);
-            state.Froms.ForEach(from => VisitSolution(from, cubeSolution));
+            state.Froms.ForEach(from => VisitSolution(from.Key, cubeSolution));
         }
 
         public delegate bool IsTargetFunc(Cube cube);
@@ -101,14 +101,14 @@ namespace sq1code
                             throw new Exception("error: a better path found in BFS");
                         } else if (nextDepth == existingState.Depth) {
                             // an alternative path may found, update if necessary
-                            if (!existingState.Froms.Contains(state)) {
-                                existingState.Froms.Add(state);
+                            if (existingState.Froms.TrueForAll(from => from.Key != state)) {
+                                existingState.AddFrom(state, rotation);
                                 netEdgeCount++;
                             }
                         }
                     } else {    
                         // new cube
-                        State nextState = new State(nextCube, nextCubeId, state);
+                        State nextState = new State(nextCube, nextCubeId, state, rotation);
                         netEdgeCount++;
                         openStates.Enqueue(nextState);
                         seenStates.Add(nextState);
@@ -138,9 +138,13 @@ namespace sq1code
             Console.WriteLine("cube: {0}", state.Cube);
             Console.WriteLine("depth：{0}", state.Depth);
             do {
+                State fromState = state.BestFrom.Key;
+                Rotation fromRotation = state.BestFrom.Value;
+                Cube rotatedCube = (fromState != null)? fromState.Cube.ApplyRotation(fromRotation) : state.Cube;
+
                 Console.WriteLine(
                     " ==> {0} | {1,2}({2,2}) | {3,2},{4,-2} | {5,2}-{6,-2},{7,2}-{8,-2}", 
-                    state.Cube.ToString(verbose: true),
+                    rotatedCube.ToString(verbose: true),
                     seenCubes[state.Cube],
                     state.Solutions.Count, 
                     seenLayers[state.Cube.Up], 
@@ -150,7 +154,7 @@ namespace sq1code
                     seenHalfs[state.Cube.Down.Left],
                     seenHalfs[state.Cube.Down.Right]
                     );
-                state = state.BestFrom;
+                state = fromState;
             } while (state != null);
         }
    }

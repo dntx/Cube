@@ -94,7 +94,7 @@ namespace sq1code
             int degreeSum = 0;
             ForEach(cell => {
                 int degree = GetDegree(cell);
-                sb.AppendFormat("{0: X}", cell);
+                sb.AppendFormat("{0:X}", cell);
                 degreeSum += degree;
                 if (degreeSum == degreeBar) {
                     sb.Append(separator);
