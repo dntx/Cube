@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace sq1code
@@ -14,7 +15,7 @@ namespace sq1code
         private static Cells GetNormalizedCells(Cells cells) {
             Cells minCells = cells;
             for (int start = 1; start < cells.Count; start++) {
-                Cells shiftedCells = new Cells(cells.GetRange(start, cells.Count - start), cells.GetRange(0, start));
+                Cells shiftedCells = new Cells(cells.GetRange(start, cells.Count - start), cells.GetRange(0, start), cells.ColorCount);
                 if (shiftedCells < minCells) {
                     minCells = shiftedCells;
                 }
@@ -36,6 +37,16 @@ namespace sq1code
             });
         }
 
+        public int GetColorDiff() {
+            int color0Count = 0;
+            ForEach(cell => { 
+                if (GetColor(cell) == 0) {
+                    color0Count++;
+                }
+            });
+            return Math.Min(color0Count, Count - color0Count);
+        }
+
         public override string ToString()
         {
             return ToString(verbose:false);
@@ -49,7 +60,7 @@ namespace sq1code
             }
         }
 
-        public static int HashCodeUpperBound = 10^10;
+        public static int HashCodeUpperBound = 16^10;
 
         public ISet<Division> GetDivisions(bool ascendingOnly) {
             ISet<Division> divisions = new HashSet<Division>();
@@ -63,8 +74,8 @@ namespace sq1code
 
                 if (degreeSum == 180) {
                     int end = start + count;
-                    Half first = new Half(GetRange(start, count));
-                    Half second = new Half(GetRange(end, Count - end), GetRange(0, start));
+                    Half first = new Half(GetRange(start, count), ColorCount);
+                    Half second = new Half(GetRange(end, Count - end), GetRange(0, start), ColorCount);
 
                     if (first > second) {
                         Half temp = first;

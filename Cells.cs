@@ -5,13 +5,36 @@ using System.Collections.Generic;
 namespace sq1code
 {
     class Cells : List<int> {
-        bool isUnicolor;
+        public int ColorCount { get; }
 
-        public Cells(List<int> cells) : base(cells) {
-            isUnicolor = cells.TrueForAll(cell => cell < 2);
+        public Cells(List<int> cells, int colorCount) : base(cells) {
+            if (colorCount != 1 && colorCount != 2 && colorCount != 6) {
+                throw new ArgumentException("color count should be 1, 2, or 6");
+            }
+            ColorCount = colorCount;
+
+            if (colorCount > 1) {
+                for (int i = 0; i < Count; i++) {
+                    int cell = this[i];
+                    int degree = GetDegree(cell);
+                    int color = GetColor(cell);
+                    if (colorCount == 1) {
+                        this[i] = degree/30;
+                    } else if (colorCount == 2) {
+                        this[i] = degree/30 + color*8;
+                    }
+                }
+            }
         }
 
-        public Cells(List<int> first, List<int> second) : this(MergeList(first, second)) {}
+        public Cells(List<int> first, List<int> second, int colorCount) 
+                : this(MergeList(first, second), colorCount) {}
+        
+
+        public Cells(Cells cells) : this(cells, cells.ColorCount) {}
+
+        public Cells(Cells first, Cells second) 
+                : this(MergeList(first, second), MergeColorCount(first.ColorCount, second.ColorCount)) {}
 
         private static List<int> MergeList(List<int> first, List<int> second) {
             List<int> result = new List<int>();
@@ -20,8 +43,16 @@ namespace sq1code
             return result;
         }
 
+        private static int MergeColorCount(int colorCount1, int colorCount2) {
+            if (colorCount1 != colorCount2) {
+                throw new ArgumentException("color count is not match");
+            }
+
+            return colorCount1;
+        }
+
         protected string ToString(int degreeBar, string separator) {
-            return isUnicolor? ToUnicolorString(degreeBar, separator) : ToLiteralString(degreeBar, separator);
+            return (ColorCount == 1)? ToUnicolorString(degreeBar, separator) : ToLiteralString(degreeBar, separator);
         }
 
         private string ToUnicolorString(int degreeBar, string separator) {
@@ -42,7 +73,7 @@ namespace sq1code
                         }
                     }
 
-                    sb.Append(cell);
+                    sb.AppendFormat("0");
                     degreeSum += degree;
                     if (degreeSum == degreeBar) {
                         sb.Append(separator);
@@ -63,7 +94,7 @@ namespace sq1code
             int degreeSum = 0;
             ForEach(cell => {
                 int degree = GetDegree(cell);
-                sb.Append(cell);
+                sb.AppendFormat("{0: X}", cell);
                 degreeSum += degree;
                 if (degreeSum == degreeBar) {
                     sb.Append(separator);
@@ -75,6 +106,14 @@ namespace sq1code
 
         protected static int GetDegree(int cell) {
             return (cell % 2 == 1) ? 30 : 60;
+        }
+
+        protected int GetColor(int cell) {
+            if (ColorCount == 1) {
+                return 0;
+            }
+
+            return cell / 8;
         }
 
         public override string ToString() {

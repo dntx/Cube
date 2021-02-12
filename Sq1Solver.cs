@@ -54,9 +54,18 @@ namespace sq1code
 
         public delegate bool IsTargetFunc(Cube cube);
 
+        private bool IsSquareCube(Cube cube, int maxColorDiff) {
+            if (!cube.IsSquare()) {
+                return false;
+            }
+
+            return cube.Up.GetColorDiff() <= maxColorDiff;
+        }
+
         public void Run() {
             Console.WriteLine("hello");
             SolveSq1Cube(Cube.UnicolorCube, cube => cube.IsHexagram(), 100);
+            //SolveSq1Cube(Cube.BicolorCube, cube => IsSquareCube(cube, 1), 5);
             Console.WriteLine("end");
         }
 
@@ -89,7 +98,7 @@ namespace sq1code
                         State existingState = seenStates[nextCubeId];
                         if (nextDepth < existingState.Depth) {
                             // a better path found, should not happen as we are using BFS
-                            Debug.Assert(false);
+                            throw new Exception("error: a better path found in BFS");
                         } else if (nextDepth == existingState.Depth) {
                             // an alternative path may found, update if necessary
                             if (!existingState.Froms.Contains(state)) {
@@ -108,7 +117,7 @@ namespace sq1code
             } while (openStates.Count > 0); 
 
             seenStates.ForEach(state => {
-                if (IsTarget(state.Cube)) {
+                if (state.Depth <= maxDepth && IsTarget(state.Cube)) {
                     VisitSolution(state, state.Cube);
                 }
             });
@@ -116,7 +125,7 @@ namespace sq1code
             seenStates.ForEach(state => state.CalculateBestFrom());
 
             seenStates.ForEach(state => {
-                if (IsTarget(state.Cube)) {
+                if (state.Depth <= maxDepth && IsTarget(state.Cube)) {
                     OutputState(state);
                     Console.WriteLine();
                 }
@@ -130,7 +139,7 @@ namespace sq1code
             Console.WriteLine("depth：{0}", state.Depth);
             do {
                 Console.WriteLine(
-                    " ==> {0} | {1,2}({2}) | {3,2},{4,-2} | {5,2}-{6,-2},{7,2}-{8,-2}", 
+                    " ==> {0} | {1,2}({2,2}) | {3,2},{4,-2} | {5,2}-{6,-2},{7,2}-{8,-2}", 
                     state.Cube.ToString(verbose: true),
                     seenCubes[state.Cube],
                     state.Solutions.Count, 

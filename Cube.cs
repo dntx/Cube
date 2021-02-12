@@ -46,6 +46,10 @@ namespace sq1code
             return Up.IsHexagram() || Down.IsHexagram();
         }
 
+        public bool IsSquare() {
+            return Up.IsSquare() && Down.IsSquare();
+        }
+        
         public List<Rotation> GetRotations() {
             List<Rotation> rotations = new List<Rotation>();
 
