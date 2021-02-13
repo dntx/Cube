@@ -82,7 +82,11 @@ namespace sq1code
 
         public string ToString(bool verbose)
         {
-            return string.Format("{0},{1}", Up.ToString(verbose), Down.ToString(verbose));
+            if (Up.ColorCount == 2) {
+                return string.Format("{0},{1}({2})", Up.ToString(verbose), Down.ToString(verbose), Up.GetColorDiff());
+            } else {
+                return string.Format("{0},{1}", Up.ToString(verbose), Down.ToString(verbose));
+            }
         }
 
         public static Cube UnicolorCube = new Cube(Layer.UnicolorSquare, Layer.UnicolorSquare);

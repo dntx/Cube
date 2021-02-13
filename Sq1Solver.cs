@@ -67,8 +67,8 @@ namespace sq1code
 
         public void Run() {
             Console.WriteLine("hello");
-            SolveSq1Cube(Cube.UnicolorCube, cube => cube.IsHexagram(), 100);
-            //SolveSq1Cube(Cube.BicolorCube, cube => IsSquareCube(cube, 1), 5);
+            //SolveSq1Cube(Cube.UnicolorCube, cube => cube.IsHexagram(), 100);
+            SolveSq1Cube(Cube.BicolorCube, cube => IsSquareCube(cube, 3), 5);
             Console.WriteLine("end");
         }
 
@@ -150,7 +150,7 @@ namespace sq1code
                 State fromState = state.BestFrom.Key;
                 Rotation fromRotation = state.BestFrom.Value;
 
-                // todo: consider up/down reverse situation
+                // todo: consider up/down reverse situation if necessary
                 Cube rotatedCube = (fromState != null)? fromState.Cube.ApplyRotation(fromRotation) : state.Cube;
 
                 Console.WriteLine(
