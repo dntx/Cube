@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace sq1code
 {
@@ -59,6 +58,10 @@ namespace sq1code
                 return false;
             }
 
+            if (cube.Up.GetColorSegmentCount() > 2 || cube.Down.GetColorSegmentCount() > 2) {
+                return false;
+            }
+
             return cube.Up.GetColorDiff() <= maxColorDiff;
         }
 
@@ -72,6 +75,7 @@ namespace sq1code
         private void SolveSq1Cube(Cube startCube, IsTargetFunc IsTarget, int maxDepth) {
             VisitCube(startCube);
 
+            int closedStateCount = 0;
             int totalEdgeCount = 0;
             int netEdgeCount = 0;
             Queue<State> openStates = new Queue<State>();
@@ -114,6 +118,10 @@ namespace sq1code
                         seenStates.Add(nextState);
                     }
                 }
+                closedStateCount++;
+                if (closedStateCount % 100 == 0) {
+                    Console.WriteLine(closedStateCount);
+                }
             } while (openStates.Count > 0); 
 
             seenStates.ForEach(state => {
@@ -131,7 +139,8 @@ namespace sq1code
                 }
             });
 
-            Console.WriteLine("cubes: {0}, total edges: {1}, net edges: {2}", seenCubes.Count, totalEdgeCount, netEdgeCount);
+            Console.WriteLine("cubes: {0}, closed: {1}", seenCubes.Count, closedStateCount);
+            Console.WriteLine("edges: {0}, net: {1}", totalEdgeCount, netEdgeCount);
         }
 
         private void OutputState(State state) {
@@ -140,6 +149,8 @@ namespace sq1code
             do {
                 State fromState = state.BestFrom.Key;
                 Rotation fromRotation = state.BestFrom.Value;
+
+                // todo: make 0101/1010 on the left if possible, also need consider up/down reverse situation
                 Cube rotatedCube = (fromState != null)? fromState.Cube.ApplyRotation(fromRotation) : state.Cube;
 
                 Console.WriteLine(

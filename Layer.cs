@@ -23,6 +23,38 @@ namespace sq1code
             return minCells;
         }
 
+        public bool IsHexagram() {
+            return TrueForAll(cell => GetDegree(cell) == 60);
+        }
+
+        public bool IsSquare() {
+            int previousDegree = 0;
+            return TrueForAll(cell => {
+                int thisDegree = GetDegree(cell);
+                bool isChanged = (thisDegree != previousDegree);
+                previousDegree = thisDegree;
+                return isChanged;
+            });
+        }
+
+        public bool IsSymmetric() {
+            for (int start = 0; start <= Count/2; start++) {
+                bool isSymmetric = true;
+                for (int i = 0; i <= Count/2; i++) {
+                    int left = (start + i) % Count;
+                    int right = (start + Count - i - 1) % Count;
+                    if (this[left] != this[right]) {
+                        isSymmetric = false;
+                        break;
+                    }
+                }
+                if (isSymmetric) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public int GetColorDiff() {
             int color0Count = 0;
             ForEach(cell => { 
@@ -31,6 +63,26 @@ namespace sq1code
                 }
             });
             return Math.Min(color0Count, Count - color0Count);
+        }
+
+        public int GetColorSegmentCount() {
+            int minSegmentCount = Count;
+            for (int start = 0; start < Count; start++) {
+                int previousColor = -1;
+                int segmentCount = 0;
+                for (int i = 0; i < Count; i++) {
+                    int index = (start + i) % Count;
+                    int color = GetColor(this[index]);
+                    if (color != previousColor) {
+                        segmentCount++;
+                    }
+                    previousColor = color;
+                }
+                if (segmentCount < minSegmentCount) {
+                    minSegmentCount = segmentCount;
+                }
+            }
+            return minSegmentCount;
         }
 
         public override string ToString()
