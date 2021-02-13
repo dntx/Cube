@@ -104,6 +104,10 @@ namespace sq1code
             return sb.ToString();
         }
 
+        public override string ToString() {
+            return ToString(0, separator: "");
+        }
+
         protected static int GetDegree(int cell) {
             return (cell % 2 == 1) ? 30 : 60;
         }
@@ -116,8 +120,36 @@ namespace sq1code
             return cell / 8;
         }
 
-        public override string ToString() {
-            return ToString(0, separator: "");
+        public bool IsHexagram() {
+            return TrueForAll(cell => GetDegree(cell) == 60);
+        }
+
+        public bool IsSquare() {
+            int previousDegree = 0;
+            return TrueForAll(cell => {
+                int thisDegree = GetDegree(cell);
+                bool isChanged = (thisDegree != previousDegree);
+                previousDegree = thisDegree;
+                return isChanged;
+            });
+        }
+
+        public bool IsSymmetric() {
+            for (int start = 0; start <= Count/2; start++) {
+                bool isSymmetric = true;
+                for (int i = 0; i <= Count/2; i++) {
+                    int left = (start + i) % Count;
+                    int right = (start + Count - i - 1) % Count;
+                    if (this[left] != this[right]) {
+                        isSymmetric = false;
+                        break;
+                    }
+                }
+                if (isSymmetric) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public static bool operator == (Cells lhs, Cells rhs) {

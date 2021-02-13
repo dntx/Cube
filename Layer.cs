@@ -23,20 +23,6 @@ namespace sq1code
             return minCells;
         }
 
-        public bool IsHexagram() {
-            return Count == 6 && TrueForAll(cell => GetDegree(cell) == 60);
-        }
-
-        public bool IsSquare() {
-            int previousDegree = 0;
-            return Count == 8 && TrueForAll(cell => {
-                int thisDegree = GetDegree(cell);
-                bool isChanged = (thisDegree != previousDegree);
-                previousDegree = thisDegree;
-                return isChanged;
-            });
-        }
-
         public int GetColorDiff() {
             int color0Count = 0;
             ForEach(cell => { 
@@ -53,10 +39,17 @@ namespace sq1code
         }
 
         public string ToString(bool verbose) {
+            String separator = "-";
+            if (IsSquare()) {
+                separator = "=";
+            } else if (IsSymmetric()) {
+                separator = ":";
+            }
+
             if (verbose) {
-                return string.Format("{0,4}-{1,-4}", Left, Right);
+                return string.Format("{0,4}{1}{2,-4}", Left, separator, Right);
             } else {
-                return ToString(degreeBar: 180, separator: "-");
+                return ToString(degreeBar: 180, separator: separator);
             }
         }
 
