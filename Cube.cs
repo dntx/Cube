@@ -49,11 +49,11 @@ namespace sq1code
         public bool IsSquare() {
             return Up.IsSquare() && Down.IsSquare();
         }
-        
+
         public List<Rotation> GetRotations() {
             List<Rotation> rotations = new List<Rotation>();
 
-            ISet<Division> upDivisions = Up.GetDivisions(ascendingOnly: true);
+            ISet<Division> upDivisions = Up.GetDivisions(ascendingOnly: false);
             ISet<Division> downDivisions = Down.GetDivisions(ascendingOnly: false);
 
             foreach (Division upDivision in upDivisions) {

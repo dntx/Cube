@@ -150,7 +150,7 @@ namespace sq1code
                 State fromState = state.BestFrom.Key;
                 Rotation fromRotation = state.BestFrom.Value;
 
-                // todo: make 0101/1010 on the left if possible, also need consider up/down reverse situation
+                // todo: consider up/down reverse situation
                 Cube rotatedCube = (fromState != null)? fromState.Cube.ApplyRotation(fromRotation) : state.Cube;
 
                 Console.WriteLine(

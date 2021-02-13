@@ -120,6 +120,20 @@ namespace sq1code
             return cell / 8;
         }
 
+        public bool IsHexagram() {
+            return TrueForAll(cell => GetDegree(cell) == 60);
+        }
+
+        public bool IsSquare() {
+            int previousDegree = 0;
+            return TrueForAll(cell => {
+                int thisDegree = GetDegree(cell);
+                bool isChanged = (thisDegree != previousDegree);
+                previousDegree = thisDegree;
+                return isChanged;
+            });
+        }
+
         public static bool operator == (Cells lhs, Cells rhs) {
             if (lhs.Count != rhs.Count) {
                 return false;
@@ -139,6 +153,14 @@ namespace sq1code
         }
 
         public static bool operator < (Cells lhs, Cells rhs) {
+            if (lhs.IsSquare() != rhs.IsSquare()) {
+                return lhs.IsSquare() && !rhs.IsSquare();
+            }
+
+            if (lhs.IsHexagram() != rhs.IsHexagram()) {
+                return !lhs.IsHexagram() && rhs.IsHexagram();
+            }
+
             int minCount = Math.Min(lhs.Count, rhs.Count);
             for (int i = 0; i < minCount; i++) {
                 if (lhs[i] < rhs[i]) {
@@ -151,6 +173,14 @@ namespace sq1code
         }
 
         public static bool operator > (Cells lhs, Cells rhs) {
+            if (lhs.IsSquare() != rhs.IsSquare()) {
+                return !lhs.IsSquare() && rhs.IsSquare();
+            }
+
+            if (lhs.IsHexagram() != rhs.IsHexagram()) {
+                return lhs.IsHexagram() && !rhs.IsHexagram();
+            }
+
             int minCount = Math.Min(lhs.Count, rhs.Count);
             for (int i = 0; i < minCount; i++) {
                 if (lhs[i] < rhs[i]) {
