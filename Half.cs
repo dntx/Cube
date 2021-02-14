@@ -9,12 +9,12 @@ namespace sq1code
 
         public static int HashCodeUpperBound = 16^6;
 
-        public static Half WhiteSquareBlueHalf = new Half(new List<int>{0,1,2,3}, colorCount: 6);
-        public static Half WhiteSquareGreenHalf = new Half(new List<int>{4,5,6,7}, colorCount: 6);
-        public static Half YellowSquareBlueHalf = new Half(new List<int>{8,9,10,11}, colorCount: 6);
-        public static Half YellowSquareGreenHalf = new Half(new List<int>{12,13,14,15}, colorCount: 6);
-        public static Half WhiteSquareHalf = new Half(WhiteSquareBlueHalf, colorCount: 2);
+        public static Half YellowSquareBlueHalf = new Half(new List<int>{0,1,2,3}, colorCount: 6);
+        public static Half YellowSquareGreenHalf = new Half(new List<int>{4,5,6,7}, colorCount: 6);
+        public static Half WhiteSquareBlueHalf = new Half(new List<int>{8,9,10,11}, colorCount: 6);
+        public static Half WhiteSquareGreenHalf = new Half(new List<int>{12,13,14,15}, colorCount: 6);
         public static Half YellowSquareHalf = new Half(YellowSquareBlueHalf, colorCount: 2);
+        public static Half WhiteSquareHalf = new Half(WhiteSquareBlueHalf, colorCount: 2);
         public static Half SquareHalf = new Half(WhiteSquareHalf, colorCount: 1);
     }
 }

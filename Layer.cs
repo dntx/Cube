@@ -122,6 +122,6 @@ namespace sq1code
         public static Layer WhiteSquare = new Layer(Half.WhiteSquareHalf, Half.WhiteSquareHalf);
         public static Layer YellowSquare = new Layer(Half.YellowSquareHalf, Half.YellowSquareHalf);
         public static Layer WhiteSquareL1 = new Layer(Half.WhiteSquareBlueHalf, Half.WhiteSquareGreenHalf);
-        public static Layer YellowSquareL1 = new Layer(Half.YellowSquareBlueHalf, Half.YellowSquareGreenHalf);
+        public static Layer YellowSquareL3 = new Layer(Half.YellowSquareBlueHalf, Half.YellowSquareGreenHalf);
     }
 }

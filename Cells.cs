@@ -108,7 +108,7 @@ namespace sq1code
             return ToString(0, separator: "");
         }
 
-        protected static int GetDegree(int cell) {
+        public static int GetDegree(int cell) {
             return (cell % 2 == 1) ? 30 : 60;
         }
 

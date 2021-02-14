@@ -19,6 +19,10 @@ namespace sq1code
             return Up.Left.GetShape() == Down.Left.GetShape() || Up.Right.GetShape() == Down.Right.GetShape();
         }
 
+        public bool IsDegree30First() {
+            return Cells.GetDegree(Up.Left[0]) == 30 && Cells.GetDegree(Down.Left[0]) == 30;
+        }
+
         public override string ToString() {
             return string.Format("{0},{1}", Up, Down);
         }

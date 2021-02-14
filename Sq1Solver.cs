@@ -62,7 +62,9 @@ namespace sq1code
                     SolveSq1Cube(Cube.BicolorCube, cube => cube.IsUpDwonSquareColorAdjacent(), rotation => rotation.IsShapeIdentical());
                     break;
                 case Goal.SolveL1L3Color:
-                    SolveSq1Cube(Cube.FullColorCube, cube => cube.IsUpDownColorMatched(), 4);
+                    //SolveSq1Cube(Cube.FullColorCube, cube => cube.IsUpDownSquareSameColor(), 4);
+                    //SolveSq1Cube(Cube.FullColorCube, cube => cube.IsL1OrL3Solved(), rotation => rotation.IsShapeIdentical(), 6);
+                    SolveSq1Cube(Cube.FullColorCube, cube => cube.IsL1Solved(), rotation => rotation.IsDegree30First());
                     break;
             }
             Console.WriteLine("end");
@@ -73,18 +75,19 @@ namespace sq1code
         }
 
         private void SolveSq1Cube(Cube startCube, Predicate<Cube> IsTargetCube, int maxDepth) {
-            SolveSq1Cube(startCube, IsTargetCube, maxDepth, IsFocusRotation: rotation => true);
+            SolveSq1Cube(startCube, IsTargetCube, IsFocusRotation: rotation => true, maxDepth);
         }
         
         private void SolveSq1Cube(Cube startCube, Predicate<Cube> IsTargetCube, Predicate<Rotation> IsFocusRotation) {
-            SolveSq1Cube(startCube, IsTargetCube, maxDepth: int.MaxValue, IsFocusRotation);
+            SolveSq1Cube(startCube, IsTargetCube, IsFocusRotation, maxDepth: int.MaxValue);
         }
         
-        private void SolveSq1Cube(Cube startCube, Predicate<Cube> IsTargetCube, int maxDepth, Predicate<Rotation> IsFocusRotation) {
+        private void SolveSq1Cube(Cube startCube, Predicate<Cube> IsTargetCube, Predicate<Rotation> IsFocusRotation, int maxDepth) {
             VisitCube(startCube);
 
             int closedStateCount = 0;
             int ignoreStateCount = 0;
+            int solutionCount = 0;
             int totalEdgeCount = 0;
             int netEdgeCount = 0;
             Queue<State> openStates = new Queue<State>();
@@ -96,6 +99,9 @@ namespace sq1code
             do {
                 State state = openStates.Dequeue();
                 Cube cube = state.Cube;
+                if (state.Depth <= maxDepth && IsTargetCube(state.Cube)) {
+                    solutionCount++;
+                }
 
                 List<Rotation> rotations = cube.GetRotations();
                 List<Rotation> focusRotations = rotations.FindAll(IsFocusRotation);
@@ -134,8 +140,9 @@ namespace sq1code
                 if (closedStateCount == 1 || closedStateCount % 1000 == 0 || openStates.Count == 0) {
                     int totalCount = closedStateCount + openStates.Count + ignoreStateCount;
                     Console.WriteLine(
-                        "depth: {0}, closed: {1}({2:p}), open: {3}({4:p}), ignored: {5}({6:p})", 
+                        "depth: {0}, solution: {1}, closed: {2}({3:p}), open: {4}({5:p}), ignored: {6}({7:p})", 
                         state.Depth, 
+                        solutionCount,
                         closedStateCount, 
                         (float)closedStateCount / totalCount,
                         openStates.Count, 

@@ -50,8 +50,12 @@ namespace sq1code
             return Up.IsSquare() && Up.IsColorAdjacent() && Down.IsSquare() && Down.IsColorAdjacent();
         }
 
-        public bool IsUpDownColorMatched() {
+        public bool IsUpDownSquareSameColor() {
             return Up.IsSquare() && Up.IsSameColor() && Down.IsSquare() && Down.IsSameColor();
+        }
+
+        public bool IsL1Solved() {
+            return Down == Layer.WhiteSquareL1;
         }
 
         public List<Rotation> GetRotations() {
@@ -94,8 +98,8 @@ namespace sq1code
         }
 
         public static Cube UnicolorCube = new Cube(Layer.Square, Layer.Square);
-        public static Cube BicolorCube = new Cube(Layer.WhiteSquare, Layer.YellowSquare);
-        public static Cube FullColorCube = new Cube(Layer.WhiteSquareL1, Layer.YellowSquareL1);
+        public static Cube BicolorCube = new Cube(Layer.YellowSquare, Layer.WhiteSquare);
+        public static Cube FullColorCube = new Cube(Layer.YellowSquareL3, Layer.WhiteSquareL1);
     }
 
 }
