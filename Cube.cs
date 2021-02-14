@@ -57,7 +57,7 @@ namespace sq1code
         public List<Rotation> GetRotations() {
             List<Rotation> rotations = new List<Rotation>();
 
-            ISet<Division> upDivisions = Up.GetDivisions(ascendingOnly: false);
+            ISet<Division> upDivisions = Up.GetDivisions(ascendingOnly: true);
             ISet<Division> downDivisions = Down.GetDivisions(ascendingOnly: false);
 
             foreach (Division upDivision in upDivisions) {
