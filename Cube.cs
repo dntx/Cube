@@ -42,12 +42,16 @@ namespace sq1code
             }
         }
 
-        public bool IsHexagram() {
+        public bool IsUpOrDownHexagram() {
             return Up.IsHexagram() || Down.IsHexagram();
         }
 
-        public bool IsSquare() {
-            return Up.IsSquare() && Down.IsSquare();
+        public bool IsUpDwonSquareColorAdjacent() {
+            return Up.IsSquare() && Up.IsColorAdjacent() && Down.IsSquare() && Down.IsColorAdjacent();
+        }
+
+        public bool IsUpDownColorMatched() {
+            return Up.IsSquare() && Up.IsSameColor() && Down.IsSquare() && Down.IsSameColor();
         }
 
         public List<Rotation> GetRotations() {
@@ -83,14 +87,15 @@ namespace sq1code
         public string ToString(bool verbose)
         {
             if (Up.ColorCount == 2) {
-                return string.Format("{0},{1}({2})", Up.ToString(verbose), Down.ToString(verbose), Up.GetColorDiff());
+                return string.Format("{0},{1}({2})", Up.ToString(verbose), Down.ToString(verbose), Up.GetDiffColorCellCount());
             } else {
                 return string.Format("{0},{1}", Up.ToString(verbose), Down.ToString(verbose));
             }
         }
 
-        public static Cube UnicolorCube = new Cube(Layer.UnicolorSquare, Layer.UnicolorSquare);
+        public static Cube UnicolorCube = new Cube(Layer.Square, Layer.Square);
         public static Cube BicolorCube = new Cube(Layer.WhiteSquare, Layer.YellowSquare);
+        public static Cube FullColorCube = new Cube(Layer.WhiteSquareL1, Layer.YellowSquareL1);
     }
 
 }

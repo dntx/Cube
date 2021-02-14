@@ -15,6 +15,10 @@ namespace sq1code
             return (Up.Left == Down.Left) || (Up.Right == Down.Right);
         }
 
+        public bool IsShapeIdentical() {
+            return Up.Left.GetShape() == Down.Left.GetShape() || Up.Right.GetShape() == Down.Right.GetShape();
+        }
+
         public override string ToString() {
             return string.Format("{0},{1}", Up, Down);
         }

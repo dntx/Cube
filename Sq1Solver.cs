@@ -53,22 +53,20 @@ namespace sq1code
 
         public delegate bool IsTargetFunc(Cube cube);
 
-        private bool IsSquareCube(Cube cube, int maxColorDiff) {
-            if (!cube.IsSquare()) {
-                return false;
+        public void Solve(Goal goal) {
+            Console.WriteLine("start");
+            switch (goal)
+            {
+                case Goal.SolveShape:
+                    SolveSq1Cube(Cube.UnicolorCube, cube => cube.IsUpOrDownHexagram(), 100);
+                    break;
+                case Goal.SolveUpDownColor:
+                    SolveSq1Cube(Cube.BicolorCube, cube => cube.IsUpDwonSquareColorAdjacent(), 5);
+                    break;
+                case Goal.SolveL1L3Color:
+                    SolveSq1Cube(Cube.FullColorCube, cube => cube.IsUpDownColorMatched(), 4);
+                    break;
             }
-
-            if (cube.Up.GetColorSegmentCount() > 2 || cube.Down.GetColorSegmentCount() > 2) {
-                return false;
-            }
-
-            return cube.Up.GetColorDiff() <= maxColorDiff;
-        }
-
-        public void Run() {
-            Console.WriteLine("hello");
-            //SolveSq1Cube(Cube.UnicolorCube, cube => cube.IsHexagram(), 100);
-            SolveSq1Cube(Cube.BicolorCube, cube => IsSquareCube(cube, 3), 5);
             Console.WriteLine("end");
         }
 
@@ -76,6 +74,7 @@ namespace sq1code
             VisitCube(startCube);
 
             int closedStateCount = 0;
+            int ignoreStateCount = 0;
             int totalEdgeCount = 0;
             int netEdgeCount = 0;
             Queue<State> openStates = new Queue<State>();
@@ -86,9 +85,6 @@ namespace sq1code
             seenStates.Add(startState);
             do {
                 State state = openStates.Dequeue();
-                if (state.Depth > maxDepth) {
-                    break;
-                }
                 Cube cube = state.Cube;
 
                 List<Rotation> rotations = cube.GetRotations();
@@ -114,15 +110,30 @@ namespace sq1code
                         // new cube
                         State nextState = new State(nextCube, nextCubeId, state, rotation);
                         netEdgeCount++;
-                        openStates.Enqueue(nextState);
+                        if (nextState.Depth <= maxDepth) {
+                            openStates.Enqueue(nextState);
+                        } else {
+                            ignoreStateCount++;
+                        }
                         seenStates.Add(nextState);
                     }
                 }
                 closedStateCount++;
-                if (closedStateCount % 100 == 0) {
-                    Console.WriteLine(closedStateCount);
+                if (closedStateCount == 1 || closedStateCount % 1000 == 0 || openStates.Count == 0) {
+                    int totalCount = closedStateCount + openStates.Count + ignoreStateCount;
+                    Console.WriteLine(
+                        "depth: {0}, closed: {1}({2:p}), open: {3}({4:p}), ignored: {5}({6:p})", 
+                        state.Depth, 
+                        closedStateCount, 
+                        (float)closedStateCount / totalCount,
+                        openStates.Count, 
+                        (float)openStates.Count / totalCount,
+                        ignoreStateCount,
+                        (float)ignoreStateCount / totalCount
+                        );
                 }
-            } while (openStates.Count > 0); 
+            } while (openStates.Count > 0);
+            Console.WriteLine(); 
 
             seenStates.ForEach(state => {
                 if (state.Depth <= maxDepth && IsTarget(state.Cube)) {
@@ -168,5 +179,7 @@ namespace sq1code
                 state = fromState;
             } while (state != null);
         }
-   }
+
+        public enum Goal { SolveShape, SolveUpDownColor, SolveL1L3Color };
+    }
 }

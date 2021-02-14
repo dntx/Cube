@@ -13,7 +13,7 @@ namespace sq1code
             }
             ColorCount = colorCount;
 
-            if (colorCount > 1) {
+            if (colorCount == 1 || colorCount == 2) {
                 for (int i = 0; i < Count; i++) {
                     int cell = this[i];
                     int degree = GetDegree(cell);
@@ -132,6 +132,24 @@ namespace sq1code
                 previousDegree = thisDegree;
                 return isChanged;
             });
+        }
+
+        public int GetDiffColorCellCount() {
+            int color0Count = 0;
+            ForEach(cell => { 
+                if (GetColor(cell) == 0) {
+                    color0Count++;
+                }
+            });
+            return Math.Min(color0Count, Count - color0Count);
+        }
+
+        public bool IsSameColor() {
+            return GetDiffColorCellCount() == 0;
+        }
+
+        public Cells GetShape() {
+            return new Cells(this, colorCount: 1);
         }
 
         public static bool operator == (Cells lhs, Cells rhs) {

@@ -41,17 +41,7 @@ namespace sq1code
             return false;
         }
 
-        public int GetColorDiff() {
-            int color0Count = 0;
-            ForEach(cell => { 
-                if (GetColor(cell) == 0) {
-                    color0Count++;
-                }
-            });
-            return Math.Min(color0Count, Count - color0Count);
-        }
-
-        public int GetColorSegmentCount() {
+        private int GetColorSegmentCount() {
             int minSegmentCount = Count;
             for (int start = 0; start < Count; start++) {
                 int previousColor = -1;
@@ -69,6 +59,10 @@ namespace sq1code
                 }
             }
             return minSegmentCount;
+        }
+
+        public bool IsColorAdjacent() {
+            return GetColorSegmentCount() == 2;
         }
 
         public override string ToString()
@@ -124,8 +118,10 @@ namespace sq1code
             return divisions;
         }
 
-        public static Layer UnicolorSquare = new Layer(Half.UnicolorSquare, Half.UnicolorSquare);
-        public static Layer WhiteSquare = new Layer(Half.WhiteSquare, Half.WhiteSquare);
-        public static Layer YellowSquare = new Layer(Half.YellowSquare, Half.YellowSquare);
+        public static Layer Square = new Layer(Half.SquareHalf, Half.SquareHalf);
+        public static Layer WhiteSquare = new Layer(Half.WhiteSquareHalf, Half.WhiteSquareHalf);
+        public static Layer YellowSquare = new Layer(Half.YellowSquareHalf, Half.YellowSquareHalf);
+        public static Layer WhiteSquareL1 = new Layer(Half.WhiteSquareBlueHalf, Half.WhiteSquareGreenHalf);
+        public static Layer YellowSquareL1 = new Layer(Half.YellowSquareBlueHalf, Half.YellowSquareGreenHalf);
     }
 }
