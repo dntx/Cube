@@ -84,7 +84,7 @@ namespace sq1code
             return rotations;
         }
 
-        public Cube ApplyRotation(Rotation rotation) {
+        public Cube RotateBy(Rotation rotation) {
             Layer up = new Layer(rotation.Up.Left, rotation.Down.Right);
             Layer down = new Layer(rotation.Down.Left, rotation.Up.Right);
 

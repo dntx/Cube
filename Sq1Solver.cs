@@ -111,7 +111,7 @@ namespace sq1code
 
                 int nextDepth = state.Depth + 1;
                 foreach (Rotation rotation in focusRotations) {
-                    Cube nextCube = cube.ApplyRotation(rotation);
+                    Cube nextCube = cube.RotateBy(rotation);
                     totalEdgeCount++;
                     int nextCubeId = VisitCube(nextCube);
                     if (nextCubeId < seenStates.Count) {    
@@ -184,7 +184,8 @@ namespace sq1code
                 Rotation fromRotation = state.BestFrom.Value;
 
                 // todo: consider up/down reverse situation if necessary
-                Cube rotatedCube = (fromState != null)? fromState.Cube.ApplyRotation(fromRotation) : state.Cube;
+                // todo: consider change case 301-0101 to 0101-301
+                Cube rotatedCube = (fromState != null)? fromState.Cube.RotateBy(fromRotation) : state.Cube;
 
                 Console.WriteLine(
                     " ==> {0} | {1,2}({2,2}) | {3,2},{4,-2} | {5,2}-{6,-2},{7,2}-{8,-2}", 

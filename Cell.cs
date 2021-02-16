@@ -15,10 +15,10 @@ namespace sq1code
         public Cell(int cell, Type type) {
             switch (type) {
                 case Type.IgnoreColor:
-                    Value = GetDegree(cell) / 30;
+                    Value = GetDegree(cell) / 30 % 2;
                     break;
                 case Type.IgnoreSideColor:
-                    Value = GetDegree(cell) / 30 + GetColor(cell) * 8;
+                    Value = GetDegree(cell) / 30 % 2 + GetColor(cell) * 8;
                     break;
                 default:
                     Value = cell;
