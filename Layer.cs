@@ -41,28 +41,34 @@ namespace sq1code
             return false;
         }
 
-        private int GetColorSegmentCount() {
-            int minSegmentCount = Count;
-            for (int start = 0; start < Count; start++) {
-                int previousColor = -1;
-                int segmentCount = 0;
-                for (int i = 0; i < Count; i++) {
-                    int index = (start + i) % Count;
-                    int color = GetColor(this[index]);
-                    if (color != previousColor) {
-                        segmentCount++;
+        public bool IsColorGrouped() {
+            int primaryColor = GetPrimaryColor();
+
+            int firstPrimary = -1;
+            int lastPrimary = 0;
+            int primaryCount = 0;
+
+            int firstSecondary = -1;
+            int lastSecondary = 0;
+            int secondaryCount = 0;
+
+            for (int i = 0; i < Count; i++) {
+                if (GetColor(this[i]) == primaryColor) {
+                    primaryCount++;
+                    if (firstPrimary < 0) {
+                        firstPrimary = i;
                     }
-                    previousColor = color;
-                }
-                if (segmentCount < minSegmentCount) {
-                    minSegmentCount = segmentCount;
+                    lastPrimary = i + 1;
+                } else {
+                    secondaryCount++;
+                    if (firstSecondary < 0) {
+                        firstSecondary = i;
+                    }
+                    lastSecondary = i + 1;
                 }
             }
-            return minSegmentCount;
-        }
-
-        public bool IsColorAdjacent() {
-            return GetColorSegmentCount() == 2;
+            
+            return (lastPrimary - firstPrimary == primaryCount) || (lastSecondary - firstSecondary == secondaryCount);
         }
 
         public override string ToString()

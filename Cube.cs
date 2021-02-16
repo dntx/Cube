@@ -46,8 +46,8 @@ namespace sq1code
             return Up.IsHexagram() || Down.IsHexagram();
         }
 
-        public bool IsUpDwonSquareColorAdjacent() {
-            return Up.IsSquare() && Up.IsColorAdjacent() && Down.IsSquare() && Down.IsColorAdjacent();
+        public bool IsUpDwonSquareColorGrouped() {
+            return Up.IsSquare() && Up.IsColorGrouped() && Down.IsSquare() && Down.IsColorGrouped();
         }
 
         public bool IsUpDownSquareSameColor() {
@@ -91,7 +91,7 @@ namespace sq1code
         public string ToString(bool verbose)
         {
             if (Up.ColorCount == 2) {
-                return string.Format("{0},{1}({2})", Up.ToString(verbose), Down.ToString(verbose), Up.GetDiffColorCellCount());
+                return string.Format("{0},{1}({2})", Up.ToString(verbose), Down.ToString(verbose), Up.GetSecondaryColorCount());
             } else {
                 return string.Format("{0},{1}", Up.ToString(verbose), Down.ToString(verbose));
             }

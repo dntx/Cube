@@ -59,7 +59,7 @@ namespace sq1code
                     SolveSq1Cube(Cube.UnicolorCube, cube => cube.IsUpOrDownHexagram());
                     break;
                 case Goal.SolveUpDownColor:
-                    SolveSq1Cube(Cube.BicolorCube, cube => cube.IsUpDwonSquareColorAdjacent(), rotation => rotation.IsShapeIdentical());
+                    SolveSq1Cube(Cube.BicolorCube, cube => cube.IsUpDwonSquareColorGrouped(), rotation => rotation.IsShapeIdentical());
                     break;
                 case Goal.SolveL1L3Color:
                     //SolveSq1Cube(Cube.FullColorCube, cube => cube.IsUpDownSquareSameColor(), 4);

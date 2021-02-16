@@ -117,7 +117,44 @@ namespace sq1code
                 return 0;
             }
 
+            // 0,1,2,3,4,5,6,7: color=0, yellow
+            // 8,9,A,B,C,D,E,F: color=1, white
             return cell / 8;
+        }
+
+        protected int GetSideColor(int cell) {
+            // 7,0: color=0, red
+            // 1,2: color=1, blue
+            // 3,4: color=2, orange
+            // 5,6: color=3, green
+
+            // F,8: color=0, red
+            // 9,A: color=1, green
+            // B,C: color=2, orange
+            // D,E: color=3, blue
+            return (cell + 1) % 8 / 2;
+        }
+
+        protected int GetPrimaryColor() {
+            int color0Count = 0;
+            int color1Count = 0;
+            ForEach(cell => { 
+                if (GetColor(cell) == 0) {
+                    color0Count++;
+                } else {
+                    color1Count++;
+                }
+            });
+            return (color0Count >= color1Count)? 0 : 1;
+        }
+
+        public int GetSecondaryColorCount() {
+            int primaryColor = GetPrimaryColor();
+            return FindAll(cell => GetColor(cell) != primaryColor).Count;
+        }
+
+        public Cells GetShape() {
+            return new Cells(this, colorCount: 1);
         }
 
         public bool IsHexagram() {
@@ -134,22 +171,9 @@ namespace sq1code
             });
         }
 
-        public int GetDiffColorCellCount() {
-            int color0Count = 0;
-            ForEach(cell => { 
-                if (GetColor(cell) == 0) {
-                    color0Count++;
-                }
-            });
-            return Math.Min(color0Count, Count - color0Count);
-        }
-
         public bool IsSameColor() {
-            return GetDiffColorCellCount() == 0;
-        }
-
-        public Cells GetShape() {
-            return new Cells(this, colorCount: 1);
+            int color = GetColor(this[0]);
+            return TrueForAll(cell => GetColor(cell) == color);
         }
 
         public static bool operator == (Cells lhs, Cells rhs) {
