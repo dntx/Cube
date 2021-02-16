@@ -50,8 +50,16 @@ namespace sq1code
             return Up.IsSquare() && Up.IsColorGrouped() && Down.IsSquare() && Down.IsColorGrouped();
         }
 
+        public bool IsUpDwonColorGrouped() {
+            return Up.IsColorGrouped() && Down.IsColorGrouped();
+        }
+
         public bool IsUpDownColorSolved() {
             return Up == Layer.YellowSquare && Down == Layer.WhiteSquare;
+        }
+
+        public bool IsUpDown6030PairSolved() {
+            return Up.Is6030PairSolved() && Down.Is6030PairSolved();
         }
 
         public bool IsL1Solved() {

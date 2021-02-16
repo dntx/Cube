@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace sq1code
 {
     class Sq1Solver {
-        public enum Goal { SolveUpDownShape, SolveUpDownColor, SolveL3Color, SolveL1L3Color};
+        public enum Goal { SolveUpDownShape, SolveUpDownColor, Solve6030Pair, Solve6030Position};
 
         Dictionary<Cube, int> seenCubes = new Dictionary<Cube, int>();
         Dictionary<Layer, int> seenLayers = new Dictionary<Layer, int>();
@@ -61,13 +61,13 @@ namespace sq1code
                     SolveSq1Cube(Cube.UpDownShapeSolvedCube, cube => cube.IsUpOrDownHexagram());
                     break;
                 case Goal.SolveUpDownColor:
-                    SolveSq1Cube(Cube.UpDownColorSolvedCube, cube => cube.IsUpDwonSquareColorGrouped(), rotation => rotation.IsShapeIdentical());
+                    SolveSq1Cube(Cube.UpDownColorSolvedCube, cube => cube.IsUpDwonColorGrouped(), rotation => rotation.IsShapeIdentical());
                     break;
-                case Goal.SolveL1L3Color:
-                    SolveSq1Cube(Cube.L1L3SolvedCube, cube => cube.IsUpDownColorSolved(), 4);
+                case Goal.Solve6030Pair:
+                    SolveSq1Cube(Cube.L1L3SolvedCube, cube => !cube.IsUpDown6030PairSolved(), rotation => rotation.IsShapeIdentical(), 4);
                     break;
-                case Goal.SolveL3Color:
-                    SolveSq1Cube(Cube.L1L3SolvedCube, cube => cube.IsL1Solved(), rotation => rotation.Is3060PairLocked());
+                case Goal.Solve6030Position:
+                    SolveSq1Cube(Cube.L1L3SolvedCube, cube => cube.IsL1Solved(), rotation => rotation.Is6030Locked());
                     break;
             }
             Console.WriteLine("end");

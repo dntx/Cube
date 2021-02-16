@@ -9,6 +9,8 @@ namespace sq1code
         public int Degree { get; }
         public int Color { get; }
         public int SideColor { get; }
+        public int LeftSideColor { get; }
+        public int RightSideColor { get; }
 
         public Cell(int cell, Type type) {
             switch (type) {
@@ -26,6 +28,8 @@ namespace sq1code
             Degree = GetDegree(Value);
             Color = GetColor(Value);
             SideColor = GetSideColor(Value);
+            LeftSideColor = GetLeftSideColor(Value);
+            RightSideColor = GetRightSideColor(Value);
         }
 
         public override string ToString()
@@ -83,16 +87,54 @@ namespace sq1code
         }
 
         private static int GetSideColor(int cell) {
-            // 7,0: color=0, red
-            // 1,2: color=1, blue
-            // 3,4: color=2, orange
-            // 5,6: color=3, green
+            if (GetDegree(cell) != 30) {
+                return -1;
+            }
 
-            // F,8: color=0, red
-            // 9,A: color=1, green
-            // B,C: color=2, orange
-            // D,E: color=3, blue
-            return (cell + 1) % 8 / 2;
+            // 1: color=0, blue
+            // 3: color=1, orange
+            // 5: color=2, green
+            // 7: color=3, red
+
+            // 9: color=4, green
+            // B: color=5, orange
+            // D: color=6, blue
+            // F: color=7, red
+            return (cell - 1) % 8 / 2;
+        }
+
+        private static int GetLeftSideColor(int cell) {
+            if (GetDegree(cell) != 60) {
+                return -1;
+            }
+
+            // 0: color=0, blue
+            // 2: color=1, orange
+            // 4: color=2, green
+            // 6: color=3, red
+
+            // 8: color=0, green
+            // A: color=1, orange
+            // C: color=2, blue
+            // E: color=3, red
+            return cell % 8 / 2;
+        }
+
+        private static int GetRightSideColor(int cell) {
+            if (GetDegree(cell) != 60) {
+                return -1;
+            }
+
+            // 2: color=0, blue
+            // 4: color=1, orange
+            // 6: color=2, green
+            // 0: color=3, red
+
+            // A: color=0, green
+            // C: color=1, orange
+            // E: color=2, blue
+            // 8: color=3, red
+            return (cell + 6) % 8 / 2;
         }
     }
 }
