@@ -11,8 +11,12 @@ namespace sq1code
             Down = down;
         }
 
+        public Cube(Layer up, Layer down, Cell.Type type) 
+                : this(new Layer(up, type), new Layer(down, type)) {}
+
         public static bool operator == (Cube lhs, Cube rhs) {
             return (lhs.Up == rhs.Up && lhs.Down == rhs.Down) || (lhs.Up == rhs.Down && lhs.Down == rhs.Up);
+            //return lhs.Up == rhs.Up && lhs.Down == rhs.Down;
         }
 
         public static bool operator != (Cube lhs, Cube rhs) {
@@ -58,12 +62,12 @@ namespace sq1code
             return Up == Layer.YellowSquare && Down == Layer.WhiteSquare;
         }
 
-        public bool IsUpDown6030PairSolved() {
-            return Up.Is6030PairSolved() && Down.Is6030PairSolved();
+        public bool IsL3P625Solved() {
+            return Up.IsL3P625Solved() || Down.IsL3P625Solved();
         }
 
         public bool IsL1Solved() {
-            return Down == Layer.WhiteSquareL1;
+            return Down == Layer.WhiteL1;
         }
 
         public List<Rotation> GetRotations() {
@@ -107,7 +111,8 @@ namespace sq1code
 
         public static Cube UpDownShapeSolvedCube = new Cube(Layer.Square, Layer.Square);
         public static Cube UpDownColorSolvedCube = new Cube(Layer.YellowSquare, Layer.WhiteSquare);
-        public static Cube L1L3SolvedCube = new Cube(Layer.YellowSquareL3, Layer.WhiteSquareL1);
+        public static Cube L3P75SolvedCube = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsForL3P75);
+        public static Cube L1L3SolvedCube = new Cube(Layer.YellowL3, Layer.WhiteL1);
     }
 
 }

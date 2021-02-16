@@ -12,6 +12,9 @@ namespace sq1code
             Right = right;
         }
 
+        public Layer(Layer layer, Cell.Type type) 
+                : this(new Half(layer.Left, type), new Half(layer.Right, type)) {}
+
         private static Cells GetNormalizedCells(Cells cells) {
             Cells minCells = cells;
             for (int start = 1; start < cells.Count; start++) {
@@ -88,6 +91,15 @@ namespace sq1code
             return true;
         }
 
+        public bool IsL3P625Solved() {
+            for (int i = 0; i < 5; i++) {
+                if (this[i].Value != i) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         public override string ToString()
         {
             return ToString(verbose:false);
@@ -144,7 +156,7 @@ namespace sq1code
         public static Layer Square = new Layer(Half.SquareHalf, Half.SquareHalf);
         public static Layer WhiteSquare = new Layer(Half.WhiteSquareHalf, Half.WhiteSquareHalf);
         public static Layer YellowSquare = new Layer(Half.YellowSquareHalf, Half.YellowSquareHalf);
-        public static Layer WhiteSquareL1 = new Layer(Half.WhiteSquareBlueHalf, Half.WhiteSquareGreenHalf);
-        public static Layer YellowSquareL3 = new Layer(Half.YellowSquareBlueHalf, Half.YellowSquareGreenHalf);
+        public static Layer WhiteL1 = new Layer(Half.L1FirstHalf, Half.L1SecondHalf);
+        public static Layer YellowL3 = new Layer(Half.L3FirstHalf, Half.L3SecondHalf);
     }
 }

@@ -26,7 +26,7 @@ namespace sq1code
         public Cells(Cells cells) : this(cells, cells.Type) {}
 
         public Cells(Cells first, Cells second) 
-                : this(MergeList(first, second), MergeType(first.Type, second.Type)) {}
+                : this(MergeList(first, second), ResolveType(first.Type, second.Type)) {}
 
         private static List<Cell> GenerateCellList(List<int> cells, Cell.Type type) {
             List<Cell> result = new List<Cell>();
@@ -47,7 +47,7 @@ namespace sq1code
             return result;
         }
 
-        private static Cell.Type MergeType(Cell.Type type1, Cell.Type type2) {
+        private static Cell.Type ResolveType(Cell.Type type1, Cell.Type type2) {
             if (type1 != type2) {
                 throw new ArgumentException("type is not match");
             }
@@ -227,7 +227,7 @@ namespace sq1code
         public override int GetHashCode()
         {
             int code = 0;
-            ForEach(cell => code = code * 10 + cell.Value);
+            ForEach(cell => code = code * 16 + cell.Value);
             return code;
         }
     }

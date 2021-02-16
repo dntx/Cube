@@ -3,7 +3,7 @@ using System;
 namespace sq1code
 {
     class Cell {
-        public enum Type { AsIs, IgnoreColor, IgnoreSideColor };
+        public enum Type { AsIs, AsIsForL3P75, IgnoreColor, IgnoreSideColor };
 
         public int Value { get; }
         public int Degree { get; }
@@ -16,6 +16,9 @@ namespace sq1code
             switch (type) {
                 case Type.IgnoreColor:
                     Value = GetDegree(cell) / 30 % 2;
+                    break;
+                case Type.AsIsForL3P75:
+                    Value = (cell < 6)? cell : GetDegree(cell) / 30 % 2 + 8;
                     break;
                 case Type.IgnoreSideColor:
                     Value = GetDegree(cell) / 30 % 2 + GetColor(cell) * 8;

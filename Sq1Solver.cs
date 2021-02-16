@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace sq1code
 {
     class Sq1Solver {
-        public enum Goal { SolveUpDownShape, SolveUpDownColor, Solve6030Pair, Solve6030Position};
+        public enum Goal { SolveUpDownShape, SolveUpDownColor, SolveL3P75, Solve6030Position};
 
         Dictionary<Cube, int> seenCubes = new Dictionary<Cube, int>();
         Dictionary<Layer, int> seenLayers = new Dictionary<Layer, int>();
@@ -29,13 +29,17 @@ namespace sq1code
         }
 
         private bool VisitLayer(Layer layer) {
+            // no matter layer is seen or not, 
+            // we always need visit the halfs because 
+            // different divison may cause different half on the same layer
+            VisitHalf(layer.Left);
+            VisitHalf(layer.Right);
+
             if (seenLayers.ContainsKey(layer)) {
                 return false;
             }
 
             seenLayers.Add(layer, seenLayers.Count);
-            VisitHalf(layer.Left);
-            VisitHalf(layer.Right);
             return true;
         }
 
@@ -58,16 +62,30 @@ namespace sq1code
             switch (goal)
             {
                 case Goal.SolveUpDownShape:
-                    SolveSq1Cube(Cube.UpDownShapeSolvedCube, cube => cube.IsUpOrDownHexagram());
+                    SolveSq1Cube(
+                        Cube.UpDownShapeSolvedCube, 
+                        cube => cube.IsUpOrDownHexagram());
                     break;
+
                 case Goal.SolveUpDownColor:
-                    SolveSq1Cube(Cube.UpDownColorSolvedCube, cube => cube.IsUpDwonColorGrouped(), rotation => rotation.IsShapeIdentical());
+                    SolveSq1Cube(
+                        Cube.UpDownColorSolvedCube, 
+                        cube => cube.IsUpDwonColorGrouped(), 
+                        rotation => rotation.IsShapeIdentical());
                     break;
-                case Goal.Solve6030Pair:
-                    SolveSq1Cube(Cube.L1L3SolvedCube, cube => !cube.IsUpDown6030PairSolved(), rotation => rotation.IsShapeIdentical(), 4);
+
+                case Goal.SolveL3P75:
+                    SolveSq1Cube(
+                        Cube.L3P75SolvedCube, 
+                        cube => cube.IsL3P625Solved(), 
+                        rotation => rotation.IsShapeIdentical());
                     break;
+
                 case Goal.Solve6030Position:
-                    SolveSq1Cube(Cube.L1L3SolvedCube, cube => cube.IsL1Solved(), rotation => rotation.Is6030Locked());
+                    SolveSq1Cube(
+                        Cube.L1L3SolvedCube, 
+                        cube => cube.IsL1Solved(), 
+                        rotation => rotation.Is6030Locked());
                     break;
             }
             Console.WriteLine("end");
@@ -102,7 +120,7 @@ namespace sq1code
             do {
                 State state = openStates.Dequeue();
                 Cube cube = state.Cube;
-                if (state.Depth <= maxDepth && IsTargetCube(state.Cube)) {
+                if (state.Depth > 0 && IsTargetCube(state.Cube)) {
                     solutionCount++;
                 }
 
@@ -158,7 +176,7 @@ namespace sq1code
             Console.WriteLine(); 
 
             seenStates.ForEach(state => {
-                if (state.Depth <= maxDepth && IsTargetCube(state.Cube)) {
+                if (state.Depth > 0 && IsTargetCube(state.Cube)) {
                     VisitSolution(state, state.Cube);
                 }
             });
@@ -166,7 +184,7 @@ namespace sq1code
             seenStates.ForEach(state => state.CalculateBestFrom());
 
             seenStates.ForEach(state => {
-                if (state.Depth <= maxDepth && IsTargetCube(state.Cube)) {
+                if (state.Depth > 0 && IsTargetCube(state.Cube)) {
                     OutputState(state);
                     Console.WriteLine();
                 }
