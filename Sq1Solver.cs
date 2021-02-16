@@ -62,9 +62,10 @@ namespace sq1code
                     SolveSq1Cube(Cube.BicolorCube, cube => cube.IsUpDwonSquareColorGrouped(), rotation => rotation.IsShapeIdentical());
                     break;
                 case Goal.SolveL1L3Color:
-                    //SolveSq1Cube(Cube.FullColorCube, cube => cube.IsUpDownSquareSameColor(), 4);
-                    //SolveSq1Cube(Cube.FullColorCube, cube => cube.IsL1OrL3Solved(), rotation => rotation.IsShapeIdentical(), 6);
-                    SolveSq1Cube(Cube.FullColorCube, cube => cube.IsL1Solved(), rotation => rotation.IsDegree30First());
+                    SolveSq1Cube(Cube.FullColorCube, cube => cube.IsUpDownSquareSameColor(), 4);
+                    break;
+                case Goal.SolveL3Color:
+                    SolveSq1Cube(Cube.FullColorCube, cube => cube.IsL1Solved(), rotation => rotation.Is3060PairLocked());
                     break;
             }
             Console.WriteLine("end");
@@ -199,6 +200,6 @@ namespace sq1code
             } while (state != null);
         }
 
-        public enum Goal { SolveShape, SolveUpDownColor, SolveL1L3Color };
+        public enum Goal { SolveShape, SolveUpDownColor, SolveL3Color, SolveL1L3Color};
     }
 }

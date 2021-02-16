@@ -4,30 +4,18 @@ using System.Collections.Generic;
 
 namespace sq1code
 {
-    class Cells : List<int> {
+    class Cells : List<Cell> {
         public int ColorCount { get; }
 
-        public Cells(List<int> cells, int colorCount) : base(cells) {
-            if (colorCount != 1 && colorCount != 2 && colorCount != 6) {
-                throw new ArgumentException("color count should be 1, 2, or 6");
-            }
+        public Cells(List<int> cells, int colorCount) : base(GenerateCellList(cells, colorCount)) {
             ColorCount = colorCount;
-
-            if (colorCount == 1 || colorCount == 2) {
-                for (int i = 0; i < Count; i++) {
-                    int cell = this[i];
-                    int degree = GetDegree(cell);
-                    int color = GetColor(cell);
-                    if (colorCount == 1) {
-                        this[i] = degree/30;
-                    } else if (colorCount == 2) {
-                        this[i] = degree/30 + color*8;
-                    }
-                }
-            }
         }
 
-        public Cells(List<int> first, List<int> second, int colorCount) 
+        public Cells(List<Cell> cells, int colorCount) 
+                : this(GenerateIntList(cells), colorCount) {
+        }
+
+        public Cells(List<Cell> first, List<Cell> second, int colorCount) 
                 : this(MergeList(first, second), colorCount) {}
         
 
@@ -36,8 +24,20 @@ namespace sq1code
         public Cells(Cells first, Cells second) 
                 : this(MergeList(first, second), MergeColorCount(first.ColorCount, second.ColorCount)) {}
 
-        private static List<int> MergeList(List<int> first, List<int> second) {
+        private static List<Cell> GenerateCellList(List<int> cells, int colorCount) {
+            List<Cell> result = new List<Cell>();
+            cells.ForEach(cell => result.Add(new Cell(cell, colorCount)));
+            return result;
+        }
+
+        private static List<int> GenerateIntList(List<Cell> cells) {
             List<int> result = new List<int>();
+            cells.ForEach(cell => result.Add(cell.Value));
+            return result;
+        }
+
+        private static List<Cell> MergeList(List<Cell> first, List<Cell> second) {
+            List<Cell> result = new List<Cell>();
             result.AddRange(first);
             result.AddRange(second);
             return result;
@@ -60,7 +60,7 @@ namespace sq1code
             int countOf30 = 0;
             int degreeSum = 0;
             ForEach(cell => {
-                int degree = GetDegree(cell);
+                int degree = cell.Degree;
                 if (degree == 30) {
                     degreeSum += degree;
                     countOf30++;
@@ -93,8 +93,8 @@ namespace sq1code
             StringBuilder sb = new StringBuilder();
             int degreeSum = 0;
             ForEach(cell => {
-                int degree = GetDegree(cell);
-                sb.AppendFormat("{0:X}", cell);
+                int degree = cell.Degree;
+                sb.Append(cell);
                 degreeSum += degree;
                 if (degreeSum == degreeBar) {
                     sb.Append(separator);
@@ -108,38 +108,11 @@ namespace sq1code
             return ToString(0, separator: "");
         }
 
-        public static int GetDegree(int cell) {
-            return (cell % 2 == 1) ? 30 : 60;
-        }
-
-        protected int GetColor(int cell) {
-            if (ColorCount == 1) {
-                return 0;
-            }
-
-            // 0,1,2,3,4,5,6,7: color=0, yellow
-            // 8,9,A,B,C,D,E,F: color=1, white
-            return cell / 8;
-        }
-
-        protected int GetSideColor(int cell) {
-            // 7,0: color=0, red
-            // 1,2: color=1, blue
-            // 3,4: color=2, orange
-            // 5,6: color=3, green
-
-            // F,8: color=0, red
-            // 9,A: color=1, green
-            // B,C: color=2, orange
-            // D,E: color=3, blue
-            return (cell + 1) % 8 / 2;
-        }
-
         protected int GetPrimaryColor() {
             int color0Count = 0;
             int color1Count = 0;
             ForEach(cell => { 
-                if (GetColor(cell) == 0) {
+                if (cell.Color == 0) {
                     color0Count++;
                 } else {
                     color1Count++;
@@ -150,7 +123,7 @@ namespace sq1code
 
         public int GetSecondaryColorCount() {
             int primaryColor = GetPrimaryColor();
-            return FindAll(cell => GetColor(cell) != primaryColor).Count;
+            return FindAll(cell => cell.Color != primaryColor).Count;
         }
 
         public Cells GetShape() {
@@ -158,13 +131,13 @@ namespace sq1code
         }
 
         public bool IsHexagram() {
-            return TrueForAll(cell => GetDegree(cell) == 60);
+            return TrueForAll(cell => cell.Degree == 60);
         }
 
         public bool IsSquare() {
             int previousDegree = 0;
             return TrueForAll(cell => {
-                int thisDegree = GetDegree(cell);
+                int thisDegree = cell.Degree;
                 bool isChanged = (thisDegree != previousDegree);
                 previousDegree = thisDegree;
                 return isChanged;
@@ -172,8 +145,8 @@ namespace sq1code
         }
 
         public bool IsSameColor() {
-            int color = GetColor(this[0]);
-            return TrueForAll(cell => GetColor(cell) == color);
+            int color = this[0].Color;
+            return TrueForAll(cell => cell.Color == color);
         }
 
         public static bool operator == (Cells lhs, Cells rhs) {
@@ -255,7 +228,7 @@ namespace sq1code
         public override int GetHashCode()
         {
             int code = 0;
-            ForEach(cell => code = code * 10 + cell);
+            ForEach(cell => code = code * 10 + cell.Value);
             return code;
         }
     }

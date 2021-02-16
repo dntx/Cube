@@ -53,7 +53,7 @@ namespace sq1code
             int secondaryCount = 0;
 
             for (int i = 0; i < Count; i++) {
-                if (GetColor(this[i]) == primaryColor) {
+                if (this[i].Color == primaryColor) {
                     primaryCount++;
                     if (firstPrimary < 0) {
                         firstPrimary = i;
@@ -99,7 +99,7 @@ namespace sq1code
                 int degreeSum = 0;
                 int count = 0;
                 for (int i = start; i < Count && degreeSum < 180; i++) {
-                    degreeSum += GetDegree(this[i]);
+                    degreeSum += this[i].Degree;
                     count++;
                 }
 

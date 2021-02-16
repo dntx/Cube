@@ -19,8 +19,22 @@ namespace sq1code
             return Up.Left.GetShape() == Down.Left.GetShape() || Up.Right.GetShape() == Down.Right.GetShape();
         }
 
-        public bool IsDegree30First() {
-            return Cells.GetDegree(Up.Left[0]) == 30 && Cells.GetDegree(Down.Left[0]) == 30;
+        public bool Is3060PairLocked() {
+            if (Up.Right[Up.Right.Count - 1].Degree == 30 && Up.Left[0].Degree == 60) {
+                return false;
+            }
+            if (Up.Left[Up.Left.Count - 1].Degree == 30 && Up.Right[0].Degree == 60) {
+                return false;
+            }
+
+            if (Down.Right[Down.Right.Count - 1].Degree == 30 && Down.Left[0].Degree == 60) {
+                return false;
+            }
+            if (Down.Left[Down.Left.Count - 1].Degree == 30 && Down.Right[0].Degree == 60) {
+                return false;
+            }
+            
+            return true;
         }
 
         public override string ToString() {

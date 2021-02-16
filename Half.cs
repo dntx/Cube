@@ -5,7 +5,8 @@ namespace sq1code
 {
     class Half : Cells {
         public Half(List<int> cells, int colorCount) : base(cells, colorCount) {}
-        public Half(List<int> first, List<int> second, int colorCount) : base(first, second, colorCount) {}
+        public Half(List<Cell> cells, int colorCount) : base(cells, colorCount) {}
+        public Half(List<Cell> first, List<Cell> second, int colorCount) : base(first, second, colorCount) {}
 
         public static int HashCodeUpperBound = 16^6;
 
