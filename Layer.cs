@@ -15,7 +15,7 @@ namespace sq1code
         private static Cells GetNormalizedCells(Cells cells) {
             Cells minCells = cells;
             for (int start = 1; start < cells.Count; start++) {
-                Cells shiftedCells = new Cells(cells.GetRange(start, cells.Count - start), cells.GetRange(0, start), cells.ColorCount);
+                Cells shiftedCells = new Cells(cells.GetRange(start, cells.Count - start), cells.GetRange(0, start), cells.Type);
                 if (shiftedCells < minCells) {
                     minCells = shiftedCells;
                 }
@@ -105,8 +105,8 @@ namespace sq1code
 
                 if (degreeSum == 180) {
                     int end = start + count;
-                    Half first = new Half(GetRange(start, count), ColorCount);
-                    Half second = new Half(GetRange(end, Count - end), GetRange(0, start), ColorCount);
+                    Half first = new Half(GetRange(start, count), Type);
+                    Half second = new Half(GetRange(end, Count - end), GetRange(0, start), Type);
 
                     if (first > second) {
                         Half temp = first;

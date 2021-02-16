@@ -50,8 +50,8 @@ namespace sq1code
             return Up.IsSquare() && Up.IsColorGrouped() && Down.IsSquare() && Down.IsColorGrouped();
         }
 
-        public bool IsUpDownSquareSameColor() {
-            return Up.IsSquare() && Up.IsSameColor() && Down.IsSquare() && Down.IsSameColor();
+        public bool IsUpDownColorSolved() {
+            return Up == Layer.YellowSquare && Down == Layer.WhiteSquare;
         }
 
         public bool IsL1Solved() {
@@ -90,16 +90,16 @@ namespace sq1code
 
         public string ToString(bool verbose)
         {
-            if (Up.ColorCount == 2) {
+            if (Up.Type == Cell.Type.IgnoreSideColor) {
                 return string.Format("{0},{1}({2})", Up.ToString(verbose), Down.ToString(verbose), Up.GetSecondaryColorCount());
             } else {
                 return string.Format("{0},{1}", Up.ToString(verbose), Down.ToString(verbose));
             }
         }
 
-        public static Cube UnicolorCube = new Cube(Layer.Square, Layer.Square);
-        public static Cube BicolorCube = new Cube(Layer.YellowSquare, Layer.WhiteSquare);
-        public static Cube FullColorCube = new Cube(Layer.YellowSquareL3, Layer.WhiteSquareL1);
+        public static Cube UpDownShapeSolvedCube = new Cube(Layer.Square, Layer.Square);
+        public static Cube UpDownColorSolvedCube = new Cube(Layer.YellowSquare, Layer.WhiteSquare);
+        public static Cube L1L3SolvedCube = new Cube(Layer.YellowSquareL3, Layer.WhiteSquareL1);
     }
 
 }

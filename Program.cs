@@ -7,7 +7,7 @@ namespace sq1code
     {
         static void Main(string[] args)
         {
-            //new Sq1Solver().Solve(Sq1Solver.Goal.SolveShape);
+            //new Sq1Solver().Solve(Sq1Solver.Goal.SolveUpDownShape);
             //new Sq1Solver().Solve(Sq1Solver.Goal.SolveUpDownColor);
             new Sq1Solver().Solve(Sq1Solver.Goal.SolveL3Color);
         }

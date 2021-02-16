@@ -4,6 +4,8 @@ using System.Collections.Generic;
 namespace sq1code
 {
     class Sq1Solver {
+        public enum Goal { SolveUpDownShape, SolveUpDownColor, SolveL3Color, SolveL1L3Color};
+
         Dictionary<Cube, int> seenCubes = new Dictionary<Cube, int>();
         Dictionary<Layer, int> seenLayers = new Dictionary<Layer, int>();
         Dictionary<Half, int> seenHalfs = new Dictionary<Half, int>();
@@ -55,17 +57,17 @@ namespace sq1code
             Console.WriteLine("start");
             switch (goal)
             {
-                case Goal.SolveShape:
-                    SolveSq1Cube(Cube.UnicolorCube, cube => cube.IsUpOrDownHexagram());
+                case Goal.SolveUpDownShape:
+                    SolveSq1Cube(Cube.UpDownShapeSolvedCube, cube => cube.IsUpOrDownHexagram());
                     break;
                 case Goal.SolveUpDownColor:
-                    SolveSq1Cube(Cube.BicolorCube, cube => cube.IsUpDwonSquareColorGrouped(), rotation => rotation.IsShapeIdentical());
+                    SolveSq1Cube(Cube.UpDownColorSolvedCube, cube => cube.IsUpDwonSquareColorGrouped(), rotation => rotation.IsShapeIdentical());
                     break;
                 case Goal.SolveL1L3Color:
-                    SolveSq1Cube(Cube.FullColorCube, cube => cube.IsUpDownSquareSameColor(), 4);
+                    SolveSq1Cube(Cube.L1L3SolvedCube, cube => cube.IsUpDownColorSolved(), 4);
                     break;
                 case Goal.SolveL3Color:
-                    SolveSq1Cube(Cube.FullColorCube, cube => cube.IsL1Solved(), rotation => rotation.Is3060PairLocked());
+                    SolveSq1Cube(Cube.L1L3SolvedCube, cube => cube.IsL1Solved(), rotation => rotation.Is3060PairLocked());
                     break;
             }
             Console.WriteLine("end");
@@ -199,7 +201,5 @@ namespace sq1code
                 state = fromState;
             } while (state != null);
         }
-
-        public enum Goal { SolveShape, SolveUpDownColor, SolveL3Color, SolveL1L3Color};
-    }
+   }
 }

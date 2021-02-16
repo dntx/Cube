@@ -5,28 +5,32 @@ using System.Collections.Generic;
 namespace sq1code
 {
     class Cells : List<Cell> {
-        public int ColorCount { get; }
+        public Cell.Type Type { get; }
 
-        public Cells(List<int> cells, int colorCount) : base(GenerateCellList(cells, colorCount)) {
-            ColorCount = colorCount;
+        public Cells(List<int> cells, Cell.Type type) : base(GenerateCellList(cells, type)) {
+            Type = type;
         }
 
-        public Cells(List<Cell> cells, int colorCount) 
-                : this(GenerateIntList(cells), colorCount) {
+        public Cells(List<int> cells) 
+                : this(cells, Cell.Type.AsIs) {
         }
 
-        public Cells(List<Cell> first, List<Cell> second, int colorCount) 
-                : this(MergeList(first, second), colorCount) {}
+        public Cells(List<Cell> cells, Cell.Type type) 
+                : this(GenerateIntList(cells), type) {
+        }
+
+        public Cells(List<Cell> first, List<Cell> second, Cell.Type type) 
+                : this(MergeList(first, second), type) {}
         
 
-        public Cells(Cells cells) : this(cells, cells.ColorCount) {}
+        public Cells(Cells cells) : this(cells, cells.Type) {}
 
         public Cells(Cells first, Cells second) 
-                : this(MergeList(first, second), MergeColorCount(first.ColorCount, second.ColorCount)) {}
+                : this(MergeList(first, second), MergeType(first.Type, second.Type)) {}
 
-        private static List<Cell> GenerateCellList(List<int> cells, int colorCount) {
+        private static List<Cell> GenerateCellList(List<int> cells, Cell.Type type) {
             List<Cell> result = new List<Cell>();
-            cells.ForEach(cell => result.Add(new Cell(cell, colorCount)));
+            cells.ForEach(cell => result.Add(new Cell(cell, type)));
             return result;
         }
 
@@ -43,19 +47,19 @@ namespace sq1code
             return result;
         }
 
-        private static int MergeColorCount(int colorCount1, int colorCount2) {
-            if (colorCount1 != colorCount2) {
-                throw new ArgumentException("color count is not match");
+        private static Cell.Type MergeType(Cell.Type type1, Cell.Type type2) {
+            if (type1 != type2) {
+                throw new ArgumentException("type is not match");
             }
 
-            return colorCount1;
+            return type1;
         }
 
         protected string ToString(int degreeBar, string separator) {
-            return (ColorCount == 1)? ToUnicolorString(degreeBar, separator) : ToLiteralString(degreeBar, separator);
+            return (Type == Cell.Type.IgnoreColor)? ToColorlessString(degreeBar, separator) : ToLiteralString(degreeBar, separator);
         }
 
-        private string ToUnicolorString(int degreeBar, string separator) {
+        private string ToColorlessString(int degreeBar, string separator) {
             StringBuilder sb = new StringBuilder();
             int countOf30 = 0;
             int degreeSum = 0;
@@ -127,7 +131,7 @@ namespace sq1code
         }
 
         public Cells GetShape() {
-            return new Cells(this, colorCount: 1);
+            return new Cells(this, Cell.Type.IgnoreColor);
         }
 
         public bool IsHexagram() {
@@ -142,11 +146,6 @@ namespace sq1code
                 previousDegree = thisDegree;
                 return isChanged;
             });
-        }
-
-        public bool IsSameColor() {
-            int color = this[0].Color;
-            return TrueForAll(cell => cell.Color == color);
         }
 
         public static bool operator == (Cells lhs, Cells rhs) {

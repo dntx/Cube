@@ -3,24 +3,26 @@ using System;
 namespace sq1code
 {
     class Cell {
+        public enum Type { AsIs, IgnoreColor, IgnoreSideColor };
+
         public int Value { get; }
         public int Degree { get; }
         public int Color { get; }
         public int SideColor { get; }
 
-        public Cell(int cell, int colorCount) {
-            if (colorCount != 1 && colorCount != 2 && colorCount != 6) {
-                throw new ArgumentException("color count should be 1, 2, or 6");
+        public Cell(int cell, Type type) {
+            switch (type) {
+                case Type.IgnoreColor:
+                    Value = GetDegree(cell) / 30;
+                    break;
+                case Type.IgnoreSideColor:
+                    Value = GetDegree(cell) / 30 + GetColor(cell) * 8;
+                    break;
+                default:
+                    Value = cell;
+                    break;
             }
-
-            if (colorCount == 1) {
-                Value = GetDegree(cell) / 30;
-            } else if (colorCount == 2) {
-                Value = GetDegree(cell) / 30 + GetColor(cell) * 8;
-            } else {
-                Value = cell;
-            }
-
+            
             Degree = GetDegree(Value);
             Color = GetColor(Value);
             SideColor = GetSideColor(Value);
