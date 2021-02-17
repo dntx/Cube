@@ -3,11 +3,12 @@ using System;
 namespace sq1code
 {
     class Cell {
-        public enum Type { AsIs, AsIsForL3P75, IgnoreColor, IgnoreSideColor };
+        public enum Type { AsIs, AsIsForL3P75, AsIsForL3, IgnoreColor, IgnoreSideColor };
 
         public int Value { get; }
         public int Degree { get; }
         public int Color { get; }
+        public int Layer { get; }
         public int SideColor { get; }
         public int LeftSideColor { get; }
         public int RightSideColor { get; }
@@ -20,6 +21,9 @@ namespace sq1code
                 case Type.AsIsForL3P75:
                     Value = (cell < 6)? cell : GetDegree(cell) / 30 % 2 + 8;
                     break;
+                case Type.AsIsForL3:
+                    Value = (cell < 8)? cell : GetDegree(cell) / 30 % 2 + 8;
+                    break;
                 case Type.IgnoreSideColor:
                     Value = GetDegree(cell) / 30 % 2 + GetColor(cell) * 8;
                     break;
@@ -30,6 +34,7 @@ namespace sq1code
             
             Degree = GetDegree(Value);
             Color = GetColor(Value);
+            Layer = (Color == 0)? 3 : 1;
             SideColor = GetSideColor(Value);
             LeftSideColor = GetLeftSideColor(Value);
             RightSideColor = GetRightSideColor(Value);

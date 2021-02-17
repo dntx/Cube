@@ -4,7 +4,13 @@ using System.Collections.Generic;
 namespace sq1code
 {
     class Sq1Solver {
-        public enum Goal { SolveUpDownShape, SolveUpDownColor, SolveL3P75, Solve6030Position};
+        public enum Goal { 
+            SolveUpDownShape, 
+            SolveL3P75Quaters,
+            SolveL3Quaters,
+            SolveQuaterPosition,
+            SolveUpDownColor
+        };
 
         Dictionary<Cube, int> seenCubes = new Dictionary<Cube, int>();
         Dictionary<Layer, int> seenLayers = new Dictionary<Layer, int>();
@@ -67,116 +73,126 @@ namespace sq1code
                         cube => cube.IsUpOrDownHexagram());
                     break;
 
+                case Goal.SolveL3P75Quaters:
+                    SolveSq1Cube(
+                        Cube.L3P75SolvedCube, 
+                        cube => cube.IsL3QuatersSolved(2, 1), 
+                        rotation => rotation.IsShapeIdentical());
+                    break;
+
+                case Goal.SolveL3Quaters:
+                    SolveSq1Cube(
+                        Cube.L3SolvedCube,
+                        cube => cube.IsL3QuatersSolved(3, 1),
+                        rotation => rotation.IsShapeIdentical(),
+                        firstSolutionOnly: true);
+                    break;
+
+                case Goal.SolveQuaterPosition:
+                    SolveSq1Cube(
+                        Cube.L1L3SolvedCube, 
+                        cube => cube.IsL1Solved(), 
+                        rotation => rotation.IsQuaterLocked());
+                    break;
+
                 case Goal.SolveUpDownColor:
                     SolveSq1Cube(
                         Cube.UpDownColorSolvedCube, 
                         cube => cube.IsUpDwonColorGrouped(), 
                         rotation => rotation.IsShapeIdentical());
                     break;
-
-                case Goal.SolveL3P75:
-                    SolveSq1Cube(
-                        Cube.L3P75SolvedCube, 
-                        cube => cube.IsL3P625Solved(), 
-                        rotation => rotation.IsShapeIdentical());
-                    break;
-
-                case Goal.Solve6030Position:
-                    SolveSq1Cube(
-                        Cube.L1L3SolvedCube, 
-                        cube => cube.IsL1Solved(), 
-                        rotation => rotation.Is6030Locked());
-                    break;
             }
             Console.WriteLine("end");
         }
 
         private void SolveSq1Cube(Cube startCube, Predicate<Cube> IsTargetCube) {
-            SolveSq1Cube(startCube, IsTargetCube, maxDepth: int.MaxValue);
+            SolveSq1Cube(startCube, IsTargetCube, firstSolutionOnly: false);
         }
 
-        private void SolveSq1Cube(Cube startCube, Predicate<Cube> IsTargetCube, int maxDepth) {
-            SolveSq1Cube(startCube, IsTargetCube, IsFocusRotation: rotation => true, maxDepth);
+        private void SolveSq1Cube(Cube startCube, Predicate<Cube> IsTargetCube, bool firstSolutionOnly) {
+            SolveSq1Cube(startCube, IsTargetCube, IsFocusRotation: rotation => true, firstSolutionOnly);
         }
         
         private void SolveSq1Cube(Cube startCube, Predicate<Cube> IsTargetCube, Predicate<Rotation> IsFocusRotation) {
-            SolveSq1Cube(startCube, IsTargetCube, IsFocusRotation, maxDepth: int.MaxValue);
+            SolveSq1Cube(startCube, IsTargetCube, IsFocusRotation, firstSolutionOnly: false);
         }
         
-        private void SolveSq1Cube(Cube startCube, Predicate<Cube> IsTargetCube, Predicate<Rotation> IsFocusRotation, int maxDepth) {
-            VisitCube(startCube);
+        private void SolveSq1Cube(Cube startCube, Predicate<Cube> IsTargetCube, Predicate<Rotation> IsFocusRotation, bool firstSolutionOnly) {
+            Predicate<State> IsTargetState = (state => state.Depth > 0 && IsTargetCube(state.Cube));
 
             int closedStateCount = 0;
-            int ignoreStateCount = 0;
             int solutionCount = 0;
+            int minSolutionDepth = int.MaxValue;
+
             int totalEdgeCount = 0;
             int netEdgeCount = 0;
             Queue<State> openStates = new Queue<State>();
             List<State> seenStates = new List<State>();
 
+            VisitCube(startCube);
             State startState = new State(startCube, 0);
             openStates.Enqueue(startState);
             seenStates.Add(startState);
             do {
                 State state = openStates.Dequeue();
                 Cube cube = state.Cube;
-                if (state.Depth > 0 && IsTargetCube(state.Cube)) {
-                    solutionCount++;
-                }
+                if (!firstSolutionOnly || state.Depth < minSolutionDepth) {
+                    List<Rotation> rotations = cube.GetRotations();
+                    List<Rotation> focusRotations = rotations.FindAll(IsFocusRotation);
 
-                List<Rotation> rotations = cube.GetRotations();
-                List<Rotation> focusRotations = rotations.FindAll(IsFocusRotation);
-
-                int nextDepth = state.Depth + 1;
-                foreach (Rotation rotation in focusRotations) {
-                    Cube nextCube = cube.RotateBy(rotation);
-                    totalEdgeCount++;
-                    int nextCubeId = VisitCube(nextCube);
-                    if (nextCubeId < seenStates.Count) {    
-                        // existing cube
-                        State existingState = seenStates[nextCubeId];
-                        if (nextDepth < existingState.Depth) {
-                            // a better path found, should not happen as we are using BFS
-                            throw new Exception("error: a better path found in BFS");
-                        } else if (nextDepth == existingState.Depth) {
-                            // an alternative path may found, update if necessary
-                            if (existingState.Froms.TrueForAll(from => from.Key != state)) {
-                                existingState.AddFrom(state, rotation);
-                                netEdgeCount++;
+                    int nextDepth = state.Depth + 1;
+                    foreach (Rotation rotation in focusRotations) {
+                        Cube nextCube = cube.RotateBy(rotation);
+                        totalEdgeCount++;
+                        int nextCubeId = VisitCube(nextCube);
+                        if (nextCubeId < seenStates.Count) {    
+                            // existing cube
+                            State existingState = seenStates[nextCubeId];
+                            if (nextDepth < existingState.Depth) {
+                                // a better path found, should not happen as we are using BFS
+                                throw new Exception("error: a better path found in BFS");
+                            } else if (nextDepth == existingState.Depth) {
+                                // an alternative path may found, update if necessary
+                                if (existingState.Froms.TrueForAll(from => from.Key != state)) {
+                                    existingState.AddFrom(state, rotation);
+                                    netEdgeCount++;
+                                }
                             }
-                        }
-                    } else {    
-                        // new cube
-                        State nextState = new State(nextCube, nextCubeId, state, rotation);
-                        netEdgeCount++;
-                        if (nextState.Depth <= maxDepth) {
+                        } else {    
+                            // new cube
+                            State nextState = new State(nextCube, nextCubeId, state, rotation);
+                            netEdgeCount++;
                             openStates.Enqueue(nextState);
-                        } else {
-                            ignoreStateCount++;
+
+                            if (IsTargetState(nextState)) {
+                                solutionCount++;
+                                if (nextState.Depth < minSolutionDepth) {
+                                    minSolutionDepth = nextState.Depth;
+                                }
+                            }
+                            seenStates.Add(nextState);
                         }
-                        seenStates.Add(nextState);
                     }
                 }
+
                 closedStateCount++;
                 if (closedStateCount == 1 || closedStateCount % 1000 == 0 || openStates.Count == 0) {
-                    int totalCount = closedStateCount + openStates.Count + ignoreStateCount;
+                    int totalCount = closedStateCount + openStates.Count;
                     Console.WriteLine(
-                        "depth: {0}, solution: {1}, closed: {2}({3:p}), open: {4}({5:p}), ignored: {6}({7:p})", 
+                        "depth: {0}, solution: {1}, closed: {2}({3:p}), open: {4}({5:p})", 
                         state.Depth, 
                         solutionCount,
                         closedStateCount, 
                         (float)closedStateCount / totalCount,
                         openStates.Count, 
-                        (float)openStates.Count / totalCount,
-                        ignoreStateCount,
-                        (float)ignoreStateCount / totalCount
+                        (float)openStates.Count / totalCount
                         );
                 }
             } while (openStates.Count > 0);
-            Console.WriteLine(); 
+            Console.WriteLine();
 
             seenStates.ForEach(state => {
-                if (state.Depth > 0 && IsTargetCube(state.Cube)) {
+                if (IsTargetState(state)) {
                     VisitSolution(state, state.Cube);
                 }
             });
@@ -184,7 +200,7 @@ namespace sq1code
             seenStates.ForEach(state => state.CalculateBestFrom());
 
             seenStates.ForEach(state => {
-                if (state.Depth > 0 && IsTargetCube(state.Cube)) {
+                if (IsTargetState(state)) {
                     OutputState(state);
                     Console.WriteLine();
                 }

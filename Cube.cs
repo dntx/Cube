@@ -62,8 +62,8 @@ namespace sq1code
             return Up == Layer.YellowSquare && Down == Layer.WhiteSquare;
         }
 
-        public bool IsL3P625Solved() {
-            return Up.IsL3P625Solved() || Down.IsL3P625Solved();
+        public bool IsL3QuatersSolved(int minSolvedCount, int minUnsolvedCount) {
+            return Up.IsL3QuatersSolved(minSolvedCount, minUnsolvedCount) || Down.IsL3QuatersSolved(minSolvedCount, minUnsolvedCount);
         }
 
         public bool IsL1Solved() {
@@ -112,6 +112,7 @@ namespace sq1code
         public static Cube UpDownShapeSolvedCube = new Cube(Layer.Square, Layer.Square);
         public static Cube UpDownColorSolvedCube = new Cube(Layer.YellowSquare, Layer.WhiteSquare);
         public static Cube L3P75SolvedCube = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsForL3P75);
+        public static Cube L3SolvedCube = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsForL3);
         public static Cube L1L3SolvedCube = new Cube(Layer.YellowL3, Layer.WhiteL1);
     }
 

@@ -74,7 +74,7 @@ namespace sq1code
             return (lastPrimary - firstPrimary == primaryCount) || (lastSecondary - firstSecondary == secondaryCount);
         }
 
-        public bool Is6030PairSolved() {
+        public bool IsQuaterSolved() {
             if (!IsSquare()) {
                 return false;
             }
@@ -83,7 +83,7 @@ namespace sq1code
             for (int i = start; i < Count; i += 2) {
                 Cell cell60 = this[i];
                 Cell cell30 = this[(i + 1) % Count];
-                if (cell60.LeftSideColor != cell30.SideColor) {
+                if (cell60.Layer != cell30.Layer || cell60.LeftSideColor != cell30.SideColor) {
                     return false;
                 }
             }
@@ -91,13 +91,34 @@ namespace sq1code
             return true;
         }
 
-        public bool IsL3P625Solved() {
-            for (int i = 0; i < 5; i++) {
-                if (this[i].Value != i) {
-                    return false;
+        public bool IsL3QuatersSolved(int minSolvedCount, int minUnsolvedCount) {
+            if (!IsSquare()) {
+                return false;
+            }
+
+            for (int start = 0; start < Count; start++) {
+                int solvedCount = 0;
+                int unsolvedCount = 0;
+                for (int i = 0; i < Count; i += 2) {
+                    Cell cell0 = this[(i + start) % Count];
+                    Cell cell1 = this[(i + start + 1) % Count];
+                    if (cell0.Layer != 3 || cell0.Degree != 60) {
+                        break;
+                    }
+
+                    if (cell1.Layer == 3 && cell1.Degree == 30 && cell1.SideColor == cell0.LeftSideColor) {
+                        solvedCount++;
+                    } else {
+                        unsolvedCount++;
+                        break;
+                    }
+                }
+                if (solvedCount >= minSolvedCount && unsolvedCount >= minUnsolvedCount) {
+                    return true;
                 }
             }
-            return true;
+
+            return false;
         }
 
         public override string ToString()
