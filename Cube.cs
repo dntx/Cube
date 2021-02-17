@@ -62,8 +62,8 @@ namespace sq1code
             return Up == Layer.YellowSquare && Down == Layer.WhiteSquare;
         }
 
-        public bool IsL3QuatersSolved(int minSolvedCount, int minUnsolvedCount) {
-            return Up.IsL3QuatersSolved(minSolvedCount, minUnsolvedCount) || Down.IsL3QuatersSolved(minSolvedCount, minUnsolvedCount);
+        public bool IsL3QuartersSolved(int minSolvedCount, int minUnsolvedCount) {
+            return Up.IsL3QuartersSolved(minSolvedCount, minUnsolvedCount) || Down.IsL3QuartersSolved(minSolvedCount, minUnsolvedCount);
         }
 
         public bool IsL1Solved() {

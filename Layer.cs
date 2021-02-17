@@ -74,7 +74,7 @@ namespace sq1code
             return (lastPrimary - firstPrimary == primaryCount) || (lastSecondary - firstSecondary == secondaryCount);
         }
 
-        public bool IsQuaterSolved() {
+        public bool IsQuarterSolved() {
             if (!IsSquare()) {
                 return false;
             }
@@ -91,7 +91,7 @@ namespace sq1code
             return true;
         }
 
-        public bool IsL3QuatersSolved(int minSolvedCount, int minUnsolvedCount) {
+        public bool IsL3QuartersSolved(int minSolvedCount, int minUnsolvedCount) {
             if (!IsSquare()) {
                 return false;
             }

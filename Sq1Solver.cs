@@ -6,9 +6,9 @@ namespace sq1code
     class Sq1Solver {
         public enum Goal { 
             SolveUpDownShape, 
-            SolveL3P75Quaters,
-            SolveL3Quaters,
-            SolveQuaterPosition,
+            SolveL3P75Quarters,
+            SolveL3Quarters,
+            SolveQuarterPosition,
             SolveUpDownColor
         };
 
@@ -73,26 +73,26 @@ namespace sq1code
                         cube => cube.IsUpOrDownHexagram());
                     break;
 
-                case Goal.SolveL3P75Quaters:
+                case Goal.SolveL3P75Quarters:
                     SolveSq1Cube(
                         Cube.L3P75SolvedCube, 
-                        cube => cube.IsL3QuatersSolved(2, 1), 
+                        cube => cube.IsL3QuartersSolved(2, 1), 
                         rotation => rotation.IsShapeIdentical());
                     break;
 
-                case Goal.SolveL3Quaters:
+                case Goal.SolveL3Quarters:
                     SolveSq1Cube(
                         Cube.L3SolvedCube,
-                        cube => cube.IsL3QuatersSolved(3, 1),
+                        cube => cube.IsL3QuartersSolved(3, 1),
                         rotation => rotation.IsShapeIdentical(),
                         firstSolutionOnly: true);
                     break;
 
-                case Goal.SolveQuaterPosition:
+                case Goal.SolveQuarterPosition:
                     SolveSq1Cube(
                         Cube.L1L3SolvedCube, 
                         cube => cube.IsL1Solved(), 
-                        rotation => rotation.IsQuaterLocked());
+                        rotation => rotation.IsQuarterLocked());
                     break;
 
                 case Goal.SolveUpDownColor:

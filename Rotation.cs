@@ -19,7 +19,7 @@ namespace sq1code
             return Up.Left.GetShape() == Down.Left.GetShape() || Up.Right.GetShape() == Down.Right.GetShape();
         }
 
-        public bool IsQuaterLocked() {
+        public bool IsQuarterLocked() {
             if (Up.Right[Up.Right.Count - 1].Degree == 60 && Up.Left[0].Degree == 30) {
                 return false;
             }
