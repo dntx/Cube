@@ -66,6 +66,10 @@ namespace sq1code
             return Up.IsL3QuartersSolved(minSolvedCount, minUnsolvedCount) || Down.IsL3QuartersSolved(minSolvedCount, minUnsolvedCount);
         }
 
+        public bool IsL3Solved(int minCellSolvedCount) {
+            return Up.IsL3Solved(minCellSolvedCount) || Down.IsL3Solved(minCellSolvedCount);
+        }
+
         public bool IsL1Solved() {
             return Down == Layer.WhiteL1;
         }

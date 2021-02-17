@@ -121,6 +121,20 @@ namespace sq1code
             return false;
         }
 
+        public bool IsL3Solved(int minCellSolvedCount) {
+            if (!IsSquare()) {
+                return false;
+            }
+
+            for (int i = 0; i < minCellSolvedCount; i++) {
+                if (this[i].Value != i) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        
         public override string ToString()
         {
             return ToString(verbose:false);
