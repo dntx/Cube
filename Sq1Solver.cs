@@ -5,9 +5,11 @@ namespace sq1code
 {
     class Sq1Solver {
         public enum Goal { 
-            SolveUpDownShape,
-            SolveL3P75,
-            SolveL3,
+            SolveShape,
+            SolveL1orL3P75,
+            SolveL1orL3LastP25,
+            SolveL3Cross,
+            SolveL3Corners,
             SolveL3P75Quarters,
             SolveL3Quarters,
             SolveQuarterPosition,
@@ -69,23 +71,37 @@ namespace sq1code
             Console.WriteLine("start");
             switch (goal)
             {
-                case Goal.SolveUpDownShape:
+                case Goal.SolveShape:
                     SolveSq1Cube(
-                        Cube.UpDownShapeSolvedCube, 
+                        Cube.ShapeSolvedCube, 
                         cube => cube.IsUpOrDownHexagram());
                     break;
 
-                case Goal.SolveL3P75:
+                case Goal.SolveL1orL3P75:
                     SolveSq1Cube(
                         Cube.L3P75SolvedCube, 
-                        cube => cube.IsL3Solved(5), 
+                        cube => cube.IsL3P625Solved(), 
                         rotation => rotation.IsShapeIdentical());
                     break;
 
-                case Goal.SolveL3:
+                case Goal.SolveL1orL3LastP25:
                     SolveSq1Cube(
                         Cube.L3SolvedCube,
-                        cube => cube.IsL3Solved(6),
+                        cube => cube.IsL3P75Solved(),
+                        rotation => rotation.IsShapeIdentical());
+                    break;
+
+                case Goal.SolveL3Cross:
+                    SolveSq1Cube(
+                        Cube.SolvedCubeExceptL3Corners, 
+                        cube => cube.IsL1Solved(), 
+                        rotation => rotation.IsShapeIdentical());
+                    break;
+
+                case Goal.SolveL3Corners:
+                    SolveSq1Cube(
+                        Cube.SolvedCube,
+                        cube => cube.IsSolvedExceptL3Corners(),
                         rotation => rotation.IsShapeIdentical());
                     break;
 
@@ -106,7 +122,7 @@ namespace sq1code
 
                 case Goal.SolveQuarterPosition:
                     SolveSq1Cube(
-                        Cube.L1L3SolvedCube, 
+                        Cube.SolvedCube, 
                         cube => cube.IsL1Solved(), 
                         rotation => rotation.IsQuarterLocked());
                     break;

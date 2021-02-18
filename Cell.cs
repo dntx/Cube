@@ -3,7 +3,7 @@ using System;
 namespace sq1code
 {
     class Cell {
-        public enum Type { AsIs, AsIsForL3P75, AsIsForL3, IgnoreColor, IgnoreSideColor };
+        public enum Type { AsIs, AsIsForL3P75, AsIsForL3, AsIsExceptL3Corners, IgnoreColor, IgnoreSideColor };
 
         public int Value { get; }
         public int Degree { get; }
@@ -24,6 +24,9 @@ namespace sq1code
                 case Type.AsIsForL3:
                     Value = (cell < 8)? cell : GetDegree(cell) / 30 % 2 + 8;
                     break;
+                case Type.AsIsExceptL3Corners:
+                    Value = (GetLayer(cell) == 3 && GetDegree(cell) == 60) ? 8 : cell;
+                    break;
                 case Type.IgnoreSideColor:
                     Value = GetDegree(cell) / 30 % 2 + GetColor(cell) * 8;
                     break;
@@ -34,7 +37,7 @@ namespace sq1code
             
             Degree = GetDegree(Value);
             Color = GetColor(Value);
-            Layer = (Color == 0)? 3 : 1;
+            Layer = GetLayer(Value);
             SideColor = GetSideColor(Value);
             LeftSideColor = GetLeftSideColor(Value);
             RightSideColor = GetRightSideColor(Value);
@@ -92,6 +95,10 @@ namespace sq1code
             // 0,1,2,3,4,5,6,7: color=0, yellow
             // 8,9,A,B,C,D,E,F: color=1, white
             return cell / 8;
+        }
+
+        private static int GetLayer(int cell) {
+            return (cell / 8 == 0)? 3 : 1;
         }
 
         private static int GetSideColor(int cell) {

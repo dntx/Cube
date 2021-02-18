@@ -134,6 +134,25 @@ namespace sq1code
 
             return true;
         }
+
+        public bool IsL3CrossSolved() {
+            if (!IsSquare()) {
+                return false;
+            }
+
+            Cell previousCell = null;
+            int count = 0;
+            foreach (Cell cell in this) {
+                if (cell.Degree == 30) {
+                    if (previousCell != null && cell.Value != (previousCell.Value + 2) % 8) {
+                        return false;
+                    }
+                    previousCell = cell;
+                    count++;
+                }
+            }
+            return count == 4;
+        }
         
         public override string ToString()
         {

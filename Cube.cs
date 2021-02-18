@@ -66,12 +66,24 @@ namespace sq1code
             return Up.IsL3QuartersSolved(minSolvedCount, minUnsolvedCount) || Down.IsL3QuartersSolved(minSolvedCount, minUnsolvedCount);
         }
 
-        public bool IsL3Solved(int minCellSolvedCount) {
+        private bool IsL3Solved(int minCellSolvedCount) {
             return Up.IsL3Solved(minCellSolvedCount) || Down.IsL3Solved(minCellSolvedCount);
         }
 
+        public bool IsL3P625Solved() {
+            return IsL3Solved(5);
+        }
+
+        public bool IsL3P75Solved() {
+            return IsL3Solved(6);
+        }
+
         public bool IsL1Solved() {
-            return Down == Layer.WhiteL1;
+            return Up == Layer.WhiteL1 || Down == Layer.WhiteL1;
+        }
+
+        public bool IsSolvedExceptL3Corners() {
+            return Up == Layer.WhiteL1 && Down.IsL3CrossSolved() || Down == Layer.WhiteL1 && Up.IsL3CrossSolved();
         }
 
         public List<Rotation> GetRotations() {
@@ -113,11 +125,12 @@ namespace sq1code
             }
         }
 
-        public static Cube UpDownShapeSolvedCube = new Cube(Layer.Square, Layer.Square);
+        public static Cube ShapeSolvedCube = new Cube(Layer.Square, Layer.Square);
         public static Cube UpDownColorSolvedCube = new Cube(Layer.YellowSquare, Layer.WhiteSquare);
         public static Cube L3P75SolvedCube = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsForL3P75);
         public static Cube L3SolvedCube = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsForL3);
-        public static Cube L1L3SolvedCube = new Cube(Layer.YellowL3, Layer.WhiteL1);
+        public static Cube SolvedCube = new Cube(Layer.YellowL3, Layer.WhiteL1);
+        public static Cube SolvedCubeExceptL3Corners = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsExceptL3Corners);
     }
 
 }
