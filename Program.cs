@@ -17,7 +17,13 @@ namespace sq1code
             //new Sq1Solver().Solve(Sq1Solver.Goal.SolveL1orL3P75);
             //new Sq1Solver().Solve(Sq1Solver.Goal.SolveL1orL3LastP25);
             //new Sq1Solver().Solve(Sq1Solver.Goal.SolveL3Cross);
-            new Sq1Solver().Solve(Sq1Solver.Goal.SolveL3Corners);
+            new Sq1Solver().Solve(Sq1Solver.Goal.SolveL3Last2Corners);
+            
+            //new Sq1Solver().Solve(Sq1Solver.Goal.SolveShape);
+            //new Sq1Solver().Solve(Sq1Solver.Goal.SolveL1orL3P75);
+            //new Sq1Solver().Solve(Sq1Solver.Goal.SolveL1orL3LastP25);
+            //new Sq1Solver().Solve(Sq1Solver.Goal.SolveL3Cross);
+            //new Sq1Solver().Solve(Sq1Solver.Goal.SolveL3Corners);
 
             //new Sq1Solver().Solve(Sq1Solver.Goal.SolveShape);
             //new Sq1Solver().Solve(Sq1Solver.Goal.SolveUpDownColor);

@@ -149,6 +149,10 @@ namespace sq1code
         }
 
         public static bool operator == (Cells lhs, Cells rhs) {
+            if (lhs is null || rhs is null) {
+                return (lhs is null) && (rhs is null);
+            }
+
             if (lhs.Count != rhs.Count) {
                 return false;
             }

@@ -154,6 +154,24 @@ namespace sq1code
             return count == 4;
         }
         
+        public bool IsL3SolvedExceptLast2Corners() {
+            if (!IsSquare()) {
+                return false;
+            }
+
+            for (int i = 0; i < 8; i++) {
+                if (i == 4 || i == 6) {
+                    continue;
+                }
+                
+                if (this[i].Value != i) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         public override string ToString()
         {
             return ToString(verbose:false);

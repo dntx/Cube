@@ -49,11 +49,14 @@ namespace sq1code
         }
 
         public static bool operator == (Cell lhs, Cell rhs) {
+            if (lhs is null || rhs is null) {
+                return (lhs is null) && (rhs is null);
+            }
             return lhs.Value == rhs.Value;
         }
 
         public static bool operator != (Cell lhs, Cell rhs) {
-            return lhs.Value != rhs.Value;
+            return !(lhs == rhs);
         }
 
         public static bool operator < (Cell lhs, Cell rhs) {

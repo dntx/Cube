@@ -82,6 +82,10 @@ namespace sq1code
             return Up == Layer.WhiteL1 || Down == Layer.WhiteL1;
         }
 
+        public bool IsSolvedExceptL3Last2Corners() {
+            return Up == Layer.WhiteL1 && Down.IsL3SolvedExceptLast2Corners() || Down == Layer.WhiteL1 && Up.IsL3SolvedExceptLast2Corners();
+        }
+
         public bool IsSolvedExceptL3Corners() {
             return Up == Layer.WhiteL1 && Down.IsL3CrossSolved() || Down == Layer.WhiteL1 && Up.IsL3CrossSolved();
         }

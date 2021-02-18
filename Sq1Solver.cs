@@ -9,6 +9,7 @@ namespace sq1code
             SolveL1orL3P75,
             SolveL1orL3LastP25,
             SolveL3Cross,
+            SolveL3Last2Corners,
             SolveL3Corners,
             SolveL3P75Quarters,
             SolveL3Quarters,
@@ -98,6 +99,14 @@ namespace sq1code
                         rotation => rotation.IsShapeIdentical());
                     break;
 
+                case Goal.SolveL3Last2Corners:
+                    SolveSq1Cube(
+                        Cube.SolvedCube,
+                        cube => cube.IsSolvedExceptL3Last2Corners(),
+                        rotation => rotation.IsShapeIdentical(),
+                        firstSolutionOnly: true);
+                    break;
+
                 case Goal.SolveL3Corners:
                     SolveSq1Cube(
                         Cube.SolvedCube,
@@ -150,6 +159,7 @@ namespace sq1code
         }
         
         private void SolveSq1Cube(Cube startCube, Predicate<Cube> IsTargetCube, Predicate<Rotation> IsFocusRotation, bool firstSolutionOnly) {
+            DateTime startTime = DateTime.Now;
             Predicate<State> IsTargetState = (state => state.Depth > 0 && IsTargetCube(state.Cube));
 
             int closedStateCount = 0;
@@ -211,7 +221,8 @@ namespace sq1code
                 if (closedStateCount == 1 || closedStateCount % 1000 == 0 || openStates.Count == 0) {
                     int totalCount = closedStateCount + openStates.Count;
                     Console.WriteLine(
-                        "depth: {0}, solution: {1}, closed: {2}({3:p}), open: {4}({5:p})", 
+                        "seconds: {0:0.00}, depth: {1}, solution: {2}, closed: {3}({4:p}), open: {5}({6:p})", 
+                        DateTime.Now.Subtract(startTime).TotalSeconds,
                         state.Depth, 
                         solutionCount,
                         closedStateCount, 
