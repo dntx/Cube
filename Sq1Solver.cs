@@ -123,7 +123,8 @@ namespace sq1code
                     SolveSq1Cube(
                         Cube.SolvedCubeExceptL3Corners, 
                         cube => cube.IsL1Solved(),
-                        rotation => rotation.IsShapeIdentical());
+                        rotation => rotation.IsQuarterLocked(),
+                        firstSolutionOnly: true);
                     break;
 
                 case Goal.SolveL3Corner34:
