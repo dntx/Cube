@@ -132,7 +132,7 @@ namespace sq1code
         public static Cube ExceptCell_234567 = new Cube(Solved, Cell.Type.IgnoreCell_234567);
         public static Cube ExceptCell_34567 = new Cube(Solved, Cell.Type.IgnoreCell_34567);
         public static Cube ExceptCell_4567 = new Cube(Solved, Cell.Type.IgnoreCell_4567);
-        public static Cube ExceptCell_567 = new Cube(Solved, Cell.Type.IgnoreCell_567);
+        public static Cube ExceptCell_57 = new Cube(Solved, Cell.Type.IgnoreCell_57);
     }
 
 }

@@ -15,7 +15,7 @@ namespace sq1code
             IgnoreCell_234567,
             IgnoreCell_34567,
             IgnoreCell_4567,
-            IgnoreCell_567
+            IgnoreCell_57
         };
 
         public int Value { get; }
@@ -46,7 +46,7 @@ namespace sq1code
                     break;
 
                 case Type.IgnoreCell_0246:
-                    Value = (cell == 0 || cell == 2 || cell == 4 || cell == 6) ? GetShape(cell) + 0 : cell;
+                    Value = (cell == 0 || cell == 2 || cell == 4 || cell == 6) ? 0 : cell;
                     break;
                 case Type.IgnoreCell_234567:
                     Value = (2 <= cell && cell <= 7) ? GetShape(cell) + 6 : cell;
@@ -57,8 +57,8 @@ namespace sq1code
                 case Type.IgnoreCell_4567:
                     Value = (4 <= cell && cell <= 7) ? GetShape(cell) + 6 : cell;
                     break;
-                case Type.IgnoreCell_567:
-                    Value = (5 <= cell && cell <= 7) ? GetShape(cell) + 6 : cell;
+                case Type.IgnoreCell_57:
+                    Value = (cell == 5 || cell == 7) ? 7 : cell;
                     break;
             }
             

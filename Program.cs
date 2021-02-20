@@ -18,11 +18,10 @@ namespace sq1code
             //new Sq1Solver().Solve(Sq1Solver.Goal.SolveL1Quarter123);
             //new Sq1Solver().Solve(Sq1Solver.Goal.SolveL1Quarter4);
             //new Sq1Solver().Solve(Sq1Solver.Goal.SolveL3Cell_01);
-            new Sq1Solver().Solve(Sq1Solver.Goal.SolveL3Cell_2);
+            //new Sq1Solver().Solve(Sq1Solver.Goal.SolveL3Cell_2);
             //new Sq1Solver().Solve(Sq1Solver.Goal.SolveL3Cell_3);
-            //new Sq1Solver().Solve(Sq1Solver.Goal.SolveL3Cell_4);
-            //new Sq1Solver().Solve(Sq1Solver.Goal.SolveL3Cell_567);
-
+            //new Sq1Solver().Solve(Sq1Solver.Goal.SolveL3Cell_46);
+            new Sq1Solver().Solve(Sq1Solver.Goal.SolveL3Cell_57);
         }
     }
 }

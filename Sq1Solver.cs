@@ -28,8 +28,8 @@ namespace sq1code
                 SolveL3Cell_01,
                 SolveL3Cell_2,
                 SolveL3Cell_3,
-                SolveL3Cell_4,
-                SolveL3Cell_567,
+                SolveL3Cell_46,
+                SolveL3Cell_57,
 
                 /// L3 strategy 4
                 SolveL3QuarterPairs,
@@ -180,7 +180,7 @@ namespace sq1code
                     SolveSq1Cube(
                         Cube.ExceptCell_34567, 
                         cube => cube.IsSolvedExceptCells(2, 3, 4, 5, 6, 7), 
-                        rotation => rotation.IsShapeIdentical(),
+                        rotation => rotation.IsQuarterLocked(),
                         firstSolutionOnly: true);
                     break;
 
@@ -188,22 +188,22 @@ namespace sq1code
                     SolveSq1Cube(
                         Cube.ExceptCell_4567,
                         cube => cube.IsSolvedExceptCells(3, 4, 5, 6, 7),
-                        rotation => rotation.IsShapeIdentical(),
+                        rotation => rotation.IsCounterQuarterLocked(),
                         firstSolutionOnly: true);
                     break;
 
-                case Goal.SolveL3Cell_4:
+                case Goal.SolveL3Cell_46:
                     SolveSq1Cube(
-                        Cube.ExceptCell_567,
+                        Cube.ExceptCell_57,
                         cube => cube.IsSolvedExceptCells(4, 5, 6, 7),
-                        rotation => rotation.IsShapeIdentical(),
+                        rotation => rotation.IsQuarterLocked(),
                         firstSolutionOnly: true);
                     break;
 
-                case Goal.SolveL3Cell_567:
+                case Goal.SolveL3Cell_57:
                     SolveSq1Cube(
                         Cube.Solved,
-                        cube => cube.IsSolvedExceptCells(5, 6, 7),
+                        cube => cube.IsSolvedExceptCells(5, 7),
                         rotation => rotation.IsShapeIdentical(),
                         firstSolutionOnly: true);
                     break;
@@ -235,7 +235,7 @@ namespace sq1code
         }
         
         private void SolveSq1Cube(Cube startCube, Predicate<Cube> IsTargetCube, Predicate<Rotation> IsFocusRotation, bool firstSolutionOnly) {
-            Console.WriteLine("rotation: {0}, first solution only: {1}", IsFocusRotation, firstSolutionOnly);
+            Console.WriteLine("first solution only: {0}", firstSolutionOnly);
             DateTime startTime = DateTime.Now;
             Predicate<State> IsTargetState = (state => state.Depth > 0 && IsTargetCube(state.Cube));
 
