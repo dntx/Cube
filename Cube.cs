@@ -127,8 +127,13 @@ namespace sq1code
         public static Cube L3SolvedCube = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsForL3);
         public static Cube SolvedCube = new Cube(Layer.YellowL3, Layer.WhiteL1);
         public static Cube SolvedCubeExceptL3Corners = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsExceptL3Corners);
-        public static Cube SolvedCubeExceptL3Quarter234 = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsExceptL3Quarter234);
-        public static Cube SolvedCubeExceptL3Quarter34 = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsExceptL3Quarter34);
+        public static Cube SolvedCubeExceptL3Quarter234 = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsExceptL3Cell345678);
+        public static Cube SolvedCubeExceptL3Quarter34 = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsExceptL3Cell5678);
+
+        public static Cube SolvedCubeExceptL3Cell345678 = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsExceptL3Cell345678);
+        public static Cube SolvedCubeExceptL3Cell45678 = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsExceptL3Cell45678);
+        public static Cube SolvedCubeExceptL3Cell5678 = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsExceptL3Cell5678);
+        public static Cube SolvedCubeExceptL3Cell678 = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsExceptL3Cell678);
     }
 
 }

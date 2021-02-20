@@ -10,8 +10,10 @@ namespace sq1code
             AsIsForL3Quarter123, 
             AsIsForL3, 
             AsIsExceptL3Corners,
-            AsIsExceptL3Quarter234,
-            AsIsExceptL3Quarter34 
+            AsIsExceptL3Cell345678,
+            AsIsExceptL3Cell45678,
+            AsIsExceptL3Cell5678,
+            AsIsExceptL3Cell678
         };
 
         public int Value { get; }
@@ -42,11 +44,17 @@ namespace sq1code
                 case Type.AsIsExceptL3Corners:
                     Value = (cell != 0 && cell != 2 && cell != 4 && cell != 6) ? cell : GetShape(cell) + 0;
                     break;
-                case Type.AsIsExceptL3Quarter234:
+                case Type.AsIsExceptL3Cell345678:
                     Value = (cell < 2 || cell >= 8) ? cell : GetShape(cell) + 2;
                     break;
-                case Type.AsIsExceptL3Quarter34:
+                case Type.AsIsExceptL3Cell45678:
+                    Value = (cell < 3 || cell >= 8) ? cell : GetShape(cell) + 2;
+                    break;
+                case Type.AsIsExceptL3Cell5678:
                     Value = (cell < 4 || cell >= 8) ? cell : GetShape(cell) + 4;
+                    break;
+                case Type.AsIsExceptL3Cell678:
+                    Value = (cell < 5 || cell >= 8) ? cell : GetShape(cell) + 4;
                     break;
             }
             
