@@ -11,8 +11,8 @@ namespace sq1code
             Down = down;
         }
 
-        public Cube(Layer up, Layer down, Cell.Type type) 
-                : this(new Layer(up, type), new Layer(down, type)) {}
+        public Cube(Cube cube, Cell.Type type) 
+                : this(new Layer(cube.Up, type), new Layer(cube.Down, type)) {}
 
         public static bool operator == (Cube lhs, Cube rhs) {
             return (lhs.Up == rhs.Up && lhs.Down == rhs.Down) || (lhs.Up == rhs.Down && lhs.Down == rhs.Up);
@@ -74,7 +74,7 @@ namespace sq1code
             return Up == Layer.WhiteL1 || Down == Layer.WhiteL1;
         }
 
-        public bool IsSolvedExceptL3Cells(params int[] exceptCells) {
+        public bool IsSolvedExceptCells(params int[] exceptCells) {
             return Up == Layer.WhiteL1 && Down.IsSolvedExceptL3Cells(exceptCells) || Down == Layer.WhiteL1 && Up.IsSolvedExceptL3Cells(exceptCells);
         }
 
@@ -121,19 +121,18 @@ namespace sq1code
             }
         }
 
-        public static Cube ShapeSolvedCube = new Cube(Layer.Square, Layer.Square);
-        public static Cube UpDownColorSolvedCube = new Cube(Layer.YellowSquare, Layer.WhiteSquare);
-        public static Cube L3Quarter123SolvedCube = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsForL3Quarter123);
-        public static Cube L3SolvedCube = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsForL3);
-        public static Cube SolvedCube = new Cube(Layer.YellowL3, Layer.WhiteL1);
-        public static Cube SolvedCubeExceptL3Corners = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsExceptL3Corners);
-        public static Cube SolvedCubeExceptL3Quarter234 = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsExceptL3Cell345678);
-        public static Cube SolvedCubeExceptL3Quarter34 = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsExceptL3Cell5678);
+        public static Cube ShapeSolved = new Cube(Layer.Square, Layer.Square);
+        public static Cube UpDownColorSolved = new Cube(Layer.YellowSquare, Layer.WhiteSquare);
 
-        public static Cube SolvedCubeExceptL3Cell345678 = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsExceptL3Cell345678);
-        public static Cube SolvedCubeExceptL3Cell45678 = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsExceptL3Cell45678);
-        public static Cube SolvedCubeExceptL3Cell5678 = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsExceptL3Cell5678);
-        public static Cube SolvedCubeExceptL3Cell678 = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsExceptL3Cell678);
+        public static Cube Solved = new Cube(Layer.YellowL3, Layer.WhiteL1);
+        public static Cube L3Quarter123Solved = new Cube(Solved, Cell.Type.KeepCell_012345);
+        public static Cube L3Solved = new Cube(Solved, Cell.Type.KeepL3Cells);
+        
+        public static Cube ExceptCell_0246 = new Cube(Solved, Cell.Type.IgnoreCell_0246);
+        public static Cube ExceptCell_234567 = new Cube(Solved, Cell.Type.IgnoreCell_234567);
+        public static Cube ExceptCell_34567 = new Cube(Solved, Cell.Type.IgnoreCell_34567);
+        public static Cube ExceptCell_4567 = new Cube(Solved, Cell.Type.IgnoreCell_4567);
+        public static Cube ExceptCell_567 = new Cube(Solved, Cell.Type.IgnoreCell_567);
     }
 
 }

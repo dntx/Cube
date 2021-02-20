@@ -25,11 +25,11 @@ namespace sq1code
                 SolveL3Quarter34,
 
                 /// L3 strategy 3
-                SolveL3Cell12,
-                SolveL3Cell3,
-                SolveL3Cell4,
-                SolveL3Cell5,
-                SolveL3Cell678,
+                SolveL3Cell_01,
+                SolveL3Cell_2,
+                SolveL3Cell_3,
+                SolveL3Cell_4,
+                SolveL3Cell_567,
 
                 /// L3 strategy 4
                 SolveL3QuarterPairs,
@@ -93,7 +93,7 @@ namespace sq1code
             {
                 case Goal.SolveShape:
                     SolveSq1Cube(
-                        Cube.ShapeSolvedCube, 
+                        Cube.ShapeSolved, 
                         cube => cube.IsUpOrDownHexagram());
                     break;
 
@@ -101,7 +101,7 @@ namespace sq1code
                 case Goal.SolveL1Quarter123:
                     // using L3 instead L1 to make the NO. of cells in solution easier to read 
                     SolveSq1Cube(
-                        Cube.L3Quarter123SolvedCube, 
+                        Cube.L3Quarter123Solved, 
                         cube => cube.IsL3CellSolved(5), 
                         rotation => rotation.IsShapeIdentical());
                     break;
@@ -109,7 +109,7 @@ namespace sq1code
                 case Goal.SolveL1Quarter4:
                     // using L3 instead L1 to make the NO. of cells in solution easier to read 
                     SolveSq1Cube(
-                        Cube.L3SolvedCube,
+                        Cube.L3Solved,
                         cube => cube.IsL3CellSolved(6),
                         rotation => rotation.IsShapeIdentical());
                     break;
@@ -117,7 +117,7 @@ namespace sq1code
                 // L1 strategy 2
                 case Goal.SolveUpDownColor:
                     SolveSq1Cube(
-                        Cube.UpDownColorSolvedCube, 
+                        Cube.UpDownColorSolved, 
                         cube => cube.IsUpDwonColorGrouped(), 
                         rotation => rotation.IsShapeIdentical());
                     break;
@@ -128,7 +128,7 @@ namespace sq1code
                 // L3 strategy 1
                 case Goal.SolveL3Cross:
                     SolveSq1Cube(
-                        Cube.SolvedCubeExceptL3Corners, 
+                        Cube.ExceptCell_0246, 
                         cube => cube.IsL1Solved(),
                         rotation => rotation.IsQuarterLocked(),
                         firstSolutionOnly: true);
@@ -136,8 +136,8 @@ namespace sq1code
 
                 case Goal.SolveL3Corner34:
                     SolveSq1Cube(
-                        Cube.SolvedCube,
-                        cube => cube.IsSolvedExceptL3Cells(4, 6),
+                        Cube.Solved,
+                        cube => cube.IsSolvedExceptCells(4, 6),
                         rotation => rotation.IsShapeIdentical(),
                         firstSolutionOnly: true);
                     break;
@@ -145,7 +145,7 @@ namespace sq1code
                 // L3 strategy 2
                 case Goal.SolveL3Quarter1:
                     SolveSq1Cube(
-                        Cube.SolvedCubeExceptL3Quarter234, 
+                        Cube.ExceptCell_234567, 
                         cube => cube.IsL1Solved(), 
                         rotation => rotation.IsShapeIdentical(),
                         firstSolutionOnly: true);
@@ -153,57 +153,57 @@ namespace sq1code
 
                 case Goal.SolveL3Quarter2:
                     SolveSq1Cube(
-                        Cube.SolvedCubeExceptL3Quarter34, 
-                        cube => cube.IsSolvedExceptL3Cells(2, 3, 4, 5, 6, 7), 
+                        Cube.ExceptCell_4567, 
+                        cube => cube.IsSolvedExceptCells(2, 3, 4, 5, 6, 7), 
                         rotation => rotation.IsQuarterLocked(),
                         firstSolutionOnly: false);
                     break;
 
                 case Goal.SolveL3Quarter34:
                     SolveSq1Cube(
-                        Cube.SolvedCube,
-                        cube => cube.IsSolvedExceptL3Cells(4, 5, 6, 7),
+                        Cube.Solved,
+                        cube => cube.IsSolvedExceptCells(4, 5, 6, 7),
                         rotation => rotation.IsShapeIdentical(),
                         firstSolutionOnly: true);
                     break;
 
                 // L3 strategy 3
-                case Goal.SolveL3Cell12:
+                case Goal.SolveL3Cell_01:
                     SolveSq1Cube(
-                        Cube.SolvedCubeExceptL3Cell345678, 
+                        Cube.ExceptCell_234567, 
                         cube => cube.IsL1Solved(), 
                         rotation => rotation.IsShapeIdentical(),
                         firstSolutionOnly: true);
                     break;
 
-                case Goal.SolveL3Cell3:
+                case Goal.SolveL3Cell_2:
                     SolveSq1Cube(
-                        Cube.SolvedCubeExceptL3Cell45678, 
-                        cube => cube.IsSolvedExceptL3Cells(2, 3, 4, 5, 6, 7), 
+                        Cube.ExceptCell_34567, 
+                        cube => cube.IsSolvedExceptCells(2, 3, 4, 5, 6, 7), 
                         rotation => rotation.IsShapeIdentical(),
                         firstSolutionOnly: true);
                     break;
 
-                case Goal.SolveL3Cell4:
+                case Goal.SolveL3Cell_3:
                     SolveSq1Cube(
-                        Cube.SolvedCubeExceptL3Cell5678,
-                        cube => cube.IsSolvedExceptL3Cells(3, 4, 5, 6, 7),
+                        Cube.ExceptCell_4567,
+                        cube => cube.IsSolvedExceptCells(3, 4, 5, 6, 7),
                         rotation => rotation.IsShapeIdentical(),
                         firstSolutionOnly: true);
                     break;
 
-                case Goal.SolveL3Cell5:
+                case Goal.SolveL3Cell_4:
                     SolveSq1Cube(
-                        Cube.SolvedCubeExceptL3Cell678,
-                        cube => cube.IsSolvedExceptL3Cells(4, 5, 6, 7),
+                        Cube.ExceptCell_567,
+                        cube => cube.IsSolvedExceptCells(4, 5, 6, 7),
                         rotation => rotation.IsShapeIdentical(),
                         firstSolutionOnly: true);
                     break;
 
-                case Goal.SolveL3Cell678:
+                case Goal.SolveL3Cell_567:
                     SolveSq1Cube(
-                        Cube.SolvedCube,
-                        cube => cube.IsSolvedExceptL3Cells(5, 6, 7),
+                        Cube.Solved,
+                        cube => cube.IsSolvedExceptCells(5, 6, 7),
                         rotation => rotation.IsShapeIdentical(),
                         firstSolutionOnly: true);
                     break;
@@ -214,7 +214,7 @@ namespace sq1code
 
                 case Goal.SolveL3QuarterPosition:
                     SolveSq1Cube(
-                        Cube.SolvedCube, 
+                        Cube.Solved, 
                         cube => cube.IsL1Solved(), 
                         rotation => rotation.IsQuarterLocked());
                     break;
@@ -235,6 +235,7 @@ namespace sq1code
         }
         
         private void SolveSq1Cube(Cube startCube, Predicate<Cube> IsTargetCube, Predicate<Rotation> IsFocusRotation, bool firstSolutionOnly) {
+            Console.WriteLine("rotation: {0}, first solution only: {1}", IsFocusRotation, firstSolutionOnly);
             DateTime startTime = DateTime.Now;
             Predicate<State> IsTargetState = (state => state.Depth > 0 && IsTargetCube(state.Cube));
 

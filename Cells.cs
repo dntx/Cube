@@ -12,7 +12,7 @@ namespace sq1code
         }
 
         public Cells(List<int> cells) 
-                : this(cells, Cell.Type.AsIs) {
+                : this(cells, Cell.Type.KeepAllCells) {
         }
 
         public Cells(List<Cell> cells, Cell.Type type) 

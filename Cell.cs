@@ -6,14 +6,16 @@ namespace sq1code
         public enum Type { 
             IgnoreColor, 
             IgnoreSideColor,
-            AsIs, 
-            AsIsForL3Quarter123, 
-            AsIsForL3, 
-            AsIsExceptL3Corners,
-            AsIsExceptL3Cell345678,
-            AsIsExceptL3Cell45678,
-            AsIsExceptL3Cell5678,
-            AsIsExceptL3Cell678
+
+            KeepAllCells, 
+            KeepCell_012345, 
+            KeepL3Cells, 
+            
+            IgnoreCell_0246,
+            IgnoreCell_234567,
+            IgnoreCell_34567,
+            IgnoreCell_4567,
+            IgnoreCell_567
         };
 
         public int Value { get; }
@@ -32,29 +34,31 @@ namespace sq1code
                 case Type.IgnoreSideColor:
                     Value = GetShape(cell) + GetColor(cell) * 8;
                     break;
-                case Type.AsIs:
+
+                case Type.KeepAllCells:
                     Value = cell;
                     break;
-                case Type.AsIsForL3Quarter123:
+                case Type.KeepCell_012345:
                     Value = (cell < 6)? cell : GetShape(cell) + 8;
                     break;
-                case Type.AsIsForL3:
+                case Type.KeepL3Cells:
                     Value = (cell < 8)? cell : GetShape(cell) + 8;
                     break;
-                case Type.AsIsExceptL3Corners:
-                    Value = (cell != 0 && cell != 2 && cell != 4 && cell != 6) ? cell : GetShape(cell) + 0;
+
+                case Type.IgnoreCell_0246:
+                    Value = (cell == 0 || cell == 2 || cell == 4 || cell == 6) ? GetShape(cell) + 0 : cell;
                     break;
-                case Type.AsIsExceptL3Cell345678:
-                    Value = (cell < 2 || cell >= 8) ? cell : GetShape(cell) + 2;
+                case Type.IgnoreCell_234567:
+                    Value = (2 <= cell && cell <= 7) ? GetShape(cell) + 6 : cell;
                     break;
-                case Type.AsIsExceptL3Cell45678:
-                    Value = (cell < 3 || cell >= 8) ? cell : GetShape(cell) + 2;
+                case Type.IgnoreCell_34567:
+                    Value = (3 <= cell && cell <= 7) ? GetShape(cell) + 6 : cell;
                     break;
-                case Type.AsIsExceptL3Cell5678:
-                    Value = (cell < 4 || cell >= 8) ? cell : GetShape(cell) + 4;
+                case Type.IgnoreCell_4567:
+                    Value = (4 <= cell && cell <= 7) ? GetShape(cell) + 6 : cell;
                     break;
-                case Type.AsIsExceptL3Cell678:
-                    Value = (cell < 5 || cell >= 8) ? cell : GetShape(cell) + 4;
+                case Type.IgnoreCell_567:
+                    Value = (5 <= cell && cell <= 7) ? GetShape(cell) + 6 : cell;
                     break;
             }
             
