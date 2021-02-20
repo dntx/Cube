@@ -66,24 +66,16 @@ namespace sq1code
             return Up.IsL3QuartersSolved(minSolvedCount, minUnsolvedCount) || Down.IsL3QuartersSolved(minSolvedCount, minUnsolvedCount);
         }
 
-        private bool IsL3Solved(int minCellSolvedCount) {
-            return Up.IsL3Solved(minCellSolvedCount) || Down.IsL3Solved(minCellSolvedCount);
-        }
-
-        public bool IsL3P625Solved() {
-            return IsL3Solved(5);
-        }
-
-        public bool IsL3P75Solved() {
-            return IsL3Solved(6);
+        public bool IsL3CellSolved(int minCellSolvedCount) {
+            return Up.IsL3CellSolved(minCellSolvedCount) || Down.IsL3CellSolved(minCellSolvedCount);
         }
 
         public bool IsL1Solved() {
             return Up == Layer.WhiteL1 || Down == Layer.WhiteL1;
         }
 
-        public bool IsSolvedExceptL3Last2Corners() {
-            return Up == Layer.WhiteL1 && Down.IsL3SolvedExceptLast2Corners() || Down == Layer.WhiteL1 && Up.IsL3SolvedExceptLast2Corners();
+        public bool IsSolvedExceptL3Cells(params int[] exceptCells) {
+            return Up == Layer.WhiteL1 && Down.IsSolvedExceptL3Cells(exceptCells) || Down == Layer.WhiteL1 && Up.IsSolvedExceptL3Cells(exceptCells);
         }
 
         public bool IsSolvedExceptL3Corners() {
@@ -131,10 +123,12 @@ namespace sq1code
 
         public static Cube ShapeSolvedCube = new Cube(Layer.Square, Layer.Square);
         public static Cube UpDownColorSolvedCube = new Cube(Layer.YellowSquare, Layer.WhiteSquare);
-        public static Cube L3P75SolvedCube = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsForL3P75);
+        public static Cube L3Quarter123SolvedCube = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsForL3Quarter123);
         public static Cube L3SolvedCube = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsForL3);
         public static Cube SolvedCube = new Cube(Layer.YellowL3, Layer.WhiteL1);
         public static Cube SolvedCubeExceptL3Corners = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsExceptL3Corners);
+        public static Cube SolvedCubeExceptL3Quarter234 = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsExceptL3Quarter234);
+        public static Cube SolvedCubeExceptL3Quarter34 = new Cube(Layer.YellowL3, Layer.WhiteL1, Cell.Type.AsIsExceptL3Quarter34);
     }
 
 }

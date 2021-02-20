@@ -121,7 +121,7 @@ namespace sq1code
             return false;
         }
 
-        public bool IsL3Solved(int minCellSolvedCount) {
+        public bool IsL3CellSolved(int minCellSolvedCount) {
             if (!IsSquare()) {
                 return false;
             }
@@ -154,13 +154,14 @@ namespace sq1code
             return count == 4;
         }
         
-        public bool IsL3SolvedExceptLast2Corners() {
+        public bool IsSolvedExceptL3Cells(int[] exceptCells) {
             if (!IsSquare()) {
                 return false;
             }
 
+            List<int> exceptCellList = new List<int>(exceptCells);
             for (int i = 0; i < 8; i++) {
-                if (i == 4 || i == 6) {
+                if (exceptCellList.Contains(i)) {
                     continue;
                 }
                 

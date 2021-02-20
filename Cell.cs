@@ -7,9 +7,11 @@ namespace sq1code
             IgnoreColor, 
             IgnoreSideColor,
             AsIs, 
-            AsIsForL3P75, 
+            AsIsForL3Quarter123, 
             AsIsForL3, 
-            AsIsExceptL3Corners 
+            AsIsExceptL3Corners,
+            AsIsExceptL3Quarter234,
+            AsIsExceptL3Quarter34 
         };
 
         public int Value { get; }
@@ -31,14 +33,20 @@ namespace sq1code
                 case Type.AsIs:
                     Value = cell;
                     break;
-                case Type.AsIsForL3P75:
+                case Type.AsIsForL3Quarter123:
                     Value = (cell < 6)? cell : GetShape(cell) + 8;
                     break;
                 case Type.AsIsForL3:
                     Value = (cell < 8)? cell : GetShape(cell) + 8;
                     break;
                 case Type.AsIsExceptL3Corners:
-                    Value = (GetLayer(cell) == 3 && GetDegree(cell) == 60) ? 8 : cell;
+                    Value = (cell != 0 && cell != 2 && cell != 4 && cell != 6) ? cell : GetShape(cell) + 0;
+                    break;
+                case Type.AsIsExceptL3Quarter234:
+                    Value = (cell < 2 || cell >= 8) ? cell : GetShape(cell) + 2;
+                    break;
+                case Type.AsIsExceptL3Quarter34:
+                    Value = (cell < 4 || cell >= 8) ? cell : GetShape(cell) + 4;
                     break;
             }
             
