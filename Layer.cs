@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace sq1code
 {
@@ -12,13 +13,13 @@ namespace sq1code
             Right = right;
         }
 
-        public Layer(Layer layer, Cell.Type type) 
-                : this(new Half(layer.Left, type), new Half(layer.Right, type)) {}
+        public Layer(params int[] cells) 
+                : this(new Half(cells.Take(4)), new Half(cells.TakeLast(4))) {}
 
         private static Cells GetNormalizedCells(Cells cells) {
             Cells minCells = cells;
             for (int start = 1; start < cells.Count; start++) {
-                Cells shiftedCells = new Cells(cells.GetRange(start, cells.Count - start), cells.GetRange(0, start), cells.Type);
+                Cells shiftedCells = new Cells(cells.GetRange(start, cells.Count - start), cells.GetRange(0, start));
                 if (shiftedCells < minCells) {
                     minCells = shiftedCells;
                 }
@@ -207,8 +208,8 @@ namespace sq1code
 
                 if (degreeSum == 180) {
                     int end = start + count;
-                    Half first = new Half(GetRange(start, count), Type);
-                    Half second = new Half(GetRange(end, Count - end), GetRange(0, start), Type);
+                    Half first = new Half(GetRange(start, count));
+                    Half second = new Half(GetRange(end, Count - end), GetRange(0, start));
 
                     if (first > second) {
                         Half temp = first;

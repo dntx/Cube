@@ -1,45 +1,19 @@
 using System;
 using System.Text;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace sq1code
 {
     class Cells : List<Cell> {
-        public Cell.Type Type { get; }
+        public Cells(IEnumerable<int> cells) 
+                : base(cells.Select(cell => new Cell(cell))) {}
 
-        public Cells(List<int> cells, Cell.Type type) : base(GenerateCellList(cells, type)) {
-            Type = type;
-        }
-
-        public Cells(List<int> cells) 
-                : this(cells, Cell.Type.KeepAllCells) {
-        }
-
-        public Cells(List<Cell> cells, Cell.Type type) 
-                : this(GenerateIntList(cells), type) {
-        }
-
-        public Cells(List<Cell> first, List<Cell> second, Cell.Type type) 
-                : this(MergeList(first, second), type) {}
+        public Cells(IEnumerable<Cell> cells) : base(cells) {}
         
-
-        public Cells(Cells cells) : this(cells, cells.Type) {}
-
-        public Cells(Cells first, Cells second) 
-                : this(MergeList(first, second), ResolveType(first.Type, second.Type)) {}
-
-        private static List<Cell> GenerateCellList(List<int> cells, Cell.Type type) {
-            List<Cell> result = new List<Cell>();
-            cells.ForEach(cell => result.Add(new Cell(cell, type)));
-            return result;
-        }
-
-        private static List<int> GenerateIntList(List<Cell> cells) {
-            List<int> result = new List<int>();
-            cells.ForEach(cell => result.Add(cell.Value));
-            return result;
-        }
-
+        public Cells(List<Cell> first, List<Cell> second) 
+                : base(MergeList(first, second)) {}
+        
         private static List<Cell> MergeList(List<Cell> first, List<Cell> second) {
             List<Cell> result = new List<Cell>();
             result.AddRange(first);
@@ -47,16 +21,8 @@ namespace sq1code
             return result;
         }
 
-        private static Cell.Type ResolveType(Cell.Type type1, Cell.Type type2) {
-            if (type1 != type2) {
-                throw new ArgumentException("type is not match");
-            }
-
-            return type1;
-        }
-
         protected string ToString(int degreeBar, string separator) {
-            return (Type == Cell.Type.IgnoreColor)? ToColorlessString(degreeBar, separator) : ToLiteralString(degreeBar, separator);
+            return TrueForAll(cell => cell.Value == cell.Shape)? ToColorlessString(degreeBar, separator) : ToLiteralString(degreeBar, separator);
         }
 
         private string ToColorlessString(int degreeBar, string separator) {
@@ -131,7 +97,7 @@ namespace sq1code
         }
 
         public Cells GetShape() {
-            return new Cells(this, Cell.Type.IgnoreColor);
+            return new Cells(this.Select(cell => cell.Degree));
         }
 
         public bool IsHexagram() {

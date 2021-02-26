@@ -11,9 +11,6 @@ namespace sq1code
             Down = down;
         }
 
-        public Cube(Cube cube, Cell.Type type) 
-                : this(new Layer(cube.Up, type), new Layer(cube.Down, type)) {}
-
         public static bool operator == (Cube lhs, Cube rhs) {
             return (lhs.Up == rhs.Up && lhs.Down == rhs.Down) || (lhs.Up == rhs.Down && lhs.Down == rhs.Up);
             //return lhs.Up == rhs.Up && lhs.Down == rhs.Down;
@@ -114,25 +111,22 @@ namespace sq1code
 
         public string ToString(bool verbose)
         {
-            if (Up.Type == Cell.Type.IgnoreSideColor) {
-                return string.Format("{0},{1}({2})", Up.ToString(verbose), Down.ToString(verbose), Up.GetSecondaryColorCount());
-            } else {
-                return string.Format("{0},{1}", Up.ToString(verbose), Down.ToString(verbose));
-            }
+            return string.Format("{0},{1}", Up.ToString(verbose), Down.ToString(verbose));
         }
 
         public static Cube ShapeSolved = new Cube(Layer.Square, Layer.Square);
         public static Cube UpDownColorSolved = new Cube(Layer.YellowSquare, Layer.WhiteSquare);
 
         public static Cube Solved = new Cube(Layer.YellowL3, Layer.WhiteL1);
-        public static Cube L3Quarter123Solved = new Cube(Solved, Cell.Type.KeepCell_012345);
-        public static Cube L3Solved = new Cube(Solved, Cell.Type.KeepL3Cells);
+        public static Cube L1Solved = new Cube(Layer.YellowSquare, Layer.WhiteL1);
+        public static Cube L3Solved = new Cube(Layer.YellowL3, Layer.WhiteSquare);
+        public static Cube L3Quarter123Solved = new Cube(new Layer(0, 1, 2, 3, 4, 5, 0x8, 0x9), Layer.WhiteSquare);
         
-        public static Cube ExceptCell_0246 = new Cube(Solved, Cell.Type.IgnoreCell_0246);
-        public static Cube ExceptCell_234567 = new Cube(Solved, Cell.Type.IgnoreCell_234567);
-        public static Cube ExceptCell_34567 = new Cube(Solved, Cell.Type.IgnoreCell_34567);
-        public static Cube ExceptCell_4567 = new Cube(Solved, Cell.Type.IgnoreCell_4567);
-        public static Cube ExceptCell_57 = new Cube(Solved, Cell.Type.IgnoreCell_57);
+        public static Cube ExceptCell_0246 = new Cube(new Layer(0, 1, 0, 3, 0, 5, 0, 7), Layer.WhiteL1);
+        public static Cube ExceptCell_234567 = new Cube(new Layer(0, 1, 6, 7, 6, 7, 6, 7), Layer.WhiteL1);
+        public static Cube ExceptCell_34567 = new Cube(new Layer(0, 1, 2, 7, 6, 7, 6, 7), Layer.WhiteL1);
+        public static Cube ExceptCell_4567 = new Cube(new Layer(0, 1, 2, 3, 6, 7, 6, 7), Layer.WhiteL1);
+        public static Cube ExceptCell_57 = new Cube(new Layer(0, 1, 2, 3, 4, 7, 6, 7), Layer.WhiteL1);
     }
 
 }

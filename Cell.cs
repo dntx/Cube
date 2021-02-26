@@ -3,71 +3,24 @@ using System;
 namespace sq1code
 {
     class Cell {
-        public enum Type { 
-            IgnoreColor, 
-            IgnoreSideColor,
-
-            KeepAllCells, 
-            KeepCell_012345, 
-            KeepL3Cells, 
-            
-            IgnoreCell_0246,
-            IgnoreCell_234567,
-            IgnoreCell_34567,
-            IgnoreCell_4567,
-            IgnoreCell_57
-        };
-
         public int Value { get; }
         public int Degree { get; }
+        public int Shape { get; }
         public int Color { get; }
         public int Layer { get; }
         public int SideColor { get; }
         public int LeftSideColor { get; }
         public int RightSideColor { get; }
 
-        public Cell(int cell, Type type) {
-            switch (type) {
-                case Type.IgnoreColor:
-                    Value = GetShape(cell);
-                    break;
-                case Type.IgnoreSideColor:
-                    Value = GetShape(cell) + GetColor(cell) * 8;
-                    break;
-
-                case Type.KeepAllCells:
-                    Value = cell;
-                    break;
-                case Type.KeepCell_012345:
-                    Value = (cell < 6)? cell : GetShape(cell) + 8;
-                    break;
-                case Type.KeepL3Cells:
-                    Value = (cell < 8)? cell : GetShape(cell) + 8;
-                    break;
-
-                case Type.IgnoreCell_0246:
-                    Value = (cell == 0 || cell == 2 || cell == 4 || cell == 6) ? 0 : cell;
-                    break;
-                case Type.IgnoreCell_234567:
-                    Value = (2 <= cell && cell <= 7) ? GetShape(cell) + 6 : cell;
-                    break;
-                case Type.IgnoreCell_34567:
-                    Value = (3 <= cell && cell <= 7) ? GetShape(cell) + 6 : cell;
-                    break;
-                case Type.IgnoreCell_4567:
-                    Value = (4 <= cell && cell <= 7) ? GetShape(cell) + 6 : cell;
-                    break;
-                case Type.IgnoreCell_57:
-                    Value = (cell == 5 || cell == 7) ? 7 : cell;
-                    break;
-            }
-            
-            Degree = GetDegree(Value);
-            Color = GetColor(Value);
-            Layer = GetLayer(Value);
-            SideColor = GetSideColor(Value);
-            LeftSideColor = GetLeftSideColor(Value);
-            RightSideColor = GetRightSideColor(Value);
+        public Cell(int cell) {
+            Value = cell;
+            Degree = GetDegree(cell);
+            Shape = GetShape(cell);
+            Color = GetColor(cell);
+            Layer = GetLayer(cell);
+            SideColor = GetSideColor(cell);
+            LeftSideColor = GetLeftSideColor(cell);
+            RightSideColor = GetRightSideColor(cell);
         }
 
         public override string ToString()
