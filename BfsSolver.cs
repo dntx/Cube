@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace sq1code
 {
-    class Sq1Solver {
+    class BfsSolver {
         Dictionary<Cube, int> seenCubes = new Dictionary<Cube, int>();
         Dictionary<Layer, int> seenLayers = new Dictionary<Layer, int>();
         Dictionary<Half, int> seenHalfs = new Dictionary<Half, int>();
 
-        public Sq1Solver() {
+        public BfsSolver() {
             seenCubes = new Dictionary<Cube, int>();
             seenLayers = new Dictionary<Layer, int>();
             seenHalfs = new Dictionary<Half, int>();
