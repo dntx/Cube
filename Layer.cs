@@ -80,10 +80,6 @@ namespace sq1code
         }
 
         public bool IsQuarterSolved() {
-            if (!IsSquare()) {
-                return false;
-            }
-
             int start = (this[0].Degree == 60)? 0 : 1;
             for (int i = start; i < Count; i += 2) {
                 Cell cell60 = this[i];
@@ -97,15 +93,11 @@ namespace sq1code
         }
 
         public bool IsL1CellSolved(int cellCount) {
-            if (!IsSquare()) {
-                return false;
-            }
-
             int start = FindIndex(cell => cell.Value == 8);
             if (start < 0) {
                 return false;
             }
-            for (int i = 0; i < cellCount; i++) {
+            for (int i = 1; i < cellCount; i++) {
                 if (this[(start + i) % 8].Value != i + 8) {
                     return false;
                 }
@@ -114,15 +106,11 @@ namespace sq1code
         }
 
         public bool IsL3CrossSolved() {
-            if (!IsSquare()) {
-                return false;
-            }
-
-            int start = FindIndex(cell => cell.Value == 0);
+            int start = FindIndex(cell => cell.Value == 1);
             if (start < 0) {
                 return false;
             }
-            for (int i = 0; i < 8; i += 2) {
+            for (int i = 2; i < 8; i += 2) {
                 if (this[(start + i) % 8].Order != i + 1) {
                     return false;
                 }
@@ -131,6 +119,7 @@ namespace sq1code
         }
         
         public bool IsL3CellSolved(int[] l3Cells) {
+            //
             if (!IsSquare()) {
                 return false;
             }
@@ -162,32 +151,37 @@ namespace sq1code
 
         public ISet<Division> GetDivisions(bool ascendingOnly) {
             ISet<Division> divisions = new HashSet<Division>();
-            for (int start = 0; start < Count - 1; start++) {
-                int degreeSum = 0;
-                int count = 0;
-                for (int i = start; i < Count && degreeSum < 180; i++) {
-                    degreeSum += this[i].Degree;
-                    count++;
-                }
-
-                if (degreeSum == 180) {
-                    int end = start + count;
-                    Half first = new Half(GetRange(start, count));
-                    Half second = new Half(GetRange(end, Count - end), GetRange(0, start));
-
-                    if (first > second) {
-                        Half temp = first;
-                        first = second;
-                        second = temp;
+            int start = 0;
+            int last = 0;
+            int degreeSum = this[start].Degree;
+            while (true) {
+                if (degreeSum < 180) {
+                    last++;
+                    if (last >= Count) {
+                        break;
                     }
+                    degreeSum += this[last].Degree;
+                } else {
+                    if (degreeSum == 180) {
+                        int end = last + 1;
+                        Half first = new Half(GetRange(start, end - start));
+                        Half second = new Half(GetRange(end, Count - end), GetRange(0, start));
 
-                    divisions.Add(new Division(first, second));
-                    if (!ascendingOnly && first != second) {
-                        divisions.Add(new Division(second, first));
+                        if (first > second) {
+                            Half temp = first;
+                            first = second;
+                            second = temp;
+                        }
+
+                        divisions.Add(new Division(first, second));
+                        if (!ascendingOnly && first != second) {
+                            divisions.Add(new Division(second, first));
+                        }
                     }
+                    degreeSum -= this[start].Degree;
+                    start++;
                 }
             }
-
             return divisions;
         }
 

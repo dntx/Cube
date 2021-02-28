@@ -6,14 +6,13 @@ using System.Linq;
 namespace sq1code
 {
     class Cells : List<Cell> {
-        public Cells(IEnumerable<int> cells) 
-                : base(cells.Select(cell => new Cell(cell))) {}
+        public Cells(IEnumerable<int> cells) : base(cells.Select(cell => new Cell(cell))) {}
 
         public Cells(IEnumerable<Cell> cells) : base(cells) {}
         
-        public Cells(List<Cell> first, List<Cell> second) 
-                : base(MergeList(first, second)) {}
+        public Cells(List<Cell> first, List<Cell> second) : base(MergeList(first, second)) {}
         
+        // Note: MergeList is much faster than first.Contact(second)
         private static List<Cell> MergeList(List<Cell> first, List<Cell> second) {
             List<Cell> result = new List<Cell>();
             result.AddRange(first);
@@ -110,13 +109,12 @@ namespace sq1code
         }
 
         public bool IsSquare() {
-            int previousDegree = 0;
-            return TrueForAll(cell => {
-                int thisDegree = cell.Degree;
-                bool isChanged = (thisDegree != previousDegree);
-                previousDegree = thisDegree;
-                return isChanged;
-            });
+            for (int i = 1; i < Count; i++) {
+                if (this[i].Shape == this[i-1].Shape) {
+                    return false;
+                }
+            }
+            return true;
         }
 
         public static bool operator == (Cells lhs, Cells rhs) {

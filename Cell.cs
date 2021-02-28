@@ -20,9 +20,9 @@ namespace sq1code
             Shape = GetShape(cell);
             Color = GetColor(cell);
             Layer = GetLayer(cell);
-            SideColor = GetSideColor(cell);
-            LeftSideColor = GetLeftSideColor(cell);
-            RightSideColor = GetRightSideColor(cell);
+            SideColor = (Degree == 30)? GetSideColor(cell) : -1;
+            LeftSideColor = (Degree == 60)? GetLeftSideColor(cell) : -1;
+            RightSideColor = (Degree == 60)? GetRightSideColor(cell) : -1;
         }
 
         public override string ToString()
@@ -75,7 +75,7 @@ namespace sq1code
         private static int GetOrder(int cell) {
             return cell % 8;
         }
-        
+
         private static int GetDegree(int cell) {
             return (cell % 2 == 1) ? 30 : 60;
         }
@@ -97,10 +97,6 @@ namespace sq1code
         }
 
         private static int GetSideColor(int cell) {
-            if (GetDegree(cell) != 30) {
-                return -1;
-            }
-
             // 1: color=0, blue
             // 3: color=1, orange
             // 5: color=2, green
@@ -114,10 +110,6 @@ namespace sq1code
         }
 
         private static int GetLeftSideColor(int cell) {
-            if (GetDegree(cell) != 60) {
-                return -1;
-            }
-
             // 0: color=0, blue
             // 2: color=1, orange
             // 4: color=2, green
@@ -131,10 +123,6 @@ namespace sq1code
         }
 
         private static int GetRightSideColor(int cell) {
-            if (GetDegree(cell) != 60) {
-                return -1;
-            }
-
             // 2: color=0, blue
             // 4: color=1, orange
             // 6: color=2, green
