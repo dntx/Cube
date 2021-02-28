@@ -212,14 +212,17 @@ namespace sq1code
             int totalEdgeCount = 0;
             int netEdgeCount = 0;
             Queue<State> openStates = new Queue<State>();
+            int[] openStateCountByDepth = new int[100];
             List<State> seenStates = new List<State>();
 
             VisitCube(startCube);
             State startState = new State(startCube, 0);
             openStates.Enqueue(startState);
+            openStateCountByDepth[startState.Depth]++;
             seenStates.Add(startState);
             do {
                 State state = openStates.Dequeue();
+                openStateCountByDepth[state.Depth]--;
                 Cube cube = state.Cube;
                 if (!firstSolutionOnly || state.Depth < minSolutionDepth) {
                     List<Rotation> rotations = cube.GetRotations();
@@ -248,6 +251,7 @@ namespace sq1code
                             State nextState = new State(nextCube, nextCubeId, state, rotation);
                             netEdgeCount++;
                             openStates.Enqueue(nextState);
+                            openStateCountByDepth[nextState.Depth]++;
 
                             if (IsTargetState(nextState)) {
                                 solutionCount++;
@@ -264,14 +268,18 @@ namespace sq1code
                 if (closedStateCount == 1 || closedStateCount % 1000 == 0 || openStates.Count == 0) {
                     int totalCount = closedStateCount + openStates.Count;
                     Console.WriteLine(
-                        "seconds: {0:0.00}, depth: {1}, solution: {2}, closed: {3}({4:p}), open: {5}({6:p})", 
+                        "seconds: {0:0.00}, depth: {1}, solution: {2}, closed: {3}({4:p}), open[{5}]: {6}({7:p}), open[{8}]: {9}({10:p})", 
                         DateTime.Now.Subtract(startTime).TotalSeconds,
                         state.Depth, 
                         solutionCount,
                         closedStateCount, 
                         (float)closedStateCount / totalCount,
-                        openStates.Count, 
-                        (float)openStates.Count / totalCount
+                        state.Depth,
+                        openStateCountByDepth[state.Depth], 
+                        (float)openStateCountByDepth[state.Depth] / totalCount,
+                        state.Depth + 1,
+                        openStateCountByDepth[state.Depth + 1], 
+                        (float)openStateCountByDepth[state.Depth + 1] / totalCount
                         );
                 }
             } while (openStates.Count > 0);
