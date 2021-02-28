@@ -70,14 +70,14 @@ namespace sq1code
                     SolveSq1Cube(
                         Cube.L1Quarter123Solved, 
                         cube => cube.IsL1CellSolved(5), 
-                        rotation => rotation.IsShapeIdentical());
+                        rotation => rotation.IsSquareShapeLocked());
                     break;
 
                 case Goal.SolveL1Quarter4:
                     SolveSq1Cube(
                         Cube.L1Solved,
                         cube => cube.IsL1CellSolved(6),
-                        rotation => rotation.IsShapeIdentical());
+                        rotation => rotation.IsSquareShapeLocked());
                     break;
 
                 // L1 strategy 2
@@ -85,7 +85,7 @@ namespace sq1code
                     SolveSq1Cube(
                         Cube.UpDownColorSolved, 
                         cube => cube.IsUpDwonColorGrouped(), 
-                        rotation => rotation.IsShapeIdentical());
+                        rotation => rotation.IsSquareShapeLocked());
                     break;
 
                 case Goal.SolveL1:
@@ -96,7 +96,7 @@ namespace sq1code
                     SolveSq1Cube(
                         Cube.L3CrossSolved, 
                         cube => cube.IsL1Solved(),
-                        rotation => rotation.IsQuarterLocked(),
+                        rotation => rotation.IsSquareQuarterLocked(),
                         firstSolutionOnly: true);
                     break;
 
@@ -104,7 +104,7 @@ namespace sq1code
                     SolveSq1Cube(
                         Cube.Solved,
                         cube => cube.IsL3CrossSolved(),
-                        rotation => rotation.IsShapeIdentical(),
+                        rotation => rotation.IsSquareShapeLocked(),
                         firstSolutionOnly: true);
                     break;
 
@@ -113,7 +113,7 @@ namespace sq1code
                     SolveSq1Cube(
                         Cube.L3Cell01Solved, 
                         cube => cube.IsL1Solved(), 
-                        rotation => rotation.IsShapeIdentical(),
+                        rotation => rotation.IsSquareShapeLocked(),
                         firstSolutionOnly: true);
                     break;
 
@@ -121,7 +121,7 @@ namespace sq1code
                     SolveSq1Cube(
                         Cube.L3Cell0123Solved, 
                         cube => cube.IsL3CellSolved(0, 1),
-                        rotation => rotation.IsQuarterLocked(),
+                        rotation => rotation.IsSquareQuarterLocked(),
                         firstSolutionOnly: false);
                     break;
 
@@ -129,7 +129,7 @@ namespace sq1code
                     SolveSq1Cube(
                         Cube.Solved,
                         cube => cube.IsL3CellSolved(0, 1, 2, 3),
-                        rotation => rotation.IsShapeIdentical(),
+                        rotation => rotation.IsSquareShapeLocked(),
                         firstSolutionOnly: true);
                     break;
 
@@ -138,7 +138,7 @@ namespace sq1code
                     SolveSq1Cube(
                         Cube.L3Cell01Solved, 
                         cube => cube.IsL1Solved(), 
-                        rotation => rotation.IsShapeIdentical(),
+                        rotation => rotation.IsSquareShapeLocked(),
                         firstSolutionOnly: true);
                     break;
 
@@ -146,7 +146,7 @@ namespace sq1code
                     SolveSq1Cube(
                         Cube.L3Cell012Solved, 
                         cube => cube.IsL3CellSolved(0, 1), 
-                        rotation => rotation.IsQuarterLocked(),
+                        rotation => rotation.IsSquareQuarterLocked(),
                         firstSolutionOnly: true);
                     break;
 
@@ -162,7 +162,7 @@ namespace sq1code
                     SolveSq1Cube(
                         Cube.L3Cell012346Solved,
                         cube => cube.IsL3CellSolved(0, 1, 2, 3),
-                        rotation => rotation.IsQuarterLocked(),
+                        rotation => rotation.IsSquareQuarterLocked(),
                         firstSolutionOnly: true);
                     break;
 
@@ -170,7 +170,7 @@ namespace sq1code
                     SolveSq1Cube(
                         Cube.Solved,
                         cube => cube.IsL3CellSolved(0, 1, 2, 3, 4, 6), 
-                        rotation => rotation.IsShapeIdentical(),
+                        rotation => rotation.IsSquareShapeLocked(),
                         firstSolutionOnly: true);
                     break;
 
@@ -182,7 +182,7 @@ namespace sq1code
                     SolveSq1Cube(
                         Cube.Solved, 
                         cube => cube.IsL1Solved(), 
-                        rotation => rotation.IsQuarterLocked());
+                        rotation => rotation.IsSquareQuarterLocked());
                     break;
             }
             Console.WriteLine("end");

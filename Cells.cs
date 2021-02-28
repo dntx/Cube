@@ -95,8 +95,10 @@ namespace sq1code
             return FindAll(cell => cell.Color != primaryColor).Count;
         }
 
-        public Cells GetShape() {
-            return new Cells(this.Select(cell => cell.Degree));
+        public int GetShape() {
+            int shapeHash = 0;
+            this.ForEach(cell => shapeHash = shapeHash * 10 + cell.Shape);
+            return shapeHash;
         }
 
         public bool IsHexagram() {
