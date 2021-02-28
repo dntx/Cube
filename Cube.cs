@@ -59,24 +59,26 @@ namespace sq1code
             return Up == Layer.YellowSquare && Down == Layer.WhiteSquare;
         }
 
-        public bool IsL3QuartersSolved(int minSolvedCount, int minUnsolvedCount) {
-            return Up.IsL3QuartersSolved(minSolvedCount, minUnsolvedCount) || Down.IsL3QuartersSolved(minSolvedCount, minUnsolvedCount);
-        }
-
-        public bool IsL3CellSolved(int minCellSolvedCount) {
-            return Up.IsL3CellSolved(minCellSolvedCount) || Down.IsL3CellSolved(minCellSolvedCount);
+        public bool IsL1CellSolved(int cellCount) {
+            return Up.IsL1CellSolved(cellCount) || Down.IsL1CellSolved(cellCount);
         }
 
         public bool IsL1Solved() {
-            return Up == Layer.WhiteL1 || Down == Layer.WhiteL1;
+            return IsL1CellSolved(8);
         }
 
-        public bool IsSolvedExceptCells(params int[] exceptCells) {
-            return Up == Layer.WhiteL1 && Down.IsSolvedExceptL3Cells(exceptCells) || Down == Layer.WhiteL1 && Up.IsSolvedExceptL3Cells(exceptCells);
+        public bool IsL3CrossSolved() {
+            if (!IsL1Solved()) {
+                return false;
+            }
+            return Up.IsL3CrossSolved() || Down.IsL3CrossSolved();
         }
 
-        public bool IsSolvedExceptL3Corners() {
-            return Up == Layer.WhiteL1 && Down.IsL3CrossSolved() || Down == Layer.WhiteL1 && Up.IsL3CrossSolved();
+        public bool IsL3CellSolved(params int[] l3Cells) {
+            if (!IsL1Solved()) {
+                return false;
+            }
+            return Up.IsL3CellSolved(l3Cells) || Down.IsL3CellSolved(l3Cells);
         }
 
         public List<Rotation> GetRotations() {
@@ -116,17 +118,50 @@ namespace sq1code
 
         public static Cube ShapeSolved = new Cube(Layer.Square, Layer.Square);
         public static Cube UpDownColorSolved = new Cube(Layer.YellowSquare, Layer.WhiteSquare);
-
         public static Cube Solved = new Cube(Layer.YellowL3, Layer.WhiteL1);
-        public static Cube L1Solved = new Cube(Layer.YellowSquare, Layer.WhiteL1);
-        public static Cube L3Solved = new Cube(Layer.YellowL3, Layer.WhiteSquare);
-        public static Cube L3Quarter123Solved = new Cube(new Layer(0, 1, 2, 3, 4, 5, 0x8, 0x9), Layer.WhiteSquare);
-        
-        public static Cube ExceptCell_0246 = new Cube(new Layer(0, 1, 0, 3, 0, 5, 0, 7), Layer.WhiteL1);
-        public static Cube ExceptCell_234567 = new Cube(new Layer(0, 1, 6, 7, 6, 7, 6, 7), Layer.WhiteL1);
-        public static Cube ExceptCell_34567 = new Cube(new Layer(0, 1, 2, 7, 6, 7, 6, 7), Layer.WhiteL1);
-        public static Cube ExceptCell_4567 = new Cube(new Layer(0, 1, 2, 3, 6, 7, 6, 7), Layer.WhiteL1);
-        public static Cube ExceptCell_57 = new Cube(new Layer(0, 1, 2, 3, 4, 7, 6, 7), Layer.WhiteL1);
-    }
 
+
+        // cubes that L1 need solved first
+        public static Cube L1Solved = new Cube(Layer.YellowSquare, Layer.WhiteL1);
+        public static Cube L1Quarter123Solved = new Cube(Layer.YellowSquare, new Layer(0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 6, 7));
+
+
+        // cubes that L3 need solved then
+        public static Cube L3CrossSolved = new Cube(new Layer(0, 1, 0, 3, 0, 5, 0, 7), Layer.WhiteL1);
+        public static Cube L3Cross1375 = new Cube(new Layer(0, 1, 0, 3, 0, 7, 0, 5), Layer.WhiteL1);
+        public static Cube L3Cross1537 = new Cube(new Layer(0, 1, 0, 5, 0, 3, 0, 7), Layer.WhiteL1);
+        public static Cube L3Cross1573 = new Cube(new Layer(0, 1, 0, 5, 0, 7, 0, 3), Layer.WhiteL1);
+        public static Cube L3Cross1735 = new Cube(new Layer(0, 1, 0, 7, 0, 3, 0, 5), Layer.WhiteL1);
+        public static Cube L3Cross1753 = new Cube(new Layer(0, 1, 0, 7, 0, 5, 0, 3), Layer.WhiteL1);
+
+        public static Cube L3CornersSolved = new Cube(new Layer(0, 7, 2, 7, 4, 7, 6, 7), Layer.WhiteL1);
+        public static Cube L3Corner0264 = new Cube(new Layer(0, 7, 2, 7, 6, 7, 4, 7), Layer.WhiteL1);
+        public static Cube L3Corner0426 = new Cube(new Layer(0, 7, 4, 7, 2, 7, 6, 7), Layer.WhiteL1);
+        public static Cube L3Corner0462 = new Cube(new Layer(0, 7, 4, 7, 6, 7, 2, 7), Layer.WhiteL1);
+        public static Cube L3Corner0624 = new Cube(new Layer(0, 7, 6, 7, 2, 7, 4, 7), Layer.WhiteL1);
+        public static Cube L3Corner0642 = new Cube(new Layer(0, 7, 6, 7, 4, 7, 2, 7), Layer.WhiteL1);
+ 
+
+        public static Cube L3Cell01Solved = new Cube(new Layer(0, 1, 6, 7, 6, 7, 6, 7), Layer.WhiteL1);
+        public static Cube L3Cell01_0xx1 = new Cube(new Layer(0, 7, 6, 1, 6, 7, 6, 7), Layer.WhiteL1);
+        public static Cube L3Cell01_1xx0 = new Cube(new Layer(1, 6, 7, 0, 7, 6, 7, 6), Layer.WhiteL1);
+        public static Cube L3Cell01_10 = new Cube(new Layer(1, 0, 7, 6, 7, 6, 7, 6), Layer.WhiteL1);
+
+
+        public static Cube L3Cell012Solved = new Cube(new Layer(0, 1, 2, 7, 6, 7, 6, 7), Layer.WhiteL1);
+        public static Cube L3Cell012_01xx2 = new Cube(new Layer(0, 1, 6, 7, 2, 7, 6, 7), Layer.WhiteL1);
+        public static Cube L3Cell012_2x01 = new Cube(new Layer(2, 7, 0, 1, 6, 7, 6, 7), Layer.WhiteL1);
+
+
+        public static Cube L3Cell0123Solved = new Cube(new Layer(0, 1, 2, 3, 6, 7, 6, 7), Layer.WhiteL1);
+        public static Cube L3Cell0123_012xx3 = new Cube(new Layer(0, 1, 2, 7, 6, 3, 6, 7), Layer.WhiteL1);
+        public static Cube L3Cell0123_3012 = new Cube(new Layer(3, 0, 1, 2, 7, 6, 7, 6), Layer.WhiteL1);
+
+
+        public static Cube L3Cell012346Solved = new Cube(new Layer(0, 1, 2, 3, 4, 7, 6, 7), Layer.WhiteL1);
+        public static Cube L3Cell012346_012364 = new Cube(new Layer(0, 1, 2, 3, 6, 7, 4, 7), Layer.WhiteL1);
+
+
+        public static Cube L3Cell012345_01234xx5 = new Cube(new Layer(0, 1, 2, 3, 4, 7, 6, 5), Layer.WhiteL1);
+    }
 }

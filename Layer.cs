@@ -14,7 +14,11 @@ namespace sq1code
         }
 
         public Layer(params int[] cells) 
-                : this(new Half(cells.Take(4)), new Half(cells.TakeLast(4))) {}
+                : this(new Half(cells.Take(4)), new Half(cells.TakeLast(4))) {
+            if (cells.Length != 8) {
+                throw new ArgumentException("cells count should be 8");
+            }
+        }
 
         private static Cells GetNormalizedCells(Cells cells) {
             Cells minCells = cells;
@@ -92,47 +96,20 @@ namespace sq1code
             return true;
         }
 
-        public bool IsL3QuartersSolved(int minSolvedCount, int minUnsolvedCount) {
+        public bool IsL1CellSolved(int cellCount) {
             if (!IsSquare()) {
                 return false;
             }
 
-            for (int start = 0; start < Count; start++) {
-                int solvedCount = 0;
-                int unsolvedCount = 0;
-                for (int i = 0; i < Count; i += 2) {
-                    Cell cell0 = this[(i + start) % Count];
-                    Cell cell1 = this[(i + start + 1) % Count];
-                    if (cell0.Layer != 3 || cell0.Degree != 60) {
-                        break;
-                    }
-
-                    if (cell1.Layer == 3 && cell1.Degree == 30 && cell1.SideColor == cell0.LeftSideColor) {
-                        solvedCount++;
-                    } else {
-                        unsolvedCount++;
-                        break;
-                    }
-                }
-                if (solvedCount >= minSolvedCount && unsolvedCount >= minUnsolvedCount) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        public bool IsL3CellSolved(int minCellSolvedCount) {
-            if (!IsSquare()) {
+            int start = FindIndex(cell => cell.Value == 8);
+            if (start < 0) {
                 return false;
             }
-
-            for (int i = 0; i < minCellSolvedCount; i++) {
-                if (this[i].Value != i) {
+            for (int i = 0; i < cellCount; i++) {
+                if (this[(start + i) % 8].Value != i + 8) {
                     return false;
                 }
             }
-
             return true;
         }
 
@@ -141,37 +118,24 @@ namespace sq1code
                 return false;
             }
 
-            Cell previousCell = null;
-            int count = 0;
-            foreach (Cell cell in this) {
-                if (cell.Degree == 30) {
-                    if (previousCell != null && cell.Value != (previousCell.Value + 2) % 8) {
-                        return false;
-                    }
-                    previousCell = cell;
-                    count++;
+            int start = FindIndex(cell => cell.Value == 0);
+            if (start < 0) {
+                return false;
+            }
+            for (int i = 0; i < 8; i += 2) {
+                if (this[(start + i) % 8].Order != i + 1) {
+                    return false;
                 }
             }
-            return count == 4;
+            return true;
         }
         
-        public bool IsSolvedExceptL3Cells(int[] exceptCells) {
+        public bool IsL3CellSolved(int[] l3Cells) {
             if (!IsSquare()) {
                 return false;
             }
 
-            List<int> exceptCellList = new List<int>(exceptCells);
-            for (int i = 0; i < 8; i++) {
-                if (exceptCellList.Contains(i)) {
-                    continue;
-                }
-                
-                if (this[i].Value != i) {
-                    return false;
-                }
-            }
-
-            return true;
+            return l3Cells.All(cell => this[cell].Value == cell);
         }
 
         public override string ToString()

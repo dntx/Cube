@@ -104,6 +104,11 @@ namespace sq1code
             return TrueForAll(cell => cell.Degree == 60);
         }
 
+        public bool IsSameColor() {
+            int color = this[0].Color;
+            return TrueForAll(cell => cell.Color == color);
+        }
+
         public bool IsSquare() {
             int previousDegree = 0;
             return TrueForAll(cell => {

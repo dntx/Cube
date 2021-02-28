@@ -4,6 +4,7 @@ namespace sq1code
 {
     class Cell {
         public int Value { get; }
+        public int Order { get; }
         public int Degree { get; }
         public int Shape { get; }
         public int Color { get; }
@@ -14,6 +15,7 @@ namespace sq1code
 
         public Cell(int cell) {
             Value = cell;
+            Order = GetOrder(cell);
             Degree = GetDegree(cell);
             Shape = GetShape(cell);
             Color = GetColor(cell);
@@ -70,6 +72,10 @@ namespace sq1code
             return Value;
         }
     
+        private static int GetOrder(int cell) {
+            return cell % 8;
+        }
+        
         private static int GetDegree(int cell) {
             return (cell % 2 == 1) ? 30 : 60;
         }

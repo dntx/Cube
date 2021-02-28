@@ -14,11 +14,11 @@
             //new BfsSolver().Solve(Goal.SolveShape);
             //new BfsSolver().Solve(Goal.SolveL1Quarter123);
             //new BfsSolver().Solve(Goal.SolveL1Quarter4);
-            //new BfsSolver().Solve(Goal.SolveL3Cell_01);
-            //new BfsSolver().Solve(Goal.SolveL3Cell_2);
-            //new BfsSolver().Solve(Goal.SolveL3Cell_3);
-            //new BfsSolver().Solve(Goal.SolveL3Cell_46);
-            new BfsSolver().Solve(Goal.SolveL3Cell_57);
+            new BfsSolver().Solve(Goal.SolveL3Cell01);
+            //new BfsSolver().Solve(Goal.SolveL3Cell2);
+            //new BfsSolver().Solve(Goal.SolveL3Cell3);
+            //new BfsSolver().Solve(Goal.SolveL3Cell46);
+            //new BfsSolver().Solve(Goal.SolveL3Cell57);
         }
     }
 }
