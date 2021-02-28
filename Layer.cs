@@ -23,9 +23,11 @@ namespace sq1code
         private static Cells GetNormalizedCells(Cells cells) {
             Cells minCells = cells;
             for (int start = 1; start < cells.Count; start++) {
-                Cells shiftedCells = new Cells(cells.GetRange(start, cells.Count - start), cells.GetRange(0, start));
-                if (shiftedCells < minCells) {
-                    minCells = shiftedCells;
+                if (cells[start] <= minCells[0]) {
+                    Cells shiftedCells = new Cells(cells.GetRange(start, cells.Count - start), cells.GetRange(0, start));
+                    if (shiftedCells < minCells) {
+                        minCells = shiftedCells;
+                    }
                 }
             }
             return minCells;

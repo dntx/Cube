@@ -142,14 +142,6 @@ namespace sq1code
         }
 
         public static bool operator < (Cells lhs, Cells rhs) {
-            if (lhs.IsSquare() != rhs.IsSquare()) {
-                return lhs.IsSquare() && !rhs.IsSquare();
-            }
-
-            if (lhs.IsHexagram() != rhs.IsHexagram()) {
-                return !lhs.IsHexagram() && rhs.IsHexagram();
-            }
-
             int minCount = Math.Min(lhs.Count, rhs.Count);
             for (int i = 0; i < minCount; i++) {
                 if (lhs[i] < rhs[i]) {
@@ -162,14 +154,6 @@ namespace sq1code
         }
 
         public static bool operator > (Cells lhs, Cells rhs) {
-            if (lhs.IsSquare() != rhs.IsSquare()) {
-                return !lhs.IsSquare() && rhs.IsSquare();
-            }
-
-            if (lhs.IsHexagram() != rhs.IsHexagram()) {
-                return lhs.IsHexagram() && !rhs.IsHexagram();
-            }
-
             int minCount = Math.Min(lhs.Count, rhs.Count);
             for (int i = 0; i < minCount; i++) {
                 if (lhs[i] < rhs[i]) {
