@@ -224,7 +224,8 @@ namespace sq1code
                 State state = openStates.Dequeue();
                 openStateCountByDepth[state.Depth]--;
                 Cube cube = state.Cube;
-                if (!firstSolutionOnly || state.Depth < minSolutionDepth) {
+                bool shouldSkip = firstSolutionOnly && state.Depth >= minSolutionDepth;
+                if (!shouldSkip) {
                     List<Rotation> rotations = cube.GetRotations();
                     List<Rotation> focusRotations = rotations.FindAll(IsFocusRotation);
 
@@ -265,7 +266,7 @@ namespace sq1code
                 }
 
                 closedStateCount++;
-                if (closedStateCount == 1 || closedStateCount % 1000 == 0 || openStates.Count == 0) {
+                if (closedStateCount == 1 || openStates.Count == 0 || (!shouldSkip && closedStateCount % 1000 == 0)) {
                     int totalCount = closedStateCount + openStates.Count;
                     Console.WriteLine(
                         "seconds: {0:0.00}, depth: {1}, solution: {2}, closed: {3}({4:p}), open[{5}]: {6}({7:p}), open[{8}]: {9}({10:p})", 
