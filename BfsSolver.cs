@@ -4,58 +4,22 @@ using System.Collections.Generic;
 namespace sq1code
 {
     class BfsSolver {
-        Dictionary<Cube, int> seenCubes = new Dictionary<Cube, int>();
-        Dictionary<Layer, int> seenLayers = new Dictionary<Layer, int>();
-        Dictionary<Half, int> seenHalfs = new Dictionary<Half, int>();
-
-        public BfsSolver() {
-            seenCubes = new Dictionary<Cube, int>();
-            seenLayers = new Dictionary<Layer, int>();
-            seenHalfs = new Dictionary<Half, int>();
-        }
-
-        private int VisitCube(Cube cube) {
+        private static int VisitCube(Cube cube, Dictionary<Cube, int> seenCubes) {
             if (seenCubes.ContainsKey(cube)) {
                 return seenCubes[cube];
             }
             
             int cubeId = seenCubes.Count;
             seenCubes.Add(cube, cubeId);
-            VisitLayer(cube.Up);
-            VisitLayer(cube.Down);
             return cubeId;
         }
 
-        private bool VisitLayer(Layer layer) {
-            // no matter layer is seen or not, 
-            // we always need visit the halfs because 
-            // different divison may cause different half on the same layer
-            VisitHalf(layer.Left);
-            VisitHalf(layer.Right);
-
-            if (seenLayers.ContainsKey(layer)) {
-                return false;
-            }
-
-            seenLayers.Add(layer, seenLayers.Count);
-            return true;
-        }
-
-        private bool VisitHalf(Half half) {
-            if (seenHalfs.ContainsKey(half)) {
-                return false;
-            }
-
-            seenHalfs.Add(half, seenHalfs.Count);
-            return true;
-        }
-
-        private void VisitSolution(State state, Cube cubeSolution) {
+        private static void VisitSolution(State state, Cube cubeSolution) {
             state.Solutions.Add(cubeSolution);
             state.Froms.ForEach(from => VisitSolution(from.Key, cubeSolution));
         }
 
-        public void Solve(Goal goal) {
+        public static void Solve(Goal goal) {
             Console.WriteLine("start {0}", goal);
             switch (goal)
             {
@@ -178,23 +142,23 @@ namespace sq1code
             Console.WriteLine("end");
         }
 
-        private void SolveSq1Cube(Cube startCube, Predicate<Cube> IsTargetCube) {
+        private static void SolveSq1Cube(Cube startCube, Predicate<Cube> IsTargetCube) {
             SolveSq1Cube(startCube, IsTargetCube, targetCubeCount: int.MaxValue, IsFocusRotation: rotation => true);
         }
         
-        private void SolveSq1Cube(Cube startCube, Predicate<Cube> IsTargetCube, Predicate<Rotation> IsFocusRotation) {
+        private static void SolveSq1Cube(Cube startCube, Predicate<Cube> IsTargetCube, Predicate<Rotation> IsFocusRotation) {
             SolveSq1Cube(startCube, IsTargetCube, targetCubeCount: int.MaxValue, IsFocusRotation);
         }
 
-        private void SolveSq1Cube(Cube startCube, Cube targetCube, Predicate<Rotation> IsFocusRotation) {
+        private static void SolveSq1Cube(Cube startCube, Cube targetCube, Predicate<Rotation> IsFocusRotation) {
             SolveSq1Cube(startCube, cube => cube == targetCube, targetCubeCount: 1, IsFocusRotation);
         }
 
-        private void SolveSq1Cube(Cube startCube, List<Cube> targetCubes, Predicate<Rotation> IsFocusRotation) {
+        private static void SolveSq1Cube(Cube startCube, List<Cube> targetCubes, Predicate<Rotation> IsFocusRotation) {
             SolveSq1Cube(startCube, cube => targetCubes.Contains(cube), targetCubes.Count, IsFocusRotation);
         }
         
-        private void SolveSq1Cube(Cube startCube, Predicate<Cube> IsTargetCube, int targetCubeCount, Predicate<Rotation> IsFocusRotation) {
+        private static void SolveSq1Cube(Cube startCube, Predicate<Cube> IsTargetCube, int targetCubeCount, Predicate<Rotation> IsFocusRotation) {
             Console.WriteLine("target cube count: {0}", targetCubeCount);
             DateTime startTime = DateTime.Now;
             Predicate<State> IsTargetState = (state => state.Depth > 0 && IsTargetCube(state.Cube));
@@ -208,7 +172,9 @@ namespace sq1code
             int[] openStateCountByDepth = new int[100];
             List<State> seenStates = new List<State>();
 
-            VisitCube(startCube);
+            Dictionary<Cube, int> seenCubes = new Dictionary<Cube, int>();
+            VisitCube(startCube, seenCubes);
+
             State startState = new State(startCube, 0);
             openStates.Enqueue(startState);
             openStateCountByDepth[startState.Depth]++;
@@ -226,7 +192,7 @@ namespace sq1code
                     foreach (Rotation rotation in focusRotations) {
                         Cube nextCube = cube.RotateBy(rotation);
                         totalEdgeCount++;
-                        int nextCubeId = VisitCube(nextCube);
+                        int nextCubeId = VisitCube(nextCube, seenCubes);
                         if (nextCubeId < seenStates.Count) {    
                             // existing cube
                             State existingState = seenStates[nextCubeId];
@@ -295,7 +261,7 @@ namespace sq1code
             Console.WriteLine("edges: {0}, net: {1}", totalEdgeCount, netEdgeCount);
         }
 
-        private void OutputState(State state) {
+        private static void OutputState(State state) {
             Console.WriteLine("cube: {0}", state.Cube);
             Console.WriteLine("depth：{0}", state.Depth);
             do {
@@ -307,16 +273,10 @@ namespace sq1code
                 Cube rotatedCube = (fromState != null)? fromState.Cube.RotateBy(fromRotation) : state.Cube;
 
                 Console.WriteLine(
-                    " ==> {0} | {1,2}({2,2}) | {3,2},{4,-2} | {5,2}-{6,-2},{7,2}-{8,-2}", 
+                    " ==> {0} | {1,2}({2,2})", 
                     rotatedCube.ToString(verbose: true),
-                    seenCubes[state.Cube],
-                    state.Solutions.Count, 
-                    seenLayers[state.Cube.Up], 
-                    seenLayers[state.Cube.Down],
-                    seenHalfs[state.Cube.Up.Left],
-                    seenHalfs[state.Cube.Up.Right],
-                    seenHalfs[state.Cube.Down.Left],
-                    seenHalfs[state.Cube.Down.Right]
+                    state.CubeId,
+                    state.Solutions.Count
                     );
                 state = fromState;
             } while (state != null);
