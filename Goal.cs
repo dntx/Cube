@@ -24,11 +24,20 @@ namespace sq1code
         SolveL3Cell01,
         SolveL3Cell2,
         SolveL3Cell3,
+
+        // L3 strategy 3.1
         SolveL3Cell46,
+        SolveL3Cell57Then,
+
+        // L3 strategy 3.2
         SolveL3Cell57,
+        SolveL3Cell46Then,
 
         // L3 strategy 4
         SolveL3QuarterPairs,
-        SolveL3QuarterPosition
+        SolveL3QuarterPosition,
+
+
+        SolveScratch
     };
 }

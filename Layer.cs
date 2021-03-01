@@ -81,12 +81,25 @@ namespace sq1code
             return (lastPrimary - firstPrimary == primaryCount) || (lastSecondary - firstSecondary == secondaryCount);
         }
 
-        public bool IsQuarterSolved() {
+        public bool IsQuarterPairSolved() {
             int start = (this[0].Degree == 60)? 0 : 1;
             for (int i = start; i < Count; i += 2) {
                 Cell cell60 = this[i];
                 Cell cell30 = this[(i + 1) % Count];
                 if (cell60.Layer != cell30.Layer || cell60.LeftSideColor != cell30.SideColor) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public bool IsCounterQuarterPairSolved() {
+            int start = (this[0].Degree == 30)? 0 : 1;
+            for (int i = start; i < Count; i += 2) {
+                Cell cell30 = this[i];
+                Cell cell60 = this[(i + 1) % Count];
+                if (cell30.Layer != cell60.Layer || cell30.SideColor != cell60.RightSideColor) {
                     return false;
                 }
             }

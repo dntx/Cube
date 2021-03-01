@@ -114,6 +114,7 @@ namespace sq1code
                         rotation => rotation.IsSquareShapeLocked());
                     break;
 
+                // L3 strategy 3.1
                 case Goal.SolveL3Cell46:
                     SolveSq1Cube(
                         Cube.L3Cell012346Solved,
@@ -121,12 +122,36 @@ namespace sq1code
                         rotation => rotation.IsSquareShapeLocked());
                     break;
 
-                case Goal.SolveL3Cell57:
+                case Goal.SolveL3Cell57Then:
                     SolveSq1Cube(
                         Cube.Solved,
                         Cube.L3Cell01234765, 
                         rotation => rotation.IsSquareShapeLocked());
                     break;
+
+                // L3 strategy 3.2
+                case Goal.SolveL3Cell57:
+                    SolveSq1Cube(
+                        Cube.L3Cell012357Solved,
+                        Cube.L3Cell012357_012375,
+                        rotation => rotation.IsSquareShapeLocked());
+                    break;
+
+                case Goal.SolveL3Cell46Then:
+                    SolveSq1Cube(
+                        Cube.Solved,
+                        Cube.L3Cell01236547, 
+                        rotation => rotation.IsSquareShapeLocked());
+                    break;
+
+
+                case Goal.SolveScratch:
+                    SolveSq1Cube(
+                        Cube.Solved, 
+                        Cube.L1L3Cell08Swapped,
+                        rotation => rotation.IsSquareShapeLocked());
+                    break;
+
 
                 // L3 strategy 4
                 case Goal.SolveL3QuarterPairs:
