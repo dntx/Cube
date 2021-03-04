@@ -1,21 +1,21 @@
 using System.Collections.Generic;
 
 namespace sq1code {
-    class State {
+    class BfsState {
         public int Depth { get; }
-        public List<KeyValuePair<State, Rotation>> Froms { get; }
-        public KeyValuePair<State, Rotation> BestFrom { get; private set; }
+        public List<KeyValuePair<BfsState, Rotation>> Froms { get; }
+        public KeyValuePair<BfsState, Rotation> BestFrom { get; private set; }
         public Cube Cube { get; }
         public int CubeId { get; }
         public ISet<Cube> Solutions { get; set; }
 
-        public State(Cube cube, int cubeId) : this(cube, cubeId, null, null) {
+        public BfsState(Cube cube, int cubeId) : this(cube, cubeId, null, null) {
         }
 
-        public State(Cube cube, int cubeId, State fromState, Rotation fromRotation) {
+        public BfsState(Cube cube, int cubeId, BfsState fromState, Rotation fromRotation) {
             Depth = 0;
-            Froms = new List<KeyValuePair<State, Rotation>>();
-            BestFrom = new KeyValuePair<State, Rotation>(null, null);
+            Froms = new List<KeyValuePair<BfsState, Rotation>>();
+            BestFrom = new KeyValuePair<BfsState, Rotation>(null, null);
             Cube = cube;
             CubeId = cubeId;
             Solutions = new HashSet<Cube>();
@@ -26,8 +26,8 @@ namespace sq1code {
             }
         }
 
-        public void AddFrom(State fromState, Rotation fromRotation) {
-            Froms.Add(new KeyValuePair<State, Rotation>(fromState, fromRotation));
+        public void AddFrom(BfsState fromState, Rotation fromRotation) {
+            Froms.Add(new KeyValuePair<BfsState, Rotation>(fromState, fromRotation));
         }
 
         public void CalculateBestFrom() {
@@ -42,9 +42,9 @@ namespace sq1code {
             Froms.ForEach(from => BestFrom = GetBetterFrom(from, BestFrom));
         }
 
-        private KeyValuePair<State, Rotation> GetBetterFrom(KeyValuePair<State, Rotation> from1, KeyValuePair<State, Rotation> from2) {
-            State state1 = from1.Key;
-            State state2 = from2.Key;
+        private KeyValuePair<BfsState, Rotation> GetBetterFrom(KeyValuePair<BfsState, Rotation> from1, KeyValuePair<BfsState, Rotation> from2) {
+            BfsState state1 = from1.Key;
+            BfsState state2 = from2.Key;
             do {
                 if (state1.Solutions.Count > state2.Solutions.Count) {
                     return from1;

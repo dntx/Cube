@@ -14,7 +14,7 @@ namespace sq1code
             return cubeId;
         }
 
-        private static void VisitSolution(State state, Cube cubeSolution) {
+        private static void VisitSolution(BfsState state, Cube cubeSolution) {
             state.Solutions.Add(cubeSolution);
             state.Froms.ForEach(from => VisitSolution(from.Key, cubeSolution));
         }
@@ -186,26 +186,26 @@ namespace sq1code
         private static void SolveSq1Cube(Cube startCube, Predicate<Cube> IsTargetCube, int targetCubeCount, Predicate<Rotation> IsFocusRotation) {
             Console.WriteLine("target cube count: {0}", targetCubeCount);
             DateTime startTime = DateTime.Now;
-            Predicate<State> IsTargetState = (state => state.Depth > 0 && IsTargetCube(state.Cube));
+            Predicate<BfsState> IsTargetState = (state => state.Depth > 0 && IsTargetCube(state.Cube));
 
             int closedStateCount = 0;
             int solutionCount = 0;
 
             int totalEdgeCount = 0;
             int netEdgeCount = 0;
-            Queue<State> openStates = new Queue<State>();
+            Queue<BfsState> openStates = new Queue<BfsState>();
             int[] openStateCountByDepth = new int[100];
-            List<State> seenStates = new List<State>();
+            List<BfsState> seenStates = new List<BfsState>();
 
             Dictionary<Cube, int> seenCubes = new Dictionary<Cube, int>();
             VisitCube(startCube, seenCubes);
 
-            State startState = new State(startCube, 0);
+            BfsState startState = new BfsState(startCube, 0);
             openStates.Enqueue(startState);
             openStateCountByDepth[startState.Depth]++;
             seenStates.Add(startState);
             do {
-                State state = openStates.Dequeue();
+                BfsState state = openStates.Dequeue();
                 openStateCountByDepth[state.Depth]--;
                 Cube cube = state.Cube;
                 bool shouldSkip = (solutionCount >= targetCubeCount);
@@ -220,7 +220,7 @@ namespace sq1code
                         int nextCubeId = VisitCube(nextCube, seenCubes);
                         if (nextCubeId < seenStates.Count) {    
                             // existing cube
-                            State existingState = seenStates[nextCubeId];
+                            BfsState existingState = seenStates[nextCubeId];
                             if (nextDepth < existingState.Depth) {
                                 // a better path found, should not happen as we are using BFS
                                 throw new Exception("error: a better path found in BFS");
@@ -233,7 +233,7 @@ namespace sq1code
                             }
                         } else {    
                             // new cube
-                            State nextState = new State(nextCube, nextCubeId, state, rotation);
+                            BfsState nextState = new BfsState(nextCube, nextCubeId, state, rotation);
                             netEdgeCount++;
                             openStates.Enqueue(nextState);
                             openStateCountByDepth[nextState.Depth]++;
@@ -286,11 +286,11 @@ namespace sq1code
             Console.WriteLine("edges: {0}, net: {1}", totalEdgeCount, netEdgeCount);
         }
 
-        private static void OutputState(State state) {
+        private static void OutputState(BfsState state) {
             Console.WriteLine("cube: {0}", state.Cube);
             Console.WriteLine("depth：{0}", state.Depth);
             do {
-                State fromState = state.BestFrom.Key;
+                BfsState fromState = state.BestFrom.Key;
                 Rotation fromRotation = state.BestFrom.Value;
 
                 // todo: consider up/down reverse situation if necessary
