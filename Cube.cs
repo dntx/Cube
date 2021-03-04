@@ -135,57 +135,67 @@ namespace sq1code
 
 
         // cubes that L3 need solved then
-        public static Cube L3CrossSolved = new Cube(new Layer(0, 1, 0, 3, 0, 5, 0, 7), Layer.WhiteL1);
-        public static Cube L3Cross1375 = new Cube(new Layer(0, 1, 0, 3, 0, 7, 0, 5), Layer.WhiteL1);
-        public static Cube L3Cross1537 = new Cube(new Layer(0, 1, 0, 5, 0, 3, 0, 7), Layer.WhiteL1);
-        public static Cube L3Cross1573 = new Cube(new Layer(0, 1, 0, 5, 0, 7, 0, 3), Layer.WhiteL1);
-        public static Cube L3Cross1735 = new Cube(new Layer(0, 1, 0, 7, 0, 3, 0, 5), Layer.WhiteL1);
-        public static Cube L3Cross1753 = new Cube(new Layer(0, 1, 0, 7, 0, 5, 0, 3), Layer.WhiteL1);
+        public static Cube L3CrossSolved = 
+            new Cube(new Layer(0, 1, 0, 3, 0, 5, 0, 7), Layer.WhiteL1);
+        public static List<Cube> L3CrossUnsolvedList = new List<Cube> {
+            new Cube(new Layer(0, 1, 0, 3, 0, 7, 0, 5), Layer.WhiteL1),
+            new Cube(new Layer(0, 1, 0, 5, 0, 3, 0, 7), Layer.WhiteL1),
+            new Cube(new Layer(0, 1, 0, 5, 0, 7, 0, 3), Layer.WhiteL1),
+            new Cube(new Layer(0, 1, 0, 7, 0, 3, 0, 5), Layer.WhiteL1),
+            new Cube(new Layer(0, 1, 0, 7, 0, 5, 0, 3), Layer.WhiteL1)
+        };
 
-        public static Cube L3CornersSolved = new Cube(new Layer(0, 7, 2, 7, 4, 7, 6, 7), Layer.WhiteL1);
-        public static Cube L3Corner0264 = new Cube(new Layer(0, 7, 2, 7, 6, 7, 4, 7), Layer.WhiteL1);
-        public static Cube L3Corner0426 = new Cube(new Layer(0, 7, 4, 7, 2, 7, 6, 7), Layer.WhiteL1);
-        public static Cube L3Corner0462 = new Cube(new Layer(0, 7, 4, 7, 6, 7, 2, 7), Layer.WhiteL1);
-        public static Cube L3Corner0624 = new Cube(new Layer(0, 7, 6, 7, 2, 7, 4, 7), Layer.WhiteL1);
-        public static Cube L3Corner0642 = new Cube(new Layer(0, 7, 6, 7, 4, 7, 2, 7), Layer.WhiteL1);
+        public static Cube L3CornersSolved = 
+            new Cube(new Layer(0, 7, 2, 7, 4, 7, 6, 7), Layer.WhiteL1);
+        public static List<Cube> L3CornersUnSolvedList = new List<Cube> {
+            new Cube(new Layer(0, 7, 2, 7, 6, 7, 4, 7), Layer.WhiteL1),
+            new Cube(new Layer(0, 7, 4, 7, 2, 7, 6, 7), Layer.WhiteL1),
+            new Cube(new Layer(0, 7, 4, 7, 6, 7, 2, 7), Layer.WhiteL1),
+            new Cube(new Layer(0, 7, 6, 7, 2, 7, 4, 7), Layer.WhiteL1),
+            new Cube(new Layer(0, 7, 6, 7, 4, 7, 2, 7), Layer.WhiteL1)
+        };
  
 
-        public static Cube L3Cell01Solved = new Cube(new Layer(0, 1, 6, 7, 6, 7, 6, 7), Layer.WhiteL1);
-        public static Cube L3Cell01_0xx1 = new Cube(new Layer(0, 7, 6, 1, 6, 7, 6, 7), Layer.WhiteL1);
-        public static Cube L3Cell01_1xx0 = new Cube(new Layer(1, 6, 7, 0, 7, 6, 7, 6), Layer.WhiteL1);
-        public static Cube L3Cell01_10 = new Cube(new Layer(1, 0, 7, 6, 7, 6, 7, 6), Layer.WhiteL1);
-        public static List<Cube> L3Cell01UnsolvedList = new List<Cube>{L3Cell01_0xx1, L3Cell01_1xx0, L3Cell01_10};
+        public static Cube L3Cell01Solved = 
+            new Cube(new Layer(0, 1, 6, 7, 6, 7, 6, 7), Layer.WhiteL1);
+        public static List<Cube> L3Cell01UnsolvedList = new List<Cube> {
+            new Cube(new Layer(0, 7, 6, 1, 6, 7, 6, 7), Layer.WhiteL1), 
+            new Cube(new Layer(1, 6, 7, 0, 7, 6, 7, 6), Layer.WhiteL1), 
+            new Cube(new Layer(1, 0, 7, 6, 7, 6, 7, 6), Layer.WhiteL1)
+        };
 
 
-        public static Cube L3Cell012Solved = new Cube(new Layer(0, 1, 2, 7, 6, 7, 6, 7), Layer.WhiteL1);
-        public static Cube L3Cell012_01xx2 = new Cube(new Layer(0, 1, 6, 7, 2, 7, 6, 7), Layer.WhiteL1);
-        public static Cube L3Cell012_2x01 = new Cube(new Layer(2, 7, 0, 1, 6, 7, 6, 7), Layer.WhiteL1);
-        public static List<Cube> L3Cell012UnsolvedList = new List<Cube>{L3Cell012_01xx2, L3Cell012_2x01};
+        public static Cube L3Cell012Solved = 
+            new Cube(new Layer(0, 1, 2, 7, 6, 7, 6, 7), Layer.WhiteL1);
+        public static List<Cube> L3Cell012UnsolvedList = new List<Cube> {
+            new Cube(new Layer(0, 1, 6, 7, 2, 7, 6, 7), Layer.WhiteL1),
+            new Cube(new Layer(2, 7, 0, 1, 6, 7, 6, 7), Layer.WhiteL1)
+        };
 
 
-        public static Cube L3Cell0123Solved = new Cube(new Layer(0, 1, 2, 3, 6, 7, 6, 7), Layer.WhiteL1);
-        public static Cube L3Cell0123_012xx3 = new Cube(new Layer(0, 1, 2, 7, 6, 3, 6, 7), Layer.WhiteL1);
-        public static Cube L3Cell0123_3012 = new Cube(new Layer(3, 0, 1, 2, 7, 6, 7, 6), Layer.WhiteL1);
-        public static List<Cube> L3Cell0123UnsolvedList = new List<Cube>{L3Cell0123_012xx3, L3Cell0123_3012};
+        public static Cube L3Cell0123Solved = 
+            new Cube(new Layer(0, 1, 2, 3, 6, 7, 6, 7), Layer.WhiteL1);
+        public static List<Cube> L3Cell0123UnsolvedList = new List<Cube> {
+            new Cube(new Layer(0, 1, 2, 7, 6, 3, 6, 7), Layer.WhiteL1),
+            new Cube(new Layer(3, 0, 1, 2, 7, 6, 7, 6), Layer.WhiteL1)
+        };
 
 
-        public static Cube L3Cell012346Solved = new Cube(new Layer(0, 1, 2, 3, 4, 7, 6, 7), Layer.WhiteL1);
-        public static Cube L3Cell012346_012364 = new Cube(new Layer(0, 1, 2, 3, 6, 7, 4, 7), Layer.WhiteL1);
-
-
+        // solve 46 first, then 57
+        public static Cube L3Cell012346 = new Cube(new Layer(0, 1, 2, 3, 4, 7, 6, 7), Layer.WhiteL1);
+        public static Cube L3Cell012364 = new Cube(new Layer(0, 1, 2, 3, 6, 7, 4, 7), Layer.WhiteL1);
         public static Cube L3Cell01234765 = new Cube(new Layer(0, 1, 2, 3, 4, 7, 6, 5), Layer.WhiteL1);
 
 
-        public static Cube L3Cell012357Solved = new Cube(new Layer(0, 1, 2, 3, 6, 5, 6, 7), Layer.WhiteL1);
-        public static Cube L3Cell012357_012375 = new Cube(new Layer(0, 1, 2, 3, 6, 7, 6, 5), Layer.WhiteL1);
-
-
+        // solve 57 first, then 46
+        public static Cube L3Cell012357 = new Cube(new Layer(0, 1, 2, 3, 6, 5, 6, 7), Layer.WhiteL1);
+        public static Cube L3Cell012375 = new Cube(new Layer(0, 1, 2, 3, 6, 7, 6, 5), Layer.WhiteL1);
         public static Cube L3Cell01236547 = new Cube(new Layer(0, 1, 2, 3, 6, 5, 4, 7), Layer.WhiteL1);
 
+
+        // scratch
         public static Cube L3Cell01456723 = new Cube(new Layer(0, 1, 4, 5, 6, 7, 2, 3), Layer.WhiteL1);
-
         public static Cube L3Cell01274563 = new Cube(new Layer(0, 1, 2, 7, 4, 5, 6, 3), Layer.WhiteL1);
-
         public static Cube L1L3Cell08Swapped = new Cube(new Layer(0x8, 1, 2, 3, 4, 5, 6, 7), new Layer(0, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF));
     }
 }

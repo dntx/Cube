@@ -117,8 +117,8 @@ namespace sq1code
                 // L3 strategy 3.1
                 case Goal.SolveL3Cell46:
                     SolveSq1Cube(
-                        Cube.L3Cell012346Solved,
-                        Cube.L3Cell012346_012364, 
+                        Cube.L3Cell012346,
+                        Cube.L3Cell012364, 
                         rotation => rotation.IsSquareShapeLocked());
                     break;
 
@@ -132,8 +132,8 @@ namespace sq1code
                 // L3 strategy 3.2
                 case Goal.SolveL3Cell57:
                     SolveSq1Cube(
-                        Cube.L3Cell012357Solved,
-                        Cube.L3Cell012357_012375,
+                        Cube.L3Cell012357,
+                        Cube.L3Cell012375,
                         rotation => rotation.IsSquareShapeLocked());
                     break;
 
