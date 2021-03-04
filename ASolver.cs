@@ -186,21 +186,23 @@ namespace sq1code
             int totalEdgeCount = 0;
             int netEdgeCount = 0;
 
-            Queue<AState> openStates = new Queue<AState>();
+            SortedSet<AState> openStates = new SortedSet<AState>();
             int[] openStateCountByDepth = new int[100];
             List<AState> seenStates = new List<AState>();
 
             Dictionary<Cube, int> seenCubes = new Dictionary<Cube, int>();
             VisitCube(startCube, seenCubes);
+            APredictor predictor = new APredictor(startCube);
 
             AState startState = new AState(startCube, 0);
-            openStates.Enqueue(startState);
+            openStates.Add(startState);
             openStateCountByDepth[startState.Depth]++;
             seenStates.Add(startState);
 
             AState targetState = null;
             do {
-                AState state = openStates.Dequeue();
+                AState state = openStates.Min;
+                openStates.Remove(state);
                 openStateCountByDepth[state.Depth]--;
                 Cube cube = state.Cube;
                 List<Rotation> rotations = cube.GetRotations();
@@ -226,9 +228,10 @@ namespace sq1code
                         }
                     } else {    
                         // new cube
-                        AState nextState = new AState(nextCube, nextCubeId, state, rotation);
+                        float predictedCost = predictor.PredictCost(nextCube);
+                        AState nextState = new AState(nextCube, nextCubeId, predictedCost, state, rotation);
                         netEdgeCount++;
-                        openStates.Enqueue(nextState);
+                        openStates.Add(nextState);
                         openStateCountByDepth[nextState.Depth]++;
                         seenStates.Add(nextState);
 
