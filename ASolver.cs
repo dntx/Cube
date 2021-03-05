@@ -110,23 +110,23 @@ namespace sq1code
 
                 case Goal.SolveL3Cell57Then:
                     SolveSq1Cube(
-                        Cube.Solved,
                         Cube.L3Cell01234765, 
+                        Cube.Solved,
                         rotation => rotation.IsSquareShapeLocked());
                     break;
 
                 // L3 strategy 3.2
                 case Goal.SolveL3Cell57:
                     SolveSq1Cube(
-                        Cube.L3Cell012357,
                         Cube.L3Cell012375,
+                        Cube.L3Cell012357,
                         rotation => rotation.IsSquareShapeLocked());
                     break;
 
                 case Goal.SolveL3Cell46Then:
                     SolveSq1Cube(
-                        Cube.Solved,
                         Cube.L3Cell01236547, 
+                        Cube.Solved,
                         rotation => rotation.IsSquareShapeLocked());
                     break;
 
@@ -184,7 +184,7 @@ namespace sq1code
             openStates.Add(startState);
             seenCubeStates.Add(startCube, startState);
 
-            APredictor predictor = new APredictor(startCube);
+            APredictor predictor = new APredictor(targetCube);
             AState targetState = null;
             do {
                 AState state = openStates.Min;

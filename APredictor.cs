@@ -9,7 +9,7 @@ namespace sq1code {
 
         // todo: make it more accurate
         public int PredictCost(Cube cube) {
-            return 0; /*
+            //return 0; /*
             List<KeyValuePair<int, int>> currentPairs = BreakCubeToPairs(cube);
             int matched = 0;
             for (int i = 0; i < targetPairs.Count; i++) {

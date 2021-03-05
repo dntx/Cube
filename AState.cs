@@ -36,6 +36,11 @@ namespace sq1code {
                 return result;
             }
 
+            if (Depth != other.Depth) {
+                // prefer deeper cube / new cube
+                return -Depth.CompareTo(other.Depth);
+            }
+
             return CubeId.CompareTo(other.CubeId);
         }
 
