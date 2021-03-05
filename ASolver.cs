@@ -1,19 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace sq1code
 {
     class ASolver {
-        private static int VisitCube(Cube cube, Dictionary<Cube, int> seenCubes) {
-            if (seenCubes.ContainsKey(cube)) {
-                return seenCubes[cube];
-            }
-            
-            int cubeId = seenCubes.Count;
-            seenCubes.Add(cube, cubeId);
-            return cubeId;
-        }
-
         public static void Solve(Goal goal) {
             Console.WriteLine("start {0}", goal);
             switch (goal)
@@ -182,28 +173,24 @@ namespace sq1code
         private static void SolveSq1CubeKernel(Cube startCube, Cube targetCube, Predicate<Rotation> IsFocusRotation) {
             DateTime startTime = DateTime.Now;
 
+            int reopenStateCount = 0;
             int closedStateCount = 0;
             int totalEdgeCount = 0;
             int netEdgeCount = 0;
 
             SortedSet<AState> openStates = new SortedSet<AState>();
-            int[] openStateCountByDepth = new int[100];
-            List<AState> seenStates = new List<AState>();
-
-            Dictionary<Cube, int> seenCubes = new Dictionary<Cube, int>();
-            VisitCube(startCube, seenCubes);
-            APredictor predictor = new APredictor(startCube);
-
+            Dictionary<Cube, AState> seenCubeStates = new Dictionary<Cube, AState>();
             AState startState = new AState(startCube, 0);
             openStates.Add(startState);
-            openStateCountByDepth[startState.Depth]++;
-            seenStates.Add(startState);
+            seenCubeStates.Add(startCube, startState);
 
+            APredictor predictor = new APredictor(startCube);
             AState targetState = null;
             do {
                 AState state = openStates.Min;
                 openStates.Remove(state);
-                openStateCountByDepth[state.Depth]--;
+                state.IsClosed = true;
+
                 Cube cube = state.Cube;
                 List<Rotation> rotations = cube.GetRotations();
                 List<Rotation> focusRotations = rotations.FindAll(IsFocusRotation);
@@ -212,28 +199,30 @@ namespace sq1code
                 foreach (Rotation rotation in focusRotations) {
                     Cube nextCube = cube.RotateBy(rotation);
                     totalEdgeCount++;
-                    int nextCubeId = VisitCube(nextCube, seenCubes);
-                    if (nextCubeId < seenStates.Count) {    
+                    if (seenCubeStates.ContainsKey(nextCube)) {
                         // existing cube
-                        AState existingState = seenStates[nextCubeId];
+                        AState existingState = seenCubeStates[nextCube];
                         if (nextDepth < existingState.Depth) {
-                            // a better path found, should not happen as we are using BFS
-                            throw new Exception("error: a better path found in BFS");
-                        } else if (nextDepth == existingState.Depth) {
-                            // an alternative path may found, update if necessary
-                            if (existingState.FromState != state) {
-                                existingState.UpdateFrom(state, rotation);
-                                netEdgeCount++;
+                            // a better path found
+                            if (existingState.IsClosed) {
+                                existingState.IsClosed = false;
+                                closedStateCount--;
+                                reopenStateCount++;
+                            } else {
+                                openStates.Remove(existingState);
                             }
+                            existingState.UpdateFrom(state, rotation);
+                            openStates.Add(existingState);
                         }
-                    } else {    
+                    } else {
                         // new cube
-                        float predictedCost = predictor.PredictCost(nextCube);
+                        int predictedCost = predictor.PredictCost(nextCube);
+                        int nextCubeId = seenCubeStates.Count();
                         AState nextState = new AState(nextCube, nextCubeId, predictedCost, state, rotation);
                         netEdgeCount++;
+
                         openStates.Add(nextState);
-                        openStateCountByDepth[nextState.Depth]++;
-                        seenStates.Add(nextState);
+                        seenCubeStates.Add(nextCube, nextState);
 
                         if (nextCube == targetCube) {
                             targetState = nextState;
@@ -246,17 +235,17 @@ namespace sq1code
                 if (targetState != null || openStates.Count == 0 || closedStateCount % 1000 == 0) {
                     int totalCount = closedStateCount + openStates.Count;
                     Console.WriteLine(
-                        "seconds: {0:0.00}, depth: {1}, closed: {2}({3:p}), open[{4}]: {5}({6:p}), open[{7}]: {8}({9:p})", 
+                        "seconds: {0:0.00}, {1}, depth: {2}, h: {3}, closed: {4}({5:p}), open: {6}({7:p}), reopened: {8}({9:p})", 
                         DateTime.Now.Subtract(startTime).TotalSeconds,
-                        state.Depth, 
+                        state.Cube,
+                        state.Depth,
+                        state.PredictedCost, 
                         closedStateCount, 
                         (float)closedStateCount / totalCount,
-                        state.Depth,
-                        openStateCountByDepth[state.Depth], 
-                        (float)openStateCountByDepth[state.Depth] / totalCount,
-                        state.Depth + 1,
-                        openStateCountByDepth[state.Depth + 1], 
-                        (float)openStateCountByDepth[state.Depth + 1] / totalCount
+                        openStates.Count,
+                        (float)openStates.Count / totalCount,
+                        reopenStateCount,
+                        (float)reopenStateCount / openStates.Count
                         );
                 }
             } while (targetState == null && openStates.Count > 0);
@@ -265,7 +254,7 @@ namespace sq1code
             OutputSolution(startState, targetState);
             Console.WriteLine();
 
-            Console.WriteLine("cubes: {0}, closed: {1}", seenCubes.Count, closedStateCount);
+            Console.WriteLine("cubes: {0}, closed: {1}", seenCubeStates.Count, closedStateCount);
             Console.WriteLine("edges: {0}, net: {1}", totalEdgeCount, netEdgeCount);
         }
 
