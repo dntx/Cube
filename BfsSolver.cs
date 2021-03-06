@@ -39,7 +39,7 @@ namespace sq1code
 
                 case Goal.SolveL1Quarter4:
                     SolveSq1Cube(
-                        Cube.L1Solved,
+                        Cube.L1Quarter4Solved,
                         cube => cube.IsL1CellSolved(6),
                         rotation => rotation.IsSquareShapeLocked());
                     break;

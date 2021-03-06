@@ -14,10 +14,20 @@ namespace sq1code
         }
 
         public Layer(params int[] cells) 
-                : this(new Half(cells.Take(4)), new Half(cells.TakeLast(4))) {
-            if (cells.Length != 8) {
-                throw new ArgumentException("cells count should be 8");
+                : this(DivideCells(cells).Key, DivideCells(cells).Value) {
+        }
+
+        private static KeyValuePair<Half, Half> DivideCells(int[] cells) {
+            int degreeSum = 0;
+            for (int i = 0; i < cells.Length; i++) {
+                degreeSum += new Cell(i).Degree;
+                if (degreeSum == 180) {
+                    int firstCount = i + 1;
+                    int secondCount = cells.Length - firstCount;
+                    return new KeyValuePair<Half, Half>(new Half(cells.Take(firstCount)), new Half(cells.TakeLast(secondCount)));
+                }
             }
+            throw new ArgumentException("the given cells can't be divided as two halves");
         }
 
         private static Cells GetNormalizedCells(Cells cells) {

@@ -124,15 +124,38 @@ namespace sq1code
             return string.Format("{0},{1}", Up.ToString(verbose), Down.ToString(verbose));
         }
 
-        public static Cube ShapeSolved = new Cube(Layer.Square, Layer.Square);
+        public static Cube ShapeSolved = 
+            new Cube(new Layer(0, 1, 0, 1, 0, 1, 0, 1), new Layer(0, 1, 0, 1, 0, 1, 0, 1));
+        public static List<Cube> ShapeUnsolvedList = new List<Cube> {
+            new Cube(new Layer(0, 0, 1, 1, 1, 1, 1, 1, 1, 1), new Layer(0, 0, 0, 0, 0, 0)),
+            new Cube(new Layer(0, 1, 0, 1, 1, 1, 1, 1, 1, 1), new Layer(0, 0, 0, 0, 0, 0)),
+            new Cube(new Layer(0, 1, 1, 0, 1, 1, 1, 1, 1, 1), new Layer(0, 0, 0, 0, 0, 0)),
+            new Cube(new Layer(0, 1, 1, 1, 0, 1, 1, 1, 1, 1), new Layer(0, 0, 0, 0, 0, 0)),
+            new Cube(new Layer(0, 1, 1, 1, 1, 0, 1, 1, 1, 1), new Layer(0, 0, 0, 0, 0, 0))
+        };
+
         public static Cube UpDownColorSolved = new Cube(Layer.YellowSquare, Layer.WhiteSquare);
         public static Cube Solved = new Cube(Layer.YellowL3, Layer.WhiteL1);
 
 
         // cubes that L1 need solved first
-        public static Cube L1Solved = new Cube(Layer.YellowSquare, Layer.WhiteL1);
-        public static Cube L1Quarter123Solved = new Cube(Layer.YellowSquare, new Layer(0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 6, 7));
+        public static Cube L1Quarter123Solved = 
+            new Cube(new Layer(6, 7, 6, 7, 6, 7, 6, 7), new Layer(0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 6, 7));
+        public static List<Cube> L1Quarter123UnsolvedList = new List<Cube> {
+            new Cube(new Layer(6, 7, 6, 7, 6, 7, 6, 7), new Layer(0x8, 0x9, 0xA, 0xB, 0xC, 7, 6, 0xD)),
+            new Cube(new Layer(6, 7, 6, 7, 6, 7, 6, 0xD), new Layer(0x8, 0x9, 0xA, 0xB, 0xC, 7, 6, 7))
+        };
 
+        public static Cube L1Quarter4Solved = 
+            new Cube(new Layer(6, 7, 6, 7, 6, 7, 6, 7), new Layer(0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF));
+        public static List<Cube> L1Quarter4UnsolvedList = new List<Cube> {
+            new Cube(new Layer(6, 7, 6, 7, 6, 7, 6, 0xF), new Layer(0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 7)),
+            new Cube(new Layer(6, 7, 6, 7, 6, 7, 0xE, 7), new Layer(0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 6, 0xF)),
+            new Cube(new Layer(6, 7, 6, 7, 6, 7, 0xE, 0xF), new Layer(0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 6, 7)),
+            new Cube(new Layer(6, 7, 6, 7, 0xE, 7, 6, 0xF), new Layer(0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 6, 7)),
+            new Cube(new Layer(6, 7, 6, 0xF, 6, 7, 0xE, 7), new Layer(0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 6, 7)),
+            new Cube(new Layer(6, 7, 6, 7, 6, 0xF, 0xE, 7), new Layer(0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 6, 7))
+        };
 
         // cubes that L3 need solved then
         public static Cube L3CrossSolved = 

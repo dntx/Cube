@@ -9,26 +9,27 @@ namespace sq1code
             Console.WriteLine("start {0}", goal);
             switch (goal)
             {
-                // case Goal.SolveShape:
-                //     SolveSq1Cube(
-                //         Cube.ShapeSolved, 
-                //         cube => cube.IsUpOrDownHexagram());
-                //     break;
+                case Goal.SolveShape:
+                    SolveSq1Cube(
+                        Cube.ShapeUnsolvedList,
+                        Cube.ShapeSolved,
+                        rotation => true);
+                    break;
 
-                // // L1 strategy 1
-                // case Goal.SolveL1Quarter123:
-                //     SolveSq1Cube(
-                //         Cube.L1Quarter123Solved, 
-                //         cube => cube.IsL1CellSolved(5), 
-                //         rotation => rotation.IsSquareShapeLocked());
-                //     break;
+                // L1 strategy 1
+                case Goal.SolveL1Quarter123:
+                    SolveSq1Cube(
+                        Cube.L1Quarter123UnsolvedList, 
+                        Cube.L1Quarter123Solved, 
+                        rotation => rotation.IsSquareShapeLocked());
+                    break;
 
-                // case Goal.SolveL1Quarter4:
-                //     SolveSq1Cube(
-                //         Cube.L1Solved,
-                //         cube => cube.IsL1CellSolved(6),
-                //         rotation => rotation.IsSquareShapeLocked());
-                //     break;
+                case Goal.SolveL1Quarter4:
+                    SolveSq1Cube(
+                        Cube.L1Quarter4UnsolvedList, 
+                        Cube.L1Quarter4Solved,
+                        rotation => rotation.IsSquareShapeLocked());
+                    break;
 
                 // // L1 strategy 2
                 // case Goal.SolveUpDownColor:

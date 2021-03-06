@@ -23,13 +23,13 @@
 
             //BfsSolver.Solve(Goal.SolveScratch);
 
-            //--ASolver.Solve(Goal.SolveShape);
-            //--ASolver.Solve(Goal.SolveL1Quarter123);
-            //--ASolver.Solve(Goal.SolveL1Quarter4);
+            //ASolver.Solve(Goal.SolveShape);
+            //ASolver.Solve(Goal.SolveL1Quarter123);
+            ASolver.Solve(Goal.SolveL1Quarter4);
             //ASolver.Solve(Goal.SolveL3Cell01);
             //ASolver.Solve(Goal.SolveL3Cell2);
             //ASolver.Solve(Goal.SolveL3Cell3);
-            ASolver.Solve(Goal.SolveL3Cell46);
+            //ASolver.Solve(Goal.SolveL3Cell46);
             //ASolver.Solve(Goal.SolveL3Cell57Then);
             //ASolver.Solve(Goal.SolveL3Cell57);
             //ASolver.Solve(Goal.SolveL3Cell46Then);
