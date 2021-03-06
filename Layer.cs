@@ -175,6 +175,7 @@ namespace sq1code
         public static int HashCodeUpperBound = 16^10;
 
         public ISet<Division> GetDivisions(bool ascendingOnly) {
+            bool needTwoDivisionsOnly = (this == Layer.YellowL3) || (this == Layer.WhiteL1);
             ISet<Division> divisions = new HashSet<Division>();
             int start = 0;
             int last = 0;
@@ -199,12 +200,15 @@ namespace sq1code
                         }
 
                         divisions.Add(new Division(first, second));
-                        if (!ascendingOnly && first != second) {
+                        if (!ascendingOnly && !needTwoDivisionsOnly && first != second) {
                             divisions.Add(new Division(second, first));
                         }
                     }
                     degreeSum -= this[start].Degree;
                     start++;
+                }
+                if (needTwoDivisionsOnly && divisions.Count == 2) {
+                    break;
                 }
             }
             return divisions;

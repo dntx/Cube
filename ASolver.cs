@@ -5,139 +5,121 @@ using System.Linq;
 namespace sq1code
 {
     class ASolver {
-        public static void Solve(Goal goal) {
-            Console.WriteLine("start {0}", goal);
+        public static bool Solve(Goal goal) {
             switch (goal)
             {
                 case Goal.SolveShape:
-                    SolveSq1Cube(
+                    return SolveSq1Cube(
                         Cube.ShapeUnsolvedList,
                         Cube.ShapeSolved,
                         rotation => true);
-                    break;
 
                 // L1 strategy 1
                 case Goal.SolveL1Quarter123:
-                    SolveSq1Cube(
+                    return SolveSq1Cube(
                         Cube.L1Quarter123UnsolvedList, 
                         Cube.L1Quarter123Solved, 
                         rotation => rotation.IsSquareShapeLocked());
-                    break;
 
                 case Goal.SolveL1Quarter4:
-                    SolveSq1Cube(
+                    return SolveSq1Cube(
                         Cube.L1Quarter4UnsolvedList, 
                         Cube.L1Quarter4Solved,
                         rotation => rotation.IsSquareShapeLocked());
-                    break;
 
                 // // L1 strategy 2
                 // case Goal.SolveUpDownColor:
-                //     SolveSq1Cube(
+                //     return SolveSq1Cube(
                 //         Cube.UpDownColorSolved, 
                 //         cube => cube.IsUpDwonColorGrouped(), 
                 //         rotation => rotation.IsSquareShapeLocked());
-                //     break;
 
                 // case Goal.SolveL1:
                 //     throw new NotImplementedException();
 
                 // L3 strategy 1
                 case Goal.SolveL3Cross:
-                    SolveSq1Cube(
+                    return SolveSq1Cube(
                         Cube.L3CrossUnsolvedList,
                         Cube.L3CrossSolved, 
                         rotation => rotation.IsSquareQuarterLocked());
-                    break;
 
                 // case Goal.SolveL3CornersThen:
-                //     SolveSq1Cube(
+                //     return SolveSq1Cube(
                 //         Cube.Solved,
                 //         cube => cube.IsL3CrossSolved(),
                 //         rotation => rotation.IsSquareShapeLocked());
-                //     break;
 
                 // // L3 strategy 2
                 // case Goal.SolveL3Quarter1:
-                //     SolveSq1Cube(
+                //     return SolveSq1Cube(
                 //         Cube.L3Cell01Solved, 
                 //         cube => cube.IsL1Solved(), 
                 //         rotation => rotation.IsSquareShapeLocked());
-                //     break;
 
                 // case Goal.SolveL3Quarter2:
-                //     SolveSq1Cube(
+                //     return SolveSq1Cube(
                 //         Cube.L3Cell0123Solved, 
                 //         cube => cube.IsL3CellSolved(0, 1),
                 //         rotation => rotation.IsSquareQuarterLocked());
-                //     break;
 
                 // case Goal.SolveL3Quarter34:
-                //     SolveSq1Cube(
+                //     return SolveSq1Cube(
                 //         Cube.Solved,
                 //         cube => cube.IsL3CellSolved(0, 1, 2, 3),
                 //         rotation => rotation.IsSquareShapeLocked());
-                //     break;
 
                 // L3 strategy 3
                 case Goal.SolveL3Cell01:
-                    SolveSq1Cube(
+                    return SolveSq1Cube(
                         Cube.L3Cell01UnsolvedList, 
                         Cube.L3Cell01Solved, 
                         rotation => rotation.IsSquareShapeLocked());
-                    break;
 
                 case Goal.SolveL3Cell2:
-                    SolveSq1Cube(
+                    return SolveSq1Cube(
                         Cube.L3Cell012UnsolvedList, 
                         Cube.L3Cell012Solved, 
                         rotation => rotation.IsSquareQuarterLocked());
-                    break;
 
                 case Goal.SolveL3Cell3:
-                    SolveSq1Cube(
+                    return SolveSq1Cube(
                         Cube.L3Cell0123UnsolvedList, 
                         Cube.L3Cell0123Solved,
                         rotation => rotation.IsSquareShapeLocked());
-                    break;
 
                 // L3 strategy 3.1
                 case Goal.SolveL3Cell46:
-                    SolveSq1Cube(
+                    return SolveSq1Cube(
                         Cube.L3Cell012364, 
                         Cube.L3Cell012346,
                         rotation => rotation.IsSquareShapeLocked());
-                    break;
 
                 case Goal.SolveL3Cell57Then:
-                    SolveSq1Cube(
+                    return SolveSq1Cube(
                         Cube.L3Cell01234765, 
                         Cube.Solved,
                         rotation => rotation.IsSquareShapeLocked());
-                    break;
 
                 // L3 strategy 3.2
                 case Goal.SolveL3Cell57:
-                    SolveSq1Cube(
+                    return SolveSq1Cube(
                         Cube.L3Cell012375,
                         Cube.L3Cell012357,
                         rotation => rotation.IsSquareShapeLocked());
-                    break;
 
                 case Goal.SolveL3Cell46Then:
-                    SolveSq1Cube(
+                    return SolveSq1Cube(
                         Cube.L3Cell01236547, 
                         Cube.Solved,
                         rotation => rotation.IsSquareShapeLocked());
-                    break;
 
 
                 case Goal.SolveScratch:
-                    SolveSq1Cube(
+                    return SolveSq1Cube(
                         Cube.Solved, 
                         Cube.L1L3Cell08Swapped,
                         rotation => rotation.IsSquareShapeLocked());
-                    break;
 
 
                 // L3 strategy 4
@@ -145,33 +127,39 @@ namespace sq1code
                 //     throw new NotImplementedException();
 
                 // case Goal.SolveL3QuarterPosition:
-                //     SolveSq1Cube(
+                //     return SolveSq1Cube(
                 //         Cube.Solved, 
                 //         cube => cube.IsL1Solved(), 
                 //         rotation => rotation.IsSquareQuarterLocked());
-                //     break;
             }
-            Console.WriteLine("end {0}", goal);
+            return false;
         }
 
-        private static void SolveSq1Cube(Cube startCube, Cube targetCube, Predicate<Rotation> IsFocusRotation) {
-            SolveSq1Cube(new List<Cube>{startCube}, targetCube, IsFocusRotation);
+        private static bool SolveSq1Cube(Cube startCube, Cube targetCube, Predicate<Rotation> IsFocusRotation) {
+            return SolveSq1Cube(new List<Cube>{startCube}, targetCube, IsFocusRotation);
         }
 
-        private static void SolveSq1Cube(List<Cube> startCubeList, Cube targetCube, Predicate<Rotation> IsFocusRotation) {
+        private static bool SolveSq1Cube(List<Cube> startCubeList, Cube targetCube, Predicate<Rotation> IsFocusRotation) {
             DateTime startTime = DateTime.Now;
+            int solvedCount = 0;
             for (int i = 0; i < startCubeList.Count; i++) {
                 Console.WriteLine("searching solution {0}/{1} ...", i + 1, startCubeList.Count);
-                SolveSq1CubeKernel(startCubeList[i], targetCube, IsFocusRotation);
+                bool successful = SolveSq1CubeKernel(startCubeList[i], targetCube, IsFocusRotation);
+                if (successful) {
+                    solvedCount++;
+                }
                 Console.WriteLine("-----------------------------------");
                 Console.WriteLine();
             }
-            Console.WriteLine("total seconds: {0:0.00}, total solutions: {1}", 
+            Console.WriteLine("total seconds: {0:0.00}, total request: {1}, solved: {2}", 
                 DateTime.Now.Subtract(startTime).TotalSeconds,
-                startCubeList.Count);
+                startCubeList.Count,
+                solvedCount);
+
+            return solvedCount == startCubeList.Count;
         }
 
-        private static void SolveSq1CubeKernel(Cube startCube, Cube targetCube, Predicate<Rotation> IsFocusRotation) {
+        private static bool SolveSq1CubeKernel(Cube startCube, Cube targetCube, Predicate<Rotation> IsFocusRotation) {
             DateTime startTime = DateTime.Now;
 
             int reopenStateCount = 0;
@@ -252,11 +240,15 @@ namespace sq1code
             } while (targetState == null && openStates.Count > 0);
             Console.WriteLine();
 
+            if (targetState == null) {
+                return false;
+            }
+
             OutputSolution(startState, targetState);
             Console.WriteLine();
-
             Console.WriteLine("cubes: {0}, closed: {1}", seenCubeStates.Count, closedStateCount);
             Console.WriteLine("edges: {0}, net: {1}", totalEdgeCount, netEdgeCount);
+            return true;
         }
 
         private static void OutputSolution(AState startState, AState targetState) {
