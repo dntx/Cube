@@ -173,7 +173,6 @@ namespace sq1code
             openStates.Add(startState);
             seenCubeStates.Add(startCube, startState);
 
-            APredictor predictor = new APredictor(targetCube);
             AState targetState = null;
             do {
                 AState state = openStates.Min;
@@ -205,7 +204,7 @@ namespace sq1code
                         }
                     } else {
                         // new cube
-                        int predictedCost = predictor.PredictCost(nextCube);
+                        int predictedCost = APredictor.PredictCost(nextCube, targetCube);
                         int nextCubeId = seenCubeStates.Count();
                         AState nextState = new AState(nextCube, nextCubeId, predictedCost, state, rotation);
                         netEdgeCount++;

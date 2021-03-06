@@ -47,6 +47,7 @@ namespace sq1code
             Console.WriteLine("start {0}", goal);
             bool successful = ASolver.Solve(goal);
             Console.WriteLine("end {0}, successful: {1}", goal, successful);
+            Console.WriteLine("=========================================");
             Console.WriteLine();
             return successful;
         }

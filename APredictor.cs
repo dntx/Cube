@@ -2,27 +2,19 @@ using System.Collections.Generic;
 
 namespace sq1code {
     class APredictor {
-        private List<KeyValuePair<int, int>> targetPairs;
-        public APredictor(Cube targetCube) {
-            targetPairs = BreakCubeToPairs(targetCube);
-        }
-
-        // todo: make it more accurate
-        public int PredictCost(Cube cube) {
+        public static int PredictCost(Cube cube, Cube targetCube) {
             //return 0; /*
             List<KeyValuePair<int, int>> currentPairs = BreakCubeToPairs(cube);
-            int matched = 0;
-            for (int i = 0; i < targetPairs.Count; i++) {
-                for (int j = 0; j < currentPairs.Count; j++) {
-                    if (targetPairs[i].Key == currentPairs[j].Key && targetPairs[i].Value == currentPairs[j].Value) {
-                        currentPairs.RemoveAt(j);
-                        matched++;
+            List<KeyValuePair<int, int>> targetPairs = BreakCubeToPairs(targetCube);
+            for (int i = 0; i < currentPairs.Count; i++) {
+                for (int j = 0; j < targetPairs.Count; j++) {
+                    if (targetPairs[j].Key == currentPairs[i].Key && targetPairs[j].Value == currentPairs[i].Value) {
+                        targetPairs.RemoveAt(j);
                         break;                        
                     }
                 }
             }
-            int unmatched = targetPairs.Count - matched;
-            return (unmatched + 3) / 4;
+            return (targetPairs.Count + 3) / 4;
             //*/
         }
 
