@@ -141,9 +141,11 @@ namespace sq1code
 
         private static bool SolveSq1Cube(List<Cube> startCubeList, Cube targetCube, Predicate<Rotation> IsFocusRotation) {
             DateTime startTime = DateTime.Now;
+            Console.WriteLine("total request for \"{0}\": {1}", targetCube, startCubeList.Count);
+
             int solvedCount = 0;
             for (int i = 0; i < startCubeList.Count; i++) {
-                Console.WriteLine("searching solution {0}/{1} ...", i + 1, startCubeList.Count);
+                Console.WriteLine("searching solution for \"{0}\": {1}/{2} ...", targetCube, i + 1, startCubeList.Count);
                 bool successful = SolveSq1CubeKernel(startCubeList[i], targetCube, IsFocusRotation);
                 if (successful) {
                     solvedCount++;
@@ -151,10 +153,13 @@ namespace sq1code
                 Console.WriteLine("-----------------------------------");
                 Console.WriteLine();
             }
-            Console.WriteLine("total seconds: {0:0.00}, total request: {1}, solved: {2}", 
+            Console.WriteLine("total seconds: {0:0.00}, total request for \"{1}\": {2}, solved: {3}", 
                 DateTime.Now.Subtract(startTime).TotalSeconds,
+                targetCube,
                 startCubeList.Count,
                 solvedCount);
+            Console.WriteLine("=======================================");
+            Console.WriteLine();
 
             return solvedCount == startCubeList.Count;
         }
