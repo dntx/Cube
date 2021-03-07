@@ -43,6 +43,10 @@ namespace sq1code
             }
         }
 
+        public bool IsShapeSolved() {
+            return Up.IsSquare() && Down.IsSquare();
+        }
+
         public bool IsUpOrDownHexagram() {
             return Up.IsHexagram() || Down.IsHexagram();
         }
@@ -90,6 +94,10 @@ namespace sq1code
         }
 
         public List<Rotation> GetRotations() {
+            return GetRotations(lockSquareShape: false);
+        }
+
+        public List<Rotation> GetRotations(bool lockSquareShape) {
             List<Rotation> rotations = new List<Rotation>();
 
             ISet<Division> upDivisions = Up.GetDivisions(ascendingOnly: true);
@@ -98,9 +106,13 @@ namespace sq1code
             foreach (Division upDivision in upDivisions) {
                 foreach (Division downDivsion in downDivisions) {
                     Rotation rotation = new Rotation(upDivision, downDivsion);
-                    if (!rotation.IsIdentical()) {
-                        rotations.Add(rotation);
+                    if (rotation.IsIdentical()) {
+                        continue;
                     }
+                    if (lockSquareShape && !rotation.IsSquareShapeLocked()) {
+                        continue;
+                    }
+                    rotations.Add(rotation);
                 }
             }
 

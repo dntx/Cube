@@ -11,28 +11,24 @@ namespace sq1code
                 case Goal.SolveShape:
                     return SolveSq1Cube(
                         Cube.ShapeUnsolvedList,
-                        Cube.ShapeSolved,
-                        rotation => true);
+                        Cube.ShapeSolved);
 
                 // L1 strategy
                 case Goal.SolveL1Quarter123:
                     return SolveSq1Cube(
                         Cube.L1Quarter123UnsolvedList, 
-                        Cube.L1Quarter123Solved, 
-                        rotation => rotation.IsSquareShapeLocked());
+                        Cube.L1Quarter123Solved);
 
                 case Goal.SolveL1Quarter4:
                     return SolveSq1Cube(
                         Cube.L1Quarter4UnsolvedList, 
-                        Cube.L1Quarter4Solved,
-                        rotation => rotation.IsSquareShapeLocked());
+                        Cube.L1Quarter4Solved);
 
                 // L3 strategy 1
                 case Goal.SolveL3Cross:
                     return SolveSq1Cube(
                         Cube.L3CrossUnsolvedList,
-                        Cube.L3CrossSolved, 
-                        rotation => rotation.IsSquareQuarterLocked());
+                        Cube.L3CrossSolved);
 
                 case Goal.SolveL3CornersThen:
                     throw new NotImplementedException();
@@ -48,69 +44,61 @@ namespace sq1code
                 case Goal.SolveL3Cell01:
                     return SolveSq1Cube(
                         Cube.L3Cell01UnsolvedList, 
-                        Cube.L3Cell01Solved, 
-                        rotation => rotation.IsSquareShapeLocked());
+                        Cube.L3Cell01Solved);
 
                 case Goal.SolveL3Cell2:
                     return SolveSq1Cube(
                         Cube.L3Cell012UnsolvedList, 
-                        Cube.L3Cell012Solved, 
-                        rotation => rotation.IsSquareQuarterLocked());
+                        Cube.L3Cell012Solved);
 
                 case Goal.SolveL3Cell3:
                     return SolveSq1Cube(
                         Cube.L3Cell0123UnsolvedList, 
-                        Cube.L3Cell0123Solved,
-                        rotation => rotation.IsSquareShapeLocked());
+                        Cube.L3Cell0123Solved);
 
                 // L3 strategy 3.1
                 case Goal.SolveL3Cell46:
                     return SolveSq1Cube(
                         Cube.L3Cell012364, 
-                        Cube.L3Cell012346,
-                        rotation => rotation.IsSquareShapeLocked());
+                        Cube.L3Cell012346);
 
                 case Goal.SolveL3Cell57Then:
                     return SolveSq1Cube(
                         Cube.L3Cell01234765, 
-                        Cube.Solved,
-                        rotation => rotation.IsSquareShapeLocked());
+                        Cube.Solved);
 
                 // L3 strategy 3.2
                 case Goal.SolveL3Cell57:
                     return SolveSq1Cube(
                         Cube.L3Cell012375,
-                        Cube.L3Cell012357,
-                        rotation => rotation.IsSquareShapeLocked());
+                        Cube.L3Cell012357);
 
                 case Goal.SolveL3Cell46Then:
                     return SolveSq1Cube(
                         Cube.L3Cell01236547, 
-                        Cube.Solved,
-                        rotation => rotation.IsSquareShapeLocked());
+                        Cube.Solved);
 
                 // scratch
                 case Goal.Scratch:
                     return SolveSq1Cube(
                         Cube.Solved, 
-                        Cube.L1L3Cell08Swapped,
-                        rotation => rotation.IsSquareShapeLocked());
+                        Cube.L1L3Cell08Swapped);
             }
             return false;
         }
 
-        private static bool SolveSq1Cube(Cube startCube, Cube targetCube, Predicate<Rotation> IsFocusRotation) {
-            return SolveSq1Cube(new List<Cube>{startCube}, targetCube, IsFocusRotation);
+        private static bool SolveSq1Cube(Cube startCube, Cube targetCube) {
+            return SolveSq1Cube(new List<Cube>{startCube}, targetCube);
         }
 
-        private static bool SolveSq1Cube(List<Cube> startCubeList, Cube targetCube, Predicate<Rotation> IsFocusRotation) {
+        private static bool SolveSq1Cube(List<Cube> startCubeList, Cube targetCube) {
             DateTime startTime = DateTime.Now;
             Console.WriteLine("total request for \"{0}\": {1}", targetCube, startCubeList.Count);
 
             int solvedCount = 0;
             for (int i = 0; i < startCubeList.Count; i++) {
                 Console.WriteLine("searching solution for \"{0}\": {1}/{2} ...", targetCube, i + 1, startCubeList.Count);
-                bool successful = SolveSq1CubeKernel(startCubeList[i], targetCube, IsFocusRotation);
+                bool successful = SolveSq1CubeKernel(startCubeList[i], targetCube);
                 if (successful) {
                     solvedCount++;
                 }
@@ -128,8 +116,9 @@ namespace sq1code
             return solvedCount == startCubeList.Count;
         }
 
-        private static bool SolveSq1CubeKernel(Cube startCube, Cube targetCube, Predicate<Rotation> IsFocusRotation) {
+        private static bool SolveSq1CubeKernel(Cube startCube, Cube targetCube) {
             DateTime startTime = DateTime.Now;
+            bool isShapeSolved = startCube.IsShapeSolved() && targetCube.IsShapeSolved();
 
             int reopenStateCount = 0;
             int closedStateCount = 0;
@@ -149,11 +138,10 @@ namespace sq1code
                 state.IsClosed = true;
 
                 Cube cube = state.Cube;
-                List<Rotation> rotations = cube.GetRotations();
-                List<Rotation> focusRotations = rotations.FindAll(IsFocusRotation);
+                List<Rotation> rotations = cube.GetRotations(isShapeSolved);
 
                 int nextDepth = state.Depth + 1;
-                foreach (Rotation rotation in focusRotations) {
+                foreach (Rotation rotation in rotations) {
                     Cube nextCube = cube.RotateBy(rotation);
                     totalEdgeCount++;
                     if (seenCubeStates.ContainsKey(nextCube)) {
