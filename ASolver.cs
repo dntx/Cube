@@ -14,7 +14,7 @@ namespace sq1code
                         Cube.ShapeSolved,
                         rotation => true);
 
-                // L1 strategy 1
+                // L1 strategy
                 case Goal.SolveL1Quarter123:
                     return SolveSq1Cube(
                         Cube.L1Quarter123UnsolvedList, 
@@ -27,16 +27,6 @@ namespace sq1code
                         Cube.L1Quarter4Solved,
                         rotation => rotation.IsSquareShapeLocked());
 
-                // // L1 strategy 2
-                // case Goal.SolveUpDownColor:
-                //     return SolveSq1Cube(
-                //         Cube.UpDownColorSolved, 
-                //         cube => cube.IsUpDwonColorGrouped(), 
-                //         rotation => rotation.IsSquareShapeLocked());
-
-                // case Goal.SolveL1:
-                //     throw new NotImplementedException();
-
                 // L3 strategy 1
                 case Goal.SolveL3Cross:
                     return SolveSq1Cube(
@@ -44,30 +34,15 @@ namespace sq1code
                         Cube.L3CrossSolved, 
                         rotation => rotation.IsSquareQuarterLocked());
 
-                // case Goal.SolveL3CornersThen:
-                //     return SolveSq1Cube(
-                //         Cube.Solved,
-                //         cube => cube.IsL3CrossSolved(),
-                //         rotation => rotation.IsSquareShapeLocked());
+                case Goal.SolveL3CornersThen:
+                    throw new NotImplementedException();
 
                 // // L3 strategy 2
-                // case Goal.SolveL3Quarter1:
-                //     return SolveSq1Cube(
-                //         Cube.L3Cell01Solved, 
-                //         cube => cube.IsL1Solved(), 
-                //         rotation => rotation.IsSquareShapeLocked());
+                case Goal.SolveL3Corners:
+                    throw new NotImplementedException();
 
-                // case Goal.SolveL3Quarter2:
-                //     return SolveSq1Cube(
-                //         Cube.L3Cell0123Solved, 
-                //         cube => cube.IsL3CellSolved(0, 1),
-                //         rotation => rotation.IsSquareQuarterLocked());
-
-                // case Goal.SolveL3Quarter34:
-                //     return SolveSq1Cube(
-                //         Cube.Solved,
-                //         cube => cube.IsL3CellSolved(0, 1, 2, 3),
-                //         rotation => rotation.IsSquareShapeLocked());
+                case Goal.SolveL3CrossThen:
+                    throw new NotImplementedException();
 
                 // L3 strategy 3
                 case Goal.SolveL3Cell01:
@@ -114,23 +89,12 @@ namespace sq1code
                         Cube.Solved,
                         rotation => rotation.IsSquareShapeLocked());
 
-
-                case Goal.SolveScratch:
+                // scratch
+                case Goal.Scratch:
                     return SolveSq1Cube(
                         Cube.Solved, 
                         Cube.L1L3Cell08Swapped,
                         rotation => rotation.IsSquareShapeLocked());
-
-
-                // L3 strategy 4
-                // case Goal.SolveL3QuarterPairs:
-                //     throw new NotImplementedException();
-
-                // case Goal.SolveL3QuarterPosition:
-                //     return SolveSq1Cube(
-                //         Cube.Solved, 
-                //         cube => cube.IsL1Solved(), 
-                //         rotation => rotation.IsSquareQuarterLocked());
             }
             return false;
         }

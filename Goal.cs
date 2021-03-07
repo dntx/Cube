@@ -3,22 +3,17 @@ namespace sq1code
     public enum Goal { 
         SolveShape,
 
-        // L1 strategy 1
+        // L1 strategy
         SolveL1Quarter123,
         SolveL1Quarter4,
-
-        // L1 strategy 2
-        SolveUpDownColor,
-        SolveL1,
 
         // L3 strategy 1
         SolveL3Cross,
         SolveL3CornersThen,
 
         // L3 strategy 2
-        SolveL3Quarter1,
-        SolveL3Quarter2,
-        SolveL3Quarter34,
+        SolveL3Corners,
+        SolveL3CrossThen,
 
         // L3 strategy 3
         SolveL3Cell01,
@@ -33,11 +28,6 @@ namespace sq1code
         SolveL3Cell57,
         SolveL3Cell46Then,
 
-        // L3 strategy 4
-        SolveL3QuarterPairs,
-        SolveL3QuarterPosition,
-
-
-        SolveScratch
+        Scratch
     };
 }

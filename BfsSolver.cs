@@ -29,7 +29,7 @@ namespace sq1code
                         cube => cube.IsUpOrDownHexagram());
                     break;
 
-                // L1 strategy 1
+                // L1 strategy
                 case Goal.SolveL1Quarter123:
                     SolveSq1Cube(
                         Cube.L1Quarter123Solved, 
@@ -43,17 +43,6 @@ namespace sq1code
                         cube => cube.IsL1CellSolved(6),
                         rotation => rotation.IsSquareShapeLocked());
                     break;
-
-                // L1 strategy 2
-                case Goal.SolveUpDownColor:
-                    SolveSq1Cube(
-                        Cube.UpDownColorSolved, 
-                        cube => cube.IsUpDwonColorGrouped(), 
-                        rotation => rotation.IsSquareShapeLocked());
-                    break;
-
-                case Goal.SolveL1:
-                    throw new NotImplementedException();
 
                 // L3 strategy 1
                 case Goal.SolveL3Cross:
@@ -71,26 +60,11 @@ namespace sq1code
                     break;
 
                 // L3 strategy 2
-                case Goal.SolveL3Quarter1:
-                    SolveSq1Cube(
-                        Cube.L3Cell01Solved, 
-                        cube => cube.IsL1Solved(), 
-                        rotation => rotation.IsSquareShapeLocked());
-                    break;
+                case Goal.SolveL3Corners:
+                    throw new NotImplementedException();
 
-                case Goal.SolveL3Quarter2:
-                    SolveSq1Cube(
-                        Cube.L3Cell0123Solved, 
-                        cube => cube.IsL3CellSolved(0, 1),
-                        rotation => rotation.IsSquareQuarterLocked());
-                    break;
-
-                case Goal.SolveL3Quarter34:
-                    SolveSq1Cube(
-                        Cube.Solved,
-                        cube => cube.IsL3CellSolved(0, 1, 2, 3),
-                        rotation => rotation.IsSquareShapeLocked());
-                    break;
+                case Goal.SolveL3CrossThen:
+                    throw new NotImplementedException();
 
                 // L3 strategy 3
                 case Goal.SolveL3Cell01:
@@ -144,19 +118,8 @@ namespace sq1code
                         rotation => rotation.IsSquareShapeLocked());
                     break;
 
-                // L3 strategy 4
-                case Goal.SolveL3QuarterPairs:
-                    throw new NotImplementedException();
-
-                case Goal.SolveL3QuarterPosition:
-                    SolveSq1Cube(
-                        Cube.Solved, 
-                        cube => cube.IsL1Solved(), 
-                        rotation => rotation.IsSquareQuarterLocked());
-                    break;
-
-
-                case Goal.SolveScratch:
+                // scratch
+                case Goal.Scratch:
                     SolveSq1Cube(
                         Cube.Solved, 
                         cube => false,
