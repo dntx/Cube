@@ -24,27 +24,27 @@ namespace sq1code
             //BfsSolver.Solve(Goal.SolveL3Cell46Then);
         }
 
-        private static void DoASolve(bool reverseSearch) {
+        private static void DoASolve(bool reverseBfsSearch) {
             DateTime startTime = DateTime.Now;
             bool successful = true;
-            successful &= ASolve(Goal.SolveShape, reverseSearch);
-            successful &= ASolve(Goal.SolveL1Quarter123, reverseSearch);
-            successful &= ASolve(Goal.SolveL1Quarter4, reverseSearch);
-            successful &= ASolve(Goal.SolveL3Cell01, reverseSearch);
-            successful &= ASolve(Goal.SolveL3Cell2, reverseSearch);
-            successful &= ASolve(Goal.SolveL3Cell3, reverseSearch);
-            successful &= ASolve(Goal.SolveL3Cell46, reverseSearch);
-            //successful &= ASolver.Solve(Goal.SolveL3Cell57Then, reverseSearch);
-            //successful &= ASolver.Solve(Goal.SolveL3Cell57, reverseSearch);
-            //successful &= ASolver.Solve(Goal.SolveL3Cell46Then, reverseSearch);
+            // successful &= ASolve(Goal.SolveShape, reverseBfsSearch);
+            // successful &= ASolve(Goal.SolveL1Quarter123, reverseBfsSearch);
+            // successful &= ASolve(Goal.SolveL1Quarter4, reverseBfsSearch);
+            // successful &= ASolve(Goal.SolveL3Cell01, reverseBfsSearch);
+            // successful &= ASolve(Goal.SolveL3Cell2, reverseBfsSearch);
+            // successful &= ASolve(Goal.SolveL3Cell3, reverseBfsSearch);
+            // successful &= ASolve(Goal.SolveL3Cell46, reverseBfsSearch);
+            successful &= ASolver.Solve(Goal.SolveL3Cell57Then, reverseBfsSearch);
+            //successful &= ASolver.Solve(Goal.SolveL3Cell57, reverseBfsSearch);
+            //successful &= ASolver.Solve(Goal.SolveL3Cell46Then, reverseBfsSearch);
             Console.WriteLine("total seconds: {0:0.00}, successful: {1}", 
                 DateTime.Now.Subtract(startTime).TotalSeconds,
                 successful);
         }
 
-        private static bool ASolve(Goal goal, bool reverseSearch) {
+        private static bool ASolve(Goal goal, bool reverseBfsSearch) {
             Console.WriteLine("start {0} ...", goal);
-            bool successful = ASolver.Solve(goal, reverseSearch);
+            bool successful = ASolver.Solve(goal, reverseBfsSearch);
             Console.WriteLine("end {0}, successful: {1}", goal, successful);
             Console.WriteLine("############################################");
             Console.WriteLine();
