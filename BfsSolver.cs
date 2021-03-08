@@ -141,7 +141,7 @@ namespace sq1code
             SolveSq1Cube(startCube, cube => cube == targetCube, targetCubeCount: 1, IsFocusRotation);
         }
 
-        private static void SolveSq1Cube(Cube startCube, List<Cube> targetCubes, Predicate<Rotation> IsFocusRotation) {
+        private static void SolveSq1Cube(Cube startCube, ICollection<Cube> targetCubes, Predicate<Rotation> IsFocusRotation) {
             SolveSq1Cube(startCube, cube => targetCubes.Contains(cube), targetCubes.Count, IsFocusRotation);
         }
         

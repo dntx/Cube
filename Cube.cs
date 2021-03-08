@@ -138,7 +138,7 @@ namespace sq1code
 
         public static Cube ShapeSolved = 
             new Cube(new Layer(0, 1, 0, 1, 0, 1, 0, 1), new Layer(0, 1, 0, 1, 0, 1, 0, 1));
-        public static List<Cube> ShapeUnsolvedList = new List<Cube> {
+        public static ISet<Cube> ShapeUnsolvedList = new HashSet<Cube> {
             new Cube(new Layer(0, 0, 1, 1, 1, 1, 1, 1, 1, 1), new Layer(0, 0, 0, 0, 0, 0)),
             new Cube(new Layer(0, 1, 0, 1, 1, 1, 1, 1, 1, 1), new Layer(0, 0, 0, 0, 0, 0)),
             new Cube(new Layer(0, 1, 1, 0, 1, 1, 1, 1, 1, 1), new Layer(0, 0, 0, 0, 0, 0)),
@@ -153,14 +153,14 @@ namespace sq1code
         // cubes that L1 need solved first
         public static Cube L1Quarter123Solved = 
             new Cube(new Layer(6, 7, 6, 7, 6, 7, 6, 7), new Layer(0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 6, 7));
-        public static List<Cube> L1Quarter123UnsolvedList = new List<Cube> {
+        public static ISet<Cube> L1Quarter123UnsolvedList = new HashSet<Cube> {
             new Cube(new Layer(6, 7, 6, 7, 6, 7, 6, 7), new Layer(0x8, 0x9, 0xA, 0xB, 0xC, 7, 6, 0xD)),
             new Cube(new Layer(6, 7, 6, 7, 6, 7, 6, 0xD), new Layer(0x8, 0x9, 0xA, 0xB, 0xC, 7, 6, 7))
         };
 
         public static Cube L1Quarter4Solved = 
             new Cube(new Layer(6, 7, 6, 7, 6, 7, 6, 7), new Layer(0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF));
-        public static List<Cube> L1Quarter4UnsolvedList = new List<Cube> {
+        public static ISet<Cube> L1Quarter4UnsolvedList = new HashSet<Cube> {
             new Cube(new Layer(6, 7, 6, 7, 6, 7, 6, 0xF), new Layer(0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 7)),
             new Cube(new Layer(6, 7, 6, 7, 6, 7, 0xE, 7), new Layer(0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 6, 0xF)),
             new Cube(new Layer(6, 7, 6, 7, 6, 7, 0xE, 0xF), new Layer(0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 6, 7)),
@@ -172,7 +172,7 @@ namespace sq1code
         // cubes that L3 need solved then
         public static Cube L3CrossSolved = 
             new Cube(new Layer(0, 1, 0, 3, 0, 5, 0, 7), Layer.WhiteL1);
-        public static List<Cube> L3CrossUnsolvedList = new List<Cube> {
+        public static ISet<Cube> L3CrossUnsolvedList = new HashSet<Cube> {
             new Cube(new Layer(0, 1, 0, 3, 0, 7, 0, 5), Layer.WhiteL1),
             new Cube(new Layer(0, 1, 0, 5, 0, 3, 0, 7), Layer.WhiteL1),
             new Cube(new Layer(0, 1, 0, 5, 0, 7, 0, 3), Layer.WhiteL1),
@@ -182,7 +182,7 @@ namespace sq1code
 
         public static Cube L3CornersSolved = 
             new Cube(new Layer(0, 7, 2, 7, 4, 7, 6, 7), Layer.WhiteL1);
-        public static List<Cube> L3CornersUnSolvedList = new List<Cube> {
+        public static ISet<Cube> L3CornersUnSolvedList = new HashSet<Cube> {
             new Cube(new Layer(0, 7, 2, 7, 6, 7, 4, 7), Layer.WhiteL1),
             new Cube(new Layer(0, 7, 4, 7, 2, 7, 6, 7), Layer.WhiteL1),
             new Cube(new Layer(0, 7, 4, 7, 6, 7, 2, 7), Layer.WhiteL1),
@@ -193,7 +193,7 @@ namespace sq1code
 
         public static Cube L3Cell01Solved = 
             new Cube(new Layer(0, 1, 6, 7, 6, 7, 6, 7), Layer.WhiteL1);
-        public static List<Cube> L3Cell01UnsolvedList = new List<Cube> {
+        public static ISet<Cube> L3Cell01UnsolvedList = new HashSet<Cube> {
             new Cube(new Layer(0, 7, 6, 1, 6, 7, 6, 7), Layer.WhiteL1), 
             new Cube(new Layer(1, 6, 7, 0, 7, 6, 7, 6), Layer.WhiteL1), 
             new Cube(new Layer(1, 0, 7, 6, 7, 6, 7, 6), Layer.WhiteL1)
@@ -202,7 +202,7 @@ namespace sq1code
 
         public static Cube L3Cell012Solved = 
             new Cube(new Layer(0, 1, 2, 7, 6, 7, 6, 7), Layer.WhiteL1);
-        public static List<Cube> L3Cell012UnsolvedList = new List<Cube> {
+        public static ISet<Cube> L3Cell012UnsolvedList = new HashSet<Cube> {
             new Cube(new Layer(0, 1, 6, 7, 2, 7, 6, 7), Layer.WhiteL1),
             new Cube(new Layer(2, 7, 0, 1, 6, 7, 6, 7), Layer.WhiteL1)
         };
@@ -210,7 +210,7 @@ namespace sq1code
 
         public static Cube L3Cell0123Solved = 
             new Cube(new Layer(0, 1, 2, 3, 6, 7, 6, 7), Layer.WhiteL1);
-        public static List<Cube> L3Cell0123UnsolvedList = new List<Cube> {
+        public static ISet<Cube> L3Cell0123UnsolvedList = new HashSet<Cube> {
             new Cube(new Layer(0, 1, 2, 7, 6, 3, 6, 7), Layer.WhiteL1),
             new Cube(new Layer(3, 0, 1, 2, 7, 6, 7, 6), Layer.WhiteL1)
         };

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace sq1code {
     class APredictor {
@@ -12,12 +13,12 @@ namespace sq1code {
             Solved1234
         };
 
-        public static int PredictCost(Cube cube, List<Cube> targetCubes) {
+        public static int PredictCost(Cube cube, ICollection<Cube> targetCubes) {
             if (targetCubes.Count > 1) {
                 // todo: even for multiple target cubes, we still can give some meaningful prediction
                 return 0;
             } else {
-                return PredictCost(cube, targetCubes[0]);
+                return PredictCost(cube, targetCubes.First());
             }
         }
 

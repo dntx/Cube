@@ -102,13 +102,13 @@ namespace sq1code
         private static bool SolveSq1Cube(Cube startCube, Cube targetCube, bool reverseSearch) {
             bool lockSquareShape = startCube.IsShapeSolved() && targetCube.IsShapeSolved();
             if (reverseSearch) {
-                return SolveSq1CubeKernel(targetCube, new List<Cube>{startCube}, true, lockSquareShape);
+                return SolveSq1CubeKernel(targetCube, new HashSet<Cube>{startCube}, true, lockSquareShape);
             } else {
-                return SolveSq1CubeKernel(startCube, new List<Cube>{targetCube}, false, lockSquareShape);
+                return SolveSq1CubeKernel(startCube, new HashSet<Cube>{targetCube}, false, lockSquareShape);
             }
         }
 
-        private static bool SolveSq1Cube(List<Cube> startCubes, Cube targetCube, bool reverseSearch) {
+        private static bool SolveSq1Cube(ICollection<Cube> startCubes, Cube targetCube, bool reverseSearch) {
             if (reverseSearch) {
                 bool lockSquareShape = startCubes.All(cube => cube.IsShapeSolved()) && targetCube.IsShapeSolved();
                 return SolveSq1CubeKernel(targetCube, startCubes, reverseSearch:true, lockSquareShape);
@@ -117,9 +117,11 @@ namespace sq1code
                 Console.WriteLine("total request for \"{0}\": {1}", targetCube, startCubes.Count);
 
                 int solvedCount = 0;
-                for (int i = 0; i < startCubes.Count; i++) {
-                    Console.WriteLine("searching solution for \"{0}\": {1}/{2} ...", targetCube, i + 1, startCubes.Count);
-                    bool successful = SolveSq1Cube(startCubes[i], targetCube, reverseSearch: false);
+                int searchedCount = 0;
+                foreach (Cube startCube in startCubes) {
+                    searchedCount++;
+                    Console.WriteLine("searching solution for \"{0}\": {1}/{2} ...", targetCube, searchedCount, startCubes.Count);
+                    bool successful = SolveSq1Cube(startCube, targetCube, reverseSearch: false);
                     if (successful) {
                         solvedCount++;
                     }
@@ -138,7 +140,7 @@ namespace sq1code
             }
         }
 
-        private static bool SolveSq1CubeKernel(Cube startCube, List<Cube> targetCubes, bool reverseSearch, bool lockSquareShape) {
+        private static bool SolveSq1CubeKernel(Cube startCube, ICollection<Cube> targetCubes, bool reverseSearch, bool lockSquareShape) {
             DateTime startTime = DateTime.Now;
 
             int reopenStateCount = 0;
@@ -202,7 +204,7 @@ namespace sq1code
                 }
 
                 closedStateCount++;
-                if (completed || openStates.Count == 0 || closedStateCount % 1000 == 0) {
+                if (completed || openStates.Count == 0 || closedStateCount % 10000 == 0) {
                     int totalCount = closedStateCount + openStates.Count;
                     Console.WriteLine(
                         "seconds: {0:0.00}, {1}, depth: {2}, h: {3}, solutions: {4}, closed: {5}({6:p}), open: {7}({8:p}), reopened: {9}({10:p})", 
@@ -228,7 +230,7 @@ namespace sq1code
 
             OutputSolutions(startState, targetStates.Values, reverseSearch);
             Console.WriteLine();
-            Console.WriteLine("cubes: {0}, solutions: {0}, closed: {1}", seenCubeStates.Count, targetStates.Count, closedStateCount);
+            Console.WriteLine("cubes: {0}, solutions: {1}, closed: {2}", seenCubeStates.Count, targetStates.Count, closedStateCount);
             Console.WriteLine("edges: {0}, net: {1}", totalEdgeCount, netEdgeCount);
             return true;
         }
@@ -258,7 +260,7 @@ namespace sq1code
 
                 Console.WriteLine(
                     " ==> {0} | {1}", 
-                    rotatedCube,
+                    rotatedCube.ToString(verbose: true),
                     state.CubeId
                     );
                 state = fromState;
@@ -284,7 +286,7 @@ namespace sq1code
             }
             Console.WriteLine(
                 " ==> {0} | {1}", 
-                targetState.Cube,
+                targetState.Cube.ToString(verbose: true),
                 targetState.CubeId
                 );
          }

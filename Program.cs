@@ -7,7 +7,7 @@ namespace sq1code
         static void Main(string[] args)
         {
             //DoBfsSolve();
-            DoASolve(false);
+            DoASolve(true);
         }
 
         private static void DoBfsSolve() {
