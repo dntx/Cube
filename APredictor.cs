@@ -12,7 +12,16 @@ namespace sq1code {
             Solved1234
         };
 
-        public static int PredictCost(Cube cube, Cube targetCube) {
+        public static int PredictCost(Cube cube, List<Cube> targetCubes) {
+            if (targetCubes.Count > 1) {
+                // todo: even for multiple target cubes, we still can give some meaningful prediction
+                return 0;
+            } else {
+                return PredictCost(cube, targetCubes[0]);
+            }
+        }
+
+        private static int PredictCost(Cube cube, Cube targetCube) {
             //return 0; /*
             if (targetCube != Cube.Solved) {
                 return PredictCostByPairs(cube, targetCube);
