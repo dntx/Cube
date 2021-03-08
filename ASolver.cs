@@ -5,34 +5,42 @@ using System.Linq;
 namespace sq1code
 {
     class ASolver {
-        public static bool Solve(Goal goal, bool reverseBfsSearch) {
+        public enum Mode {
+            ASearch,
+            ReverseBfSearch,
+            ReverseBfSearchThenASearch
+        }
+
+        private Mode mode;
+
+        public ASolver(Mode mode) {
+            this.mode = mode;
+        }
+
+        public bool Solve(Goal goal) {
             switch (goal)
             {
                 case Goal.SolveShape:
                     return SolveSq1Cube(
                         Cube.ShapeUnsolvedList,
-                        Cube.ShapeSolved,
-                        reverseBfsSearch);
+                        Cube.ShapeSolved);
 
                 // L1 strategy
                 case Goal.SolveL1Quarter123:
                     return SolveSq1Cube(
                         Cube.L1Quarter123UnsolvedList, 
-                        Cube.L1Quarter123Solved,
-                        reverseBfsSearch);
+                        Cube.L1Quarter123Solved);
 
                 case Goal.SolveL1Quarter4:
                     return SolveSq1Cube(
                         Cube.L1Quarter4UnsolvedList, 
-                        Cube.L1Quarter4Solved,
-                        reverseBfsSearch);
+                        Cube.L1Quarter4Solved);
 
                 // L3 strategy 1
                 case Goal.SolveL3Cross:
                     return SolveSq1Cube(
                         Cube.L3CrossUnsolvedList,
-                        Cube.L3CrossSolved,
-                        reverseBfsSearch);
+                        Cube.L3CrossSolved);
 
                 case Goal.SolveL3CornersThen:
                     throw new NotImplementedException();
@@ -48,70 +56,62 @@ namespace sq1code
                 case Goal.SolveL3Cell01:
                     return SolveSq1Cube(
                         Cube.L3Cell01UnsolvedList, 
-                        Cube.L3Cell01Solved,
-                        reverseBfsSearch);
+                        Cube.L3Cell01Solved);
 
                 case Goal.SolveL3Cell2:
                     return SolveSq1Cube(
                         Cube.L3Cell012UnsolvedList, 
-                        Cube.L3Cell012Solved,
-                        reverseBfsSearch);
+                        Cube.L3Cell012Solved);
 
                 case Goal.SolveL3Cell3:
                     return SolveSq1Cube(
                         Cube.L3Cell0123UnsolvedList, 
-                        Cube.L3Cell0123Solved,
-                        reverseBfsSearch);
+                        Cube.L3Cell0123Solved);
 
                 // L3 strategy 3.1
                 case Goal.SolveL3Cell46:
                     return SolveSq1Cube(
                         Cube.L3Cell012364, 
-                        Cube.L3Cell012346,
-                        reverseBfsSearch);
+                        Cube.L3Cell012346);
 
                 case Goal.SolveL3Cell57Then:
                     return SolveSq1Cube(
                         Cube.L3Cell01234765, 
-                        Cube.Solved,
-                        reverseBfsSearch);
+                        Cube.Solved);
 
                 // L3 strategy 3.2
                 case Goal.SolveL3Cell57:
                     return SolveSq1Cube(
                         Cube.L3Cell012375,
-                        Cube.L3Cell012357,
-                        reverseBfsSearch);
+                        Cube.L3Cell012357);
 
                 case Goal.SolveL3Cell46Then:
                     return SolveSq1Cube(
                         Cube.L3Cell01236547, 
-                        Cube.Solved,
-                        reverseBfsSearch);
+                        Cube.Solved);
 
                 // scratch
                 case Goal.Scratch:
                     return SolveSq1Cube(
                         Cube.Solved, 
-                        Cube.L1L3Cell08Swapped,
-                        reverseBfsSearch);
+                        Cube.L1L3Cell08Swapped);
             }
             return false;
         }
 
-        private static bool SolveSq1Cube(Cube startCube, Cube targetCube, bool reverseBfsSearch) {
+        private bool SolveSq1Cube(Cube startCube, Cube targetCube) {
             bool lockSquareShape = startCube.IsShapeSolved() && targetCube.IsShapeSolved();
-            if (reverseBfsSearch) {
-                return SolveSq1CubeKernel(targetCube, new HashSet<Cube>{startCube}, true, lockSquareShape);
+            if (mode == Mode.ReverseBfSearch) {
+                return SolveSq1CubeKernel(targetCube, new HashSet<Cube>{startCube}, lockSquareShape);
             } else {
-                return SolveSq1CubeKernel(startCube, new HashSet<Cube>{targetCube}, false, lockSquareShape);
+                return SolveSq1CubeKernel(startCube, new HashSet<Cube>{targetCube}, lockSquareShape);
             }
         }
 
-        private static bool SolveSq1Cube(ICollection<Cube> startCubes, Cube targetCube, bool reverseBfsSearch) {
-            if (reverseBfsSearch) {
+        private bool SolveSq1Cube(ICollection<Cube> startCubes, Cube targetCube) {
+            if (mode == Mode.ReverseBfSearch) {
                 bool lockSquareShape = startCubes.All(cube => cube.IsShapeSolved()) && targetCube.IsShapeSolved();
-                return SolveSq1CubeKernel(targetCube, startCubes, reverseBfsSearch:true, lockSquareShape);
+                return SolveSq1CubeKernel(targetCube, startCubes, lockSquareShape);
             } else {
                 DateTime startTime = DateTime.Now;
                 Console.WriteLine("total request for \"{0}\": {1}", targetCube, startCubes.Count);
@@ -121,7 +121,7 @@ namespace sq1code
                 foreach (Cube startCube in startCubes) {
                     searchedCount++;
                     Console.WriteLine("searching solution for \"{0}\": {1}/{2} ...", targetCube, searchedCount, startCubes.Count);
-                    bool successful = SolveSq1Cube(startCube, targetCube, reverseBfsSearch: false);
+                    bool successful = SolveSq1Cube(startCube, targetCube);
                     if (successful) {
                         solvedCount++;
                     }
@@ -140,7 +140,7 @@ namespace sq1code
             }
         }
 
-        private static bool SolveSq1CubeKernel(Cube startCube, ICollection<Cube> targetCubes, bool reverseBfsSearch, bool lockSquareShape) {
+        private bool SolveSq1CubeKernel(Cube startCube, ICollection<Cube> targetCubes, bool lockSquareShape) {
             DateTime startTime = DateTime.Now;
 
             int reopenStateCount = 0;
@@ -185,7 +185,7 @@ namespace sq1code
                         }
                     } else {
                         // new cube
-                        int predictedCost = reverseBfsSearch ? 0 : APredictor.PredictCost(nextCube, targetCubes);
+                        int predictedCost = (mode == Mode.ReverseBfSearch) ? 0 : APredictor.PredictCost(nextCube, targetCubes);
                         int nextCubeId = seenCubeStates.Count();
                         AState nextState = new AState(nextCube, nextCubeId, predictedCost, state, rotation);
                         netEdgeCount++;
@@ -228,16 +228,16 @@ namespace sq1code
                 return false;
             }
 
-            OutputSolutions(startState, targetStates.Values, reverseBfsSearch);
+            OutputSolutions(startState, targetStates.Values);
             Console.WriteLine();
             Console.WriteLine("cubes: {0}, solutions: {1}, closed: {2}", seenCubeStates.Count, targetStates.Count, closedStateCount);
             Console.WriteLine("edges: {0}, net: {1}", totalEdgeCount, netEdgeCount);
             return true;
         }
 
-        private static void OutputSolutions(AState startState, ICollection<AState> targetStates, bool reverseBfsSearch) {
+        private void OutputSolutions(AState startState, ICollection<AState> targetStates) {
             foreach (AState targetState in targetStates) {
-                if (reverseBfsSearch) {
+                if (mode == Mode.ReverseBfSearch) {
                     ReverseOutputSolution(startState, targetState);
                 } else {
                     OutputSolution(startState, targetState);
@@ -246,7 +246,7 @@ namespace sq1code
             }
         }
 
-        private static void ReverseOutputSolution(AState startState, AState targetState) {
+        private void ReverseOutputSolution(AState startState, AState targetState) {
             Console.WriteLine("cube: {0}", targetState.Cube);
             Console.WriteLine("depth：{0}", targetState.Depth);
             AState state = targetState;
@@ -267,7 +267,7 @@ namespace sq1code
             } while (state != null);
         }
 
-        private static void OutputSolution(AState startState, AState targetState) {
+        private void OutputSolution(AState startState, AState targetState) {
             Console.WriteLine("cube: {0}", startState.Cube);
             Console.WriteLine("depth：{0}", targetState.Depth);
             
