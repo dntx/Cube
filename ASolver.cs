@@ -7,8 +7,7 @@ namespace sq1code
     class ASolver {
         public enum Mode {
             ASearch,
-            ReverseBfSearch,
-            ReverseBfSearchThenASearch
+            ReverseBfSearch
         }
 
         private Mode mode;

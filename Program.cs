@@ -6,37 +6,23 @@ namespace sq1code
     {
         static void Main(string[] args)
         {
-            //DoBfsSolve();
-            DoASolve();
+            //DoASolve(ASolver.Mode.ReverseBfSearch);
+            DoASolve(ASolver.Mode.ASearch);
         }
 
-        private static void DoBfsSolve() {
-            //BfsSolver.Solve(Goal.SolveShape);
-            //BfsSolver.Solve(Goal.SolveL1Quarter123);
-            //BfsSolver.Solve(Goal.SolveL1Quarter4);
-            //BfsSolver.Solve(Goal.SolveL3Cell01);
-            //BfsSolver.Solve(Goal.SolveL3Cell2);
-            //BfsSolver.Solve(Goal.SolveL3Cell3);
-            BfsSolver.Solve(Goal.SolveL3Cell46);
-            //BfsSolver.Solve(Goal.SolveL3Cell57Then);
-            
-            //BfsSolver.Solve(Goal.SolveL3Cell57);
-            //BfsSolver.Solve(Goal.SolveL3Cell46Then);
-        }
-
-        private static void DoASolve() {
+        private static void DoASolve(ASolver.Mode mode) {
             DateTime startTime = DateTime.Now;
             bool successful = true;
-            successful &= ASolve(Goal.SolveShape, ASolver.Mode.ASearch);
-            successful &= ASolve(Goal.SolveL1Quarter123, ASolver.Mode.ASearch);
-            successful &= ASolve(Goal.SolveL1Quarter4, ASolver.Mode.ASearch);
-            successful &= ASolve(Goal.SolveL3Cell01, ASolver.Mode.ASearch);
-            successful &= ASolve(Goal.SolveL3Cell2, ASolver.Mode.ASearch);
-            successful &= ASolve(Goal.SolveL3Cell3, ASolver.Mode.ASearch);
-            successful &= ASolve(Goal.SolveL3Cell46, ASolver.Mode.ASearch);
-            //successful &= ASolve(Goal.SolveL3Cell57Then, ASolver.Mode.ASearch);
-            //successful &= ASolver.Solve(Goal.SolveL3Cell57, ASolver.Mode.ASearch);
-            //successful &= ASolver.Solve(Goal.SolveL3Cell46Then, ASolver.Mode.ASearch);
+            successful &= ASolve(Goal.SolveShape, mode);
+            successful &= ASolve(Goal.SolveL1Quarter123, mode);
+            successful &= ASolve(Goal.SolveL1Quarter4, mode);
+            successful &= ASolve(Goal.SolveL3Cell01, mode);
+            successful &= ASolve(Goal.SolveL3Cell2, mode);
+            successful &= ASolve(Goal.SolveL3Cell3, mode);
+            successful &= ASolve(Goal.SolveL3Cell46, mode);
+            //successful &= ASolve(Goal.SolveL3Cell57Then, mode);
+            successful &= ASolve(Goal.SolveL3Cell57, mode);
+            //successful &= ASolve(Goal.SolveL3Cell46Then, mode);
             Console.WriteLine("total seconds: {0:0.00}, successful: {1}", 
                 DateTime.Now.Subtract(startTime).TotalSeconds,
                 successful);
