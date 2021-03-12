@@ -22,7 +22,7 @@ namespace sq1code {
             }
         }
 
-        private static int PredictCost(Cube cube, Cube targetCube) {
+        public static int PredictCost(Cube cube, Cube targetCube) {
             //return 0; /*
             if (targetCube != Cube.Solved) {
                 return PredictCostByPairs(cube, targetCube);

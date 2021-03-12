@@ -7,7 +7,8 @@ namespace sq1code
     class ASolver {
         public enum Mode {
             ASearch,
-            ReverseBfSearch
+            ReverseSearch,
+            BiDiSearch
         }
 
         private Mode mode;
@@ -18,7 +19,7 @@ namespace sq1code
 
         public bool Solve(Cube startCube, Cube targetCube) {
             bool lockSquareShape = startCube.IsShapeSolved() && targetCube.IsShapeSolved();
-            if (mode == Mode.ReverseBfSearch) {
+            if (mode == Mode.ReverseSearch) {
                 return DoSolve(targetCube, new HashSet<Cube>{startCube}, lockSquareShape);
             } else {
                 return DoSolve(startCube, new HashSet<Cube>{targetCube}, lockSquareShape);
@@ -26,7 +27,7 @@ namespace sq1code
         }
 
         public bool Solve(ICollection<Cube> startCubes, Cube targetCube) {
-            if (mode == Mode.ReverseBfSearch) {
+            if (mode == Mode.ReverseSearch) {
                 bool lockSquareShape = startCubes.All(cube => cube.IsShapeSolved()) && targetCube.IsShapeSolved();
                 return DoSolve(targetCube, startCubes, lockSquareShape);
             } else {
@@ -65,14 +66,32 @@ namespace sq1code
             int closedStateCount = 0;
             int totalEdgeCount = 0;
             int netEdgeCount = 0;
+            int solutionCount = 0;
+
+            // solution for one-way search
+            Dictionary<Cube, AState> targetStates = new Dictionary<Cube, AState>();
+
+            // solution for BiDiSearch
+            AState targetState = null;
+            AState midStateFromStart = null;
+            AState midStateFromTarget = null;
 
             SortedSet<AState> openStates = new SortedSet<AState>();
             Dictionary<Cube, AState> seenCubeStates = new Dictionary<Cube, AState>();
-            AState startState = new AState(startCube, 0);
+            AState startState = new AState(startCube, seenCubeStates.Count);
             openStates.Add(startState);
             seenCubeStates.Add(startCube, startState);
 
-            Dictionary<Cube, AState> targetStates = new Dictionary<Cube, AState>();
+            if (mode == Mode.BiDiSearch) {
+                if (targetCubes.Count != 1) {
+                    throw new Exception("target cube should be only one for BidiSearch mode.");
+                }
+                Cube targetCube = targetCubes.First();
+                targetState = new AState(targetCube, seenCubeStates.Count);
+                openStates.Add(targetState);
+                seenCubeStates.Add(targetCube, targetState);
+            }
+
             bool completed = false;
             do {
                 AState state = openStates.Min;
@@ -89,30 +108,53 @@ namespace sq1code
                     if (seenCubeStates.ContainsKey(nextCube)) {
                         // existing cube
                         AState existingState = seenCubeStates[nextCube];
-                        if (nextDepth < existingState.Depth) {
-                            // a better path found
-                            if (existingState.IsClosed) {
-                                existingState.IsClosed = false;
-                                closedStateCount--;
-                                reopenStateCount++;
-                            } else {
-                                openStates.Remove(existingState);
+                        if (state.StartCube == existingState.StartCube) {
+                            // same way
+                            if (nextDepth < existingState.Depth) {
+                                // a better path found
+                                if (existingState.IsClosed) {
+                                    existingState.IsClosed = false;
+                                    closedStateCount--;
+                                    reopenStateCount++;
+                                } else {
+                                    openStates.Remove(existingState);
+                                }
+                                existingState.UpdateFrom(state, rotation);
+                                openStates.Add(existingState);
                             }
-                            existingState.UpdateFrom(state, rotation);
-                            openStates.Add(existingState);
+                        } else {
+                            // meet from two different ways !!!
+                            int nextCubeId = existingState.CubeId;
+                            int predictedCost = existingState.Depth;
+                            AState nextState = new AState(state.StartCube, nextCube, nextCubeId, predictedCost, state, rotation);
+                            netEdgeCount++;
+
+                            if (nextState.StartCube == startCube) {
+                                midStateFromStart = nextState;
+                                midStateFromTarget = existingState;
+                            } else {
+                                midStateFromStart = existingState;
+                                midStateFromTarget = nextState;
+                            }
+                            solutionCount++;
+                            completed = true;
+                            break;
                         }
                     } else {
                         // new cube
-                        int predictedCost = (mode == Mode.ReverseBfSearch) ? 0 : APredictor.PredictCost(nextCube, targetCubes);
-                        int nextCubeId = seenCubeStates.Count();
-                        AState nextState = new AState(nextCube, nextCubeId, predictedCost, state, rotation);
+                        int predictedCost = (state.StartCube == startCube)? 
+                            APredictor.PredictCost(nextCube, targetCubes) :
+                            APredictor.PredictCost(nextCube, startCube);
+                        int nextCubeId = seenCubeStates.Count;
+                        AState nextState = new AState(state.StartCube, nextCube, nextCubeId, predictedCost, state, rotation);
                         netEdgeCount++;
 
                         openStates.Add(nextState);
                         seenCubeStates.Add(nextCube, nextState);
 
                         if (targetCubes.Contains(nextCube)) {
-                            targetStates[nextCube] = nextState;
+                            targetStates.Add(nextCube, nextState);
+                            solutionCount++;
                             if (targetStates.Count == targetCubes.Count) {
                                 completed = true;
                                 break;
@@ -125,12 +167,13 @@ namespace sq1code
                 if (completed || openStates.Count == 0 || closedStateCount % 10000 == 0) {
                     int totalCount = closedStateCount + openStates.Count;
                     Console.WriteLine(
-                        "seconds: {0:0.00}, {1}, depth: {2}, h: {3}, solutions: {4}, closed: {5}({6:p}), open: {7}({8:p}), reopened: {9}({10:p})", 
+                        "sec: {0:0.00}, {1}{2}, g: {3}, h: {4}, solved: {5}, closed: {6}({7:p}), open: {8}({9:p}), reopened: {10}({11:p})", 
                         DateTime.Now.Subtract(startTime).TotalSeconds,
                         state.Cube,
+                        (state.StartCube == startCube)? " -> " : " <- ",
                         state.Depth,
                         state.PredictedCost, 
-                        targetStates.Count,
+                        solutionCount,
                         closedStateCount, 
                         (float)closedStateCount / totalCount,
                         openStates.Count,
@@ -146,25 +189,25 @@ namespace sq1code
                 return false;
             }
 
-            OutputSolutions(startState, targetStates.Values);
+            switch (mode) {
+                case Mode.ASearch:
+                    targetStates.Values.ToList().ForEach(targetState => OutputSolution(startState, targetState));
+                    break;
+                case Mode.ReverseSearch:
+                    targetStates.Values.ToList().ForEach(targetState => OutputReverseSolution(startState, targetState));
+                    break;
+                case Mode.BiDiSearch:
+                    OutputSolution(startState, midStateFromStart);
+                    OutputReverseSolution(targetState, midStateFromTarget);
+                    break;
+            }
             Console.WriteLine();
             Console.WriteLine("cubes: {0}, solutions: {1}, closed: {2}", seenCubeStates.Count, targetStates.Count, closedStateCount);
             Console.WriteLine("edges: {0}, net: {1}", totalEdgeCount, netEdgeCount);
             return true;
         }
 
-        private void OutputSolutions(AState startState, ICollection<AState> targetStates) {
-            foreach (AState targetState in targetStates) {
-                if (mode == Mode.ReverseBfSearch) {
-                    ReverseOutputSolution(startState, targetState);
-                } else {
-                    OutputSolution(startState, targetState);
-                }
-                Console.WriteLine();
-            }
-        }
-
-        private void ReverseOutputSolution(AState startState, AState targetState) {
+        private void OutputReverseSolution(AState startState, AState targetState) {
             Console.WriteLine("cube: {0}", targetState.Cube);
             Console.WriteLine("depth：{0}", targetState.Depth);
             AState state = targetState;
@@ -183,6 +226,7 @@ namespace sq1code
                     );
                 state = fromState;
             } while (state != null);
+            Console.WriteLine();
         }
 
         private void OutputSolution(AState startState, AState targetState) {
@@ -207,6 +251,7 @@ namespace sq1code
                 targetState.Cube.ToString(verbose: true),
                 targetState.CubeId
                 );
+            Console.WriteLine();
          }
    }
 }

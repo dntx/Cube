@@ -6,8 +6,9 @@ namespace sq1code
     {
         static void Main(string[] args)
         {
-            //ASolve(ASolver.Mode.ReverseBfSearch);
-            ASolve(ASolver.Mode.ASearch);
+            //ASolve(ASolver.Mode.ReverseSearch);
+            //ASolve(ASolver.Mode.ASearch);
+            ASolve(ASolver.Mode.BiDiSearch);
         }
 
         private static void ASolve(ASolver.Mode mode) {
@@ -20,8 +21,8 @@ namespace sq1code
             successful &= DoASolve(Goal.SolveL3Cell2, mode);
             successful &= DoASolve(Goal.SolveL3Cell3, mode);
             successful &= DoASolve(Goal.SolveL3Cell46, mode);
-            //successful &= DoASolve(Goal.SolveL3Cell57Then, mode);
-            successful &= DoASolve(Goal.SolveL3Cell57, mode);
+            successful &= DoASolve(Goal.SolveL3Cell57Then, mode);
+            //successful &= DoASolve(Goal.SolveL3Cell57, mode);
             //successful &= DoASolve(Goal.SolveL3Cell46Then, mode);
             Console.WriteLine("total seconds: {0:0.00}, successful: {1}", 
                 DateTime.Now.Subtract(startTime).TotalSeconds,
