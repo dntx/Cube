@@ -10,7 +10,7 @@ namespace Cube.Sq1RawCube
         }
 
         public bool IsIdentical() {
-            return (Up.Left == Down.Left) || (Up.Right == Down.Right);
+            return Up.Right == Down.Right;
         }
 
         public override string ToString() {

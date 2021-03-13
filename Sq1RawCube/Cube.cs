@@ -13,7 +13,7 @@ namespace Cube.Sq1RawCube
         }
 
         public static bool operator == (Cube lhs, Cube rhs) {
-            return (lhs.Up == rhs.Up && lhs.Down == rhs.Down) || (lhs.Up == rhs.Down && lhs.Down == rhs.Up);
+            return (lhs.Up == rhs.Up) && (lhs.Down == rhs.Down);
         }
 
         public static bool operator != (Cube lhs, Cube rhs) {
@@ -34,13 +34,7 @@ namespace Cube.Sq1RawCube
         // override object.GetHashCode
         public override int GetHashCode()
         {
-            int upHashCode = Up.GetHashCode();
-            int downHashCode = Down.GetHashCode();
-            if (upHashCode <= downHashCode) {
-                return upHashCode * 2^10 + downHashCode;
-            } else {
-                return downHashCode * 2^10 + upHashCode;
-            }
+            return Up.Code * 2^10 + Down.Code;
         }
 
         public ICollection<IRotation> GetRotations() {

@@ -74,9 +74,7 @@ namespace Cube.Sq1RawCube
                         Cells first = new Cells(GetRange(start, end - start));
                         Cells second = new Cells(GetRange(end, Count - end), GetRange(0, start));
                         divisions.Add(new Division(first, second));
-                        if (first != second) {
-                            divisions.Add(new Division(second, first));
-                        }
+                        divisions.Add(new Division(second, first));
                     }
                     degreeSum -= this[start];
                     start++;
