@@ -21,44 +21,6 @@ namespace Cube.Sq1Cube
         }
 
         protected string ToString(int degreeBar, string separator) {
-            return TrueForAll(cell => cell.Value == cell.Shape)? ToColorlessString(degreeBar, separator) : ToLiteralString(degreeBar, separator);
-        }
-
-        private string ToColorlessString(int degreeBar, string separator) {
-            StringBuilder sb = new StringBuilder();
-            int countOf30 = 0;
-            int degreeSum = 0;
-            ForEach(cell => {
-                int degree = cell.Degree;
-                if (degree == 30) {
-                    degreeSum += degree;
-                    countOf30++;
-                } else {
-                    if (countOf30 > 0) {
-                        sb.Append(countOf30);
-                        countOf30 = 0;
-                        if (degreeSum == degreeBar) {
-                            sb.Append(separator);
-                        }
-                    }
-
-                    sb.AppendFormat("0");
-                    degreeSum += degree;
-                    if (degreeSum == degreeBar) {
-                        sb.Append(separator);
-                    }
-                }
-            });
-
-            if (countOf30 > 0) {
-                sb.Append(countOf30);
-                countOf30 = 0;
-            }
-
-            return sb.ToString();
-        }
-
-        private string ToLiteralString(int degreeBar, string separator) {
             StringBuilder sb = new StringBuilder();
             int degreeSum = 0;
             ForEach(cell => {
@@ -108,15 +70,6 @@ namespace Cube.Sq1Cube
         public bool IsSameColor() {
             int color = this[0].Color;
             return TrueForAll(cell => cell.Color == color);
-        }
-
-        public bool IsSquare() {
-            for (int i = 1; i < Count; i++) {
-                if (this[i].Shape == this[i-1].Shape) {
-                    return false;
-                }
-            }
-            return true;
         }
 
         public static bool operator == (Cells lhs, Cells rhs) {
