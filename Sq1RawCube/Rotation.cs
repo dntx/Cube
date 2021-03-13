@@ -9,10 +9,6 @@ namespace Cube.Sq1RawCube
             Down = down;
         }
 
-        public bool IsIdentical() {
-            return Up.Right == Down.Right;
-        }
-
         public override string ToString() {
             return string.Format("{0,9},{1,-9}", Up, Down);
         }

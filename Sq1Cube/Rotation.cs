@@ -9,14 +9,6 @@ namespace Cube.Sq1Cube
             Down = down;
         }
 
-        public bool IsIdentical() {
-            return (Up.Left == Down.Left) || (Up.Right == Down.Right);
-        }
-
-        public bool IsSquareShapeLocked() {
-            return Up.Left[0].Shape == Down.Left[0].Shape;
-        }
-
         public override string ToString() {
             return string.Format("{0},{1}", Up, Down);
         }

@@ -52,9 +52,12 @@ namespace Cube.Sq1Cube
             ISet<Division> downDivisions = Down.GetDivisions(ascendingOnly: false);
 
             foreach (Division upDivision in upDivisions) {
-                foreach (Division downDivsion in downDivisions) {
-                    Rotation rotation = new Rotation(upDivision, downDivsion);
-                    if (!rotation.IsIdentical() && rotation.IsSquareShapeLocked()) {
+                foreach (Division downDivision in downDivisions) {
+                    if (upDivision.Left != downDivision.Left 
+                        && upDivision.Right != downDivision.Right
+                        && upDivision.Left[0].Shape == downDivision.Left[0].Shape) 
+                    {
+                        Rotation rotation = new Rotation(upDivision, downDivision);
                         rotations.Add(rotation);
                     }
                 }

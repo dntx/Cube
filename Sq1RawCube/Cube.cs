@@ -44,10 +44,9 @@ namespace Cube.Sq1RawCube
             ISet<Division> downDivisions = Down.GetDivisions();
 
             foreach (Division upDivision in upDivisions) {
-                foreach (Division downDivsion in downDivisions) {
-                    Rotation rotation = new Rotation(upDivision, downDivsion);
-                    if (!rotation.IsIdentical()) {
-                        rotations.Add(rotation);
+                foreach (Division downDivision in downDivisions) {
+                    if (upDivision.Right != downDivision.Right) {
+                        rotations.Add(new Rotation(upDivision, downDivision));
                     }
                 }
             }
