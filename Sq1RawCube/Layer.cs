@@ -56,7 +56,7 @@ namespace Cube.Sq1RawCube
             return ToString(separator);
         }
 
-        public ISet<Division> GetDivisions(bool ascendingOnly) {
+        public ISet<Division> GetDivisions() {
             ISet<Division> divisions = new HashSet<Division>();
             int start = 0;
             int last = 0;
@@ -73,15 +73,8 @@ namespace Cube.Sq1RawCube
                         int end = last + 1;
                         Cells first = new Cells(GetRange(start, end - start));
                         Cells second = new Cells(GetRange(end, Count - end), GetRange(0, start));
-
-                        if (first > second) {
-                            Cells temp = first;
-                            first = second;
-                            second = temp;
-                        }
-
                         divisions.Add(new Division(first, second));
-                        if (!ascendingOnly && first != second) {
+                        if (first != second) {
                             divisions.Add(new Division(second, first));
                         }
                     }

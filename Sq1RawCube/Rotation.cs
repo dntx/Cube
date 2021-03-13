@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Cube.Sq1RawCube
 {
     class Rotation : IRotation {

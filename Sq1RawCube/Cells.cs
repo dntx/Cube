@@ -1,4 +1,3 @@
-using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,25 +8,17 @@ namespace Cube.Sq1RawCube
         public int Code { get; }
 
         public Cells(IEnumerable<int> cells) : base(cells) {
-            Code = GetCode();
+            Code = GetCode(this);
         }
         
-        public Cells(List<int> first, List<int> second) : this(MergeList(first, second)) {}
+        public Cells(IEnumerable<int> first, IEnumerable<int> second) : this(first.Concat(second)) {}
         
-        // Note: MergeList is much faster than first.Contact(second)
-        private static List<int> MergeList(List<int> first, List<int> second) {
-            List<int> result = new List<int>();
-            result.AddRange(first);
-            result.AddRange(second);
-            return result;
-        }
-
-        private int GetCode() {
+        protected static int GetCode(IEnumerable<int> cells) {
             int code = 0;
-            ForEach(cell => {
+            foreach (int cell in cells) {
                 int degree = (int)cell;
                 code = code * 2 + (degree == 30 ? 1 : 0);
-            });
+            }
             return code;
         }
 

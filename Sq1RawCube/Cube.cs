@@ -46,8 +46,8 @@ namespace Cube.Sq1RawCube
         public ICollection<IRotation> GetRotations() {
             List<IRotation> rotations = new List<IRotation>();
 
-            ISet<Division> upDivisions = Up.GetDivisions(ascendingOnly: true);
-            ISet<Division> downDivisions = Down.GetDivisions(ascendingOnly: false);
+            ISet<Division> upDivisions = Up.GetDivisions();
+            ISet<Division> downDivisions = Down.GetDivisions();
 
             foreach (Division upDivision in upDivisions) {
                 foreach (Division downDivsion in downDivisions) {
