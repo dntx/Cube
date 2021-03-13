@@ -6,19 +6,19 @@ namespace sq1code {
         public int Depth { get; private set; }
         public int PredictedCost { get; }
         public AState FromState { get; private set; }
-        public Rotation FromRotation { get; private set; }
-        public Cube StartCube { get; }
-        public Cube Cube { get; }
+        public IRotation FromRotation { get; private set; }
+        public ICube StartCube { get; }
+        public ICube Cube { get; }
         public int CubeId { get; }
         public bool IsClosed { get; set; }
 
-        public AState(Cube cube, int cubeId) : this(cube, cube, cubeId) {
+        public AState(ICube cube, int cubeId) : this(cube, cube, cubeId) {
         }
 
-        public AState(Cube startCube, Cube cube, int cubeId) : this(startCube, cube, cubeId, 0, null, null) {
+        public AState(ICube startCube, ICube cube, int cubeId) : this(startCube, cube, cubeId, 0, null, null) {
         }
 
-        public AState(Cube startCube, Cube cube, int cubeId, int predictedCost, AState fromState, Rotation fromRotation) {
+        public AState(ICube startCube, ICube cube, int cubeId, int predictedCost, AState fromState, IRotation fromRotation) {
             StartCube = startCube;
             Depth = (fromState != null) ? fromState.Depth + 1 : 0;
             PredictedCost = predictedCost;
@@ -29,7 +29,7 @@ namespace sq1code {
             IsClosed = false;
         }
 
-        public void UpdateFrom(AState fromState, Rotation fromRotation) {
+        public void UpdateFrom(AState fromState, IRotation fromRotation) {
             Depth = fromState.Depth + 1;
             FromState = fromState;
             FromRotation = fromRotation;

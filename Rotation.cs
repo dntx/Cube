@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace sq1code
 {
-    class Rotation {
+    class Rotation : IRotation {
         public Division Up { get; }
         public Division Down { get; }
 

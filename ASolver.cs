@@ -17,30 +17,27 @@ namespace sq1code
             this.mode = mode;
         }
 
-        public bool Solve(Cube startCube, Cube targetCube) {
-            bool lockSquareShape = startCube.IsShapeSolved() && targetCube.IsShapeSolved();
+        public bool Solve(ICube startCube, ICube targetCube) {
             if (mode == Mode.ReverseSearch) {
-                return DoSolve(targetCube, new HashSet<Cube>{startCube}, lockSquareShape);
+                return DoSolve(targetCube, new HashSet<ICube>{startCube});
             } else {
-                return DoSolve(startCube, new HashSet<Cube>{targetCube}, lockSquareShape);
+                return DoSolve(startCube, new HashSet<ICube>{targetCube});
             }
         }
 
-        public bool Solve(ICollection<Cube> startCubes, Cube targetCube) {
+        public bool Solve(ICollection<ICube> startCubes, ICube targetCube) {
             if (mode == Mode.ReverseSearch) {
-                bool lockSquareShape = startCubes.All(cube => cube.IsShapeSolved()) && targetCube.IsShapeSolved();
-                return DoSolve(targetCube, startCubes, lockSquareShape);
+                return DoSolve(targetCube, startCubes);
             } else {
                 DateTime startTime = DateTime.Now;
                 Console.WriteLine("total request for \"{0}\": {1}", targetCube, startCubes.Count);
 
                 int solvedCount = 0;
                 int searchedCount = 0;
-                foreach (Cube startCube in startCubes) {
+                foreach (ICube startCube in startCubes) {
                     searchedCount++;
                     Console.WriteLine("searching solution for \"{0}\": {1}/{2} ...", targetCube, searchedCount, startCubes.Count);
-                    bool lockSquareShape = startCube.IsShapeSolved() && targetCube.IsShapeSolved();
-                    bool successful = DoSolve(startCube, new HashSet<Cube>{targetCube}, lockSquareShape);
+                    bool successful = DoSolve(startCube, new HashSet<ICube>{targetCube});
                     if (successful) {
                         solvedCount++;
                     }
@@ -59,7 +56,7 @@ namespace sq1code
             }
         }
 
-        private bool DoSolve(Cube startCube, ICollection<Cube> targetCubes, bool lockSquareShape) {
+        private bool DoSolve(ICube startCube, ICollection<ICube> targetCubes) {
             DateTime startTime = DateTime.Now;
 
             int reopenStateCount = 0;
@@ -69,7 +66,7 @@ namespace sq1code
             int solutionCount = 0;
 
             // solution for one-way search
-            Dictionary<Cube, AState> targetStates = new Dictionary<Cube, AState>();
+            Dictionary<ICube, AState> targetStates = new Dictionary<ICube, AState>();
 
             // solution for BiDiSearch
             AState targetState = null;
@@ -77,7 +74,7 @@ namespace sq1code
             AState midStateFromTarget = null;
 
             SortedSet<AState> openStates = new SortedSet<AState>();
-            Dictionary<Cube, AState> seenCubeStates = new Dictionary<Cube, AState>();
+            Dictionary<ICube, AState> seenCubeStates = new Dictionary<ICube, AState>();
             AState startState = new AState(startCube, seenCubeStates.Count);
             openStates.Add(startState);
             seenCubeStates.Add(startCube, startState);
@@ -86,7 +83,7 @@ namespace sq1code
                 if (targetCubes.Count != 1) {
                     throw new Exception("target cube should be only one for BidiSearch mode.");
                 }
-                Cube targetCube = targetCubes.First();
+                ICube targetCube = targetCubes.First();
                 targetState = new AState(targetCube, seenCubeStates.Count);
                 openStates.Add(targetState);
                 seenCubeStates.Add(targetCube, targetState);
@@ -98,12 +95,12 @@ namespace sq1code
                 openStates.Remove(state);
                 state.IsClosed = true;
 
-                Cube cube = state.Cube;
-                List<Rotation> rotations = cube.GetRotations(lockSquareShape);
+                ICube cube = state.Cube;
+                ICollection<IRotation> rotations = cube.GetRotations();
 
                 int nextDepth = state.Depth + 1;
-                foreach (Rotation rotation in rotations) {
-                    Cube nextCube = cube.RotateBy(rotation);
+                foreach (IRotation rotation in rotations) {
+                    ICube nextCube = cube.RotateBy(rotation);
                     totalEdgeCount++;
                     if (seenCubeStates.ContainsKey(nextCube)) {
                         // existing cube
@@ -143,8 +140,8 @@ namespace sq1code
                     } else {
                         // new cube
                         int predictedCost = (state.StartCube == startCube)? 
-                            APredictor.PredictCost(nextCube, targetCubes) :
-                            APredictor.PredictCost(nextCube, startCube);
+                            nextCube.PredictCost(targetCubes) :
+                            nextCube.PredictCost(startCube);
                         int nextCubeId = seenCubeStates.Count;
                         AState nextState = new AState(state.StartCube, nextCube, nextCubeId, predictedCost, state, rotation);
                         netEdgeCount++;
@@ -213,15 +210,15 @@ namespace sq1code
             AState state = targetState;
             do {
                 AState fromState = state.FromState;
-                Rotation fromRotation = state.FromRotation;
+                IRotation fromRotation = state.FromRotation;
 
                 // todo: consider up/down reverse situation if necessary
                 // todo: consider change case 301-0101 to 0101-301
-                Cube rotatedCube = (fromState != null)? fromState.Cube.RotateBy(fromRotation) : state.Cube;
+                ICube rotatedCube = (fromState != null)? fromState.Cube.RotateBy(fromRotation) : state.Cube;
 
                 Console.WriteLine(
                     " ==> {0} | {1}", 
-                    rotatedCube.ToString(verbose: true),
+                    rotatedCube,
                     state.CubeId
                     );
                 state = fromState;
@@ -248,7 +245,7 @@ namespace sq1code
             }
             Console.WriteLine(
                 " ==> {0} | {1}", 
-                targetState.Cube.ToString(verbose: true),
+                targetState.Cube,
                 targetState.CubeId
                 );
             Console.WriteLine();
