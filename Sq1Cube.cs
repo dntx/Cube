@@ -45,58 +45,7 @@ namespace sq1code
             }
         }
 
-        public bool IsShapeSolved() {
-            return Up.IsSquare() && Down.IsSquare();
-        }
-
-        public bool IsUpOrDownHexagram() {
-            return Up.IsHexagram() || Down.IsHexagram();
-        }
-
-        public bool IsUpDwonSquareColorGrouped() {
-            return Up.IsSquare() && Up.IsColorGrouped() && Down.IsSquare() && Down.IsColorGrouped();
-        }
-
-        public bool IsUpDwonColorGrouped() {
-            return Up.IsColorGrouped() && Down.IsColorGrouped();
-        }
-
-        public bool IsUpDownColorSolved() {
-            return Up == Layer.YellowSquare && Down == Layer.WhiteSquare;
-        }
-
-        public bool IsQuarterPairSolved() {
-            return Up.IsQuarterPairSolved() && Down.IsQuarterPairSolved();
-        }
-
-        public bool IsCounterQuarterPairSolved() {
-            return Up.IsCounterQuarterPairSolved() && Down.IsCounterQuarterPairSolved();
-        }
-
-        public bool IsL1CellSolved(int cellCount) {
-            return Up.IsL1CellSolved(cellCount) || Down.IsL1CellSolved(cellCount);
-        }
-
-        public bool IsL1Solved() {
-            return IsL1CellSolved(8);
-        }
-
-        public bool IsL3CrossSolved() {
-            if (!IsL1Solved()) {
-                return false;
-            }
-            return Up.IsL3CrossSolved() || Down.IsL3CrossSolved();
-        }
-
-        public bool IsL3CellSolved(params int[] l3Cells) {
-            if (!IsL1Solved()) {
-                return false;
-            }
-            return Up.IsL3CellSolved(l3Cells) || Down.IsL3CellSolved(l3Cells);
-        }
-
         public ICollection<IRotation> GetRotations() {
-            bool lockSquareShape = IsShapeSolved();
             List<IRotation> rotations = new List<IRotation>();
 
             ISet<Division> upDivisions = Up.GetDivisions(ascendingOnly: true);
@@ -105,13 +54,9 @@ namespace sq1code
             foreach (Division upDivision in upDivisions) {
                 foreach (Division downDivsion in downDivisions) {
                     Sq1Rotation rotation = new Sq1Rotation(upDivision, downDivsion);
-                    if (rotation.IsIdentical()) {
-                        continue;
+                    if (!rotation.IsIdentical() && rotation.IsSquareShapeLocked()) {
+                        rotations.Add(rotation);
                     }
-                    if (lockSquareShape && !rotation.IsSquareShapeLocked()) {
-                        continue;
-                    }
-                    rotations.Add(rotation);
                 }
             }
 
@@ -258,9 +203,7 @@ namespace sq1code
             return pairs;
         }
  
-        public static Sq1Cube UpDownColorSolved = new Sq1Cube(Layer.YellowSquare, Layer.WhiteSquare);
         public static Sq1Cube Solved = new Sq1Cube(Layer.YellowL3, Layer.WhiteL1);
-
 
         // cubes that L1 need solved first
         public static Sq1Cube L1Quarter123Solved = 

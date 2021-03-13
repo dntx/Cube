@@ -15,18 +15,6 @@ namespace sq1code
             return (Up.Left == Down.Left) || (Up.Right == Down.Right);
         }
 
-        public bool IsSquareShapeLocked() {
-            return Up.Left[0].Shape == Down.Left[0].Shape;
-        }
-
-        public bool IsSquareQuarterLocked() {
-            return Up.Left[0].Degree == 60 && Down.Left[0].Degree == 60;
-        }
-
-        public bool IsCounterQuarterLocked() {
-            return Up.Left[0].Degree == 30 && Down.Left[0].Degree == 30;
-        }
-
         public override string ToString() {
             return string.Format("{0},{1}", Up, Down);
         }
