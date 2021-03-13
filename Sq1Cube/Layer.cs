@@ -5,10 +5,10 @@ using System.Linq;
 namespace Cube.Sq1Cube
 {
     class Layer : Cells {
-        public Half Left { get; }
-        public Half Right { get; }
+        public Cells Left { get; }
+        public Cells Right { get; }
 
-        public Layer(Half left, Half right) : base(GetNormalizedCells(new Cells(left, right))) {
+        public Layer(Cells left, Cells right) : base(GetNormalizedCells(new Cells(left, right))) {
             Left = left;
             Right = right;
         }
@@ -17,14 +17,14 @@ namespace Cube.Sq1Cube
                 : this(DivideCells(cells).Key, DivideCells(cells).Value) {
         }
 
-        private static KeyValuePair<Half, Half> DivideCells(int[] cells) {
+        private static KeyValuePair<Cells, Cells> DivideCells(int[] cells) {
             int degreeSum = 0;
             for (int i = 0; i < cells.Length; i++) {
                 degreeSum += new Cell(i).Degree;
                 if (degreeSum == 180) {
                     int firstCount = i + 1;
                     int secondCount = cells.Length - firstCount;
-                    return new KeyValuePair<Half, Half>(new Half(cells.Take(firstCount)), new Half(cells.TakeLast(secondCount)));
+                    return new KeyValuePair<Cells, Cells>(new Cells(cells.Take(firstCount)), new Cells(cells.TakeLast(secondCount)));
                 }
             }
             throw new ArgumentException("the given cells can't be divided as two halves");
@@ -190,11 +190,11 @@ namespace Cube.Sq1Cube
                 } else {
                     if (degreeSum == 180) {
                         int end = last + 1;
-                        Half first = new Half(GetRange(start, end - start));
-                        Half second = new Half(GetRange(end, Count - end), GetRange(0, start));
+                        Cells first = new Cells(GetRange(start, end - start));
+                        Cells second = new Cells(GetRange(end, Count - end), GetRange(0, start));
 
                         if (first > second) {
-                            Half temp = first;
+                            Cells temp = first;
                             first = second;
                             second = temp;
                         }
@@ -214,10 +214,7 @@ namespace Cube.Sq1Cube
             return divisions;
         }
 
-        public static Layer Square = new Layer(Half.SquareHalf, Half.SquareHalf);
-        public static Layer WhiteSquare = new Layer(Half.WhiteSquareHalf, Half.WhiteSquareHalf);
-        public static Layer YellowSquare = new Layer(Half.YellowSquareHalf, Half.YellowSquareHalf);
-        public static Layer WhiteL1 = new Layer(Half.L1FirstHalf, Half.L1SecondHalf);
-        public static Layer YellowL3 = new Layer(Half.L3FirstHalf, Half.L3SecondHalf);
+        public static Layer WhiteL1 = new Layer(0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF);
+        public static Layer YellowL3 = new Layer(0, 1, 2, 3, 4, 5, 6, 7);
     }
 }

@@ -1,8 +1,6 @@
 namespace Cube
 {
     public enum Goal { 
-        SolveShape,
-
         // L1 strategy
         SolveL1Quarter123,
         SolveL1Quarter4,
