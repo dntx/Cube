@@ -16,8 +16,7 @@ namespace Cube.Sq1RawCube
         protected static int GetCode(IEnumerable<int> cells) {
             int code = 0;
             foreach (int cell in cells) {
-                int degree = (int)cell;
-                code = code * 2 + (degree == 30 ? 1 : 0);
+                code = code * 2 + (cell == 30 ? 1 : 0);
             }
             return code;
         }
@@ -71,22 +70,6 @@ namespace Cube.Sq1RawCube
 
         public static bool operator != (Cells lhs, Cells rhs) {
             return !(lhs == rhs);
-        }
-
-        public static bool operator < (Cells lhs, Cells rhs) {
-            return lhs.Code < rhs.Code;
-        }
-
-        public static bool operator > (Cells lhs, Cells rhs) {
-            return lhs.Code > rhs.Code;
-        }
-
-        public static bool operator <= (Cells lhs, Cells rhs) {
-            return lhs.Code <= rhs.Code;
-        }
-
-        public static bool operator >= (Cells lhs, Cells rhs) {
-            return lhs.Code >= rhs.Code;
         }
 
         public override bool Equals(object obj)

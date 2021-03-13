@@ -76,14 +76,13 @@ namespace Cube.Sq1RawCube
             return 0;
         }
 
-        public static Cube Solved = 
-            new Cube(new Layer(60, 30, 60, 30, 60, 30, 60, 30), new Layer(60, 30, 60, 30, 60, 30, 60, 30));
+        public static Cube Solved = new Cube(Layer.Squre, Layer.Squre);
         public static ISet<ICube> UnsolvedList = new HashSet<ICube> {
-            new Cube(new Layer(60, 60, 30, 30, 30, 30, 30, 30, 30, 30), new Layer(60, 60, 60, 60, 60, 60)),
-            new Cube(new Layer(60, 30, 60, 30, 30, 30, 30, 30, 30, 30), new Layer(60, 60, 60, 60, 60, 60)),
-            new Cube(new Layer(60, 30, 30, 60, 30, 30, 30, 30, 30, 30), new Layer(60, 60, 60, 60, 60, 60)),
-            new Cube(new Layer(60, 30, 30, 30, 60, 30, 30, 30, 30, 30), new Layer(60, 60, 60, 60, 60, 60)),
-            new Cube(new Layer(60, 30, 30, 30, 30, 60, 30, 30, 30, 30), new Layer(60, 60, 60, 60, 60, 60))
+            new Cube(new Layer(60, 60, 30, 30, 30, 30, 30, 30, 30, 30), Layer.Hexagram),
+            new Cube(new Layer(60, 30, 60, 30, 30, 30, 30, 30, 30, 30), Layer.Hexagram),
+            new Cube(new Layer(60, 30, 30, 60, 30, 30, 30, 30, 30, 30), Layer.Hexagram),
+            new Cube(new Layer(60, 30, 30, 30, 60, 30, 30, 30, 30, 30), Layer.Hexagram),
+            new Cube(new Layer(60, 30, 30, 30, 30, 60, 30, 30, 30, 30), Layer.Hexagram)
         };
     }
 }

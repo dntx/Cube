@@ -5,25 +5,29 @@ using System.Linq;
 namespace Cube.Sq1RawCube
 {
     class Layer : Cells {
-        public Layer(Cells cells) : base(GetNormalizedCells(cells)) {}
-        public Layer(params int[] cells) : this(new Cells(cells)) {}
-        public Layer(IEnumerable<int> cells) : this(new Cells(cells)) {}
+        public Layer(params int[] cells) : base(GetMinPermutedCells(cells)) {}
+        public Layer(IEnumerable<int> cells) : base(GetMinPermutedCells(cells)) {}
 
-        private static Cells GetNormalizedCells(Cells cells) {
-            Cells minCells = cells;
+        private static IEnumerable<int> GetMinPermutedCells(IEnumerable<int> rawCells) {
+            int minCode = GetCode(rawCells);
+            IEnumerable<int> minCells = rawCells;
+
+            List<int> cells = rawCells.ToList();
             for (int start = 1; start < cells.Count; start++) {
-                if (cells[start] <= minCells[0]) {
-                    Cells shiftedCells = new Cells(cells.GetRange(start, cells.Count - start), cells.GetRange(0, start));
-                    if (shiftedCells < minCells) {
-                        minCells = shiftedCells;
-                    }
+                IEnumerable<int> first = cells.GetRange(start, cells.Count - start);
+                IEnumerable<int> second = cells.GetRange(0, start);
+                IEnumerable<int> shiftedCells = first.Concat(second);
+                int code = GetCode(shiftedCells);
+                if (code < minCode) {
+                    minCode = code;
+                    minCells = shiftedCells;
                 }
             }
             return minCells;
         }
 
         public bool IsSquare() {
-            return Code == 0x55 || Code == 0xAA;
+            return this == Layer.Squre;
         }
 
         public bool IsSymmetric() {
@@ -82,5 +86,8 @@ namespace Cube.Sq1RawCube
             }
             return divisions;
         }
+
+        public static Layer Squre = new Layer(60, 30, 60, 30, 60, 30, 60, 30);
+        public static Layer Hexagram = new Layer(60, 60, 60, 60, 60, 60);
    }
 }
