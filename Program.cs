@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace sq1code
+namespace Cube
 {
     class Program
     {
@@ -44,18 +44,18 @@ namespace sq1code
             switch (goal)
             {
                 case Goal.SolveShape:
-                    return solver.Solve(Sq1RawCube.ShapeUnsolvedList, Sq1RawCube.ShapeSolved);
+                    return solver.Solve(Sq1RawCube.Cube.ShapeUnsolvedList, Sq1RawCube.Cube.ShapeSolved);
 
                 // L1 strategy
                 case Goal.SolveL1Quarter123:
-                    return solver.Solve(Sq1Cube.L1Quarter123UnsolvedList, Sq1Cube.L1Quarter123Solved);
+                    return solver.Solve(Sq1Cube.Cube.L1Quarter123UnsolvedList, Sq1Cube.Cube.L1Quarter123Solved);
 
                 case Goal.SolveL1Quarter4:
-                    return solver.Solve(Sq1Cube.L1Quarter4UnsolvedList, Sq1Cube.L1Quarter4Solved);
+                    return solver.Solve(Sq1Cube.Cube.L1Quarter4UnsolvedList, Sq1Cube.Cube.L1Quarter4Solved);
 
                 // L3 strategy 1
                 case Goal.SolveL3Cross:
-                    return solver.Solve(Sq1Cube.L3CrossUnsolvedList, Sq1Cube.L3CrossSolved);
+                    return solver.Solve(Sq1Cube.Cube.L3CrossUnsolvedList, Sq1Cube.Cube.L3CrossSolved);
 
                 case Goal.SolveL3CornersThen:
                     throw new NotImplementedException();
@@ -69,31 +69,31 @@ namespace sq1code
 
                 // L3 strategy 3
                 case Goal.SolveL3Cell01:
-                    return solver.Solve(Sq1Cube.L3Cell01UnsolvedList, Sq1Cube.L3Cell01Solved);
+                    return solver.Solve(Sq1Cube.Cube.L3Cell01UnsolvedList, Sq1Cube.Cube.L3Cell01Solved);
 
                 case Goal.SolveL3Cell2:
-                    return solver.Solve(Sq1Cube.L3Cell012UnsolvedList, Sq1Cube.L3Cell012Solved);
+                    return solver.Solve(Sq1Cube.Cube.L3Cell012UnsolvedList, Sq1Cube.Cube.L3Cell012Solved);
 
                 case Goal.SolveL3Cell3:
-                    return solver.Solve(Sq1Cube.L3Cell0123UnsolvedList, Sq1Cube.L3Cell0123Solved);
+                    return solver.Solve(Sq1Cube.Cube.L3Cell0123UnsolvedList, Sq1Cube.Cube.L3Cell0123Solved);
 
                 // L3 strategy 3.1
                 case Goal.SolveL3Cell46:
-                    return solver.Solve(Sq1Cube.L3Cell012364, Sq1Cube.L3Cell012346);
+                    return solver.Solve(Sq1Cube.Cube.L3Cell012364, Sq1Cube.Cube.L3Cell012346);
 
                 case Goal.SolveL3Cell57Then:
-                    return solver.Solve(Sq1Cube.L3Cell01234765, Sq1Cube.Solved);
+                    return solver.Solve(Sq1Cube.Cube.L3Cell01234765, Sq1Cube.Cube.Solved);
 
                 // L3 strategy 3.2
                 case Goal.SolveL3Cell57:
-                    return solver.Solve(Sq1Cube.L3Cell012375, Sq1Cube.L3Cell012357);
+                    return solver.Solve(Sq1Cube.Cube.L3Cell012375, Sq1Cube.Cube.L3Cell012357);
 
                 case Goal.SolveL3Cell46Then:
-                    return solver.Solve(Sq1Cube.L3Cell01236547, Sq1Cube.Solved);
+                    return solver.Solve(Sq1Cube.Cube.L3Cell01236547, Sq1Cube.Cube.Solved);
 
                 // scratch
                 case Goal.Scratch:
-                    return solver.Solve(Sq1Cube.Solved, Sq1Cube.L1L3Cell08Swapped);
+                    return solver.Solve(Sq1Cube.Cube.Solved, Sq1Cube.Cube.L1L3Cell08Swapped);
             }
             return false;
         }

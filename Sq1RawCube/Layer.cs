@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace sq1code
+namespace Cube.Sq1RawCube
 {
     class Layer : Cells {
         public Half Left { get; }

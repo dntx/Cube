@@ -1,4 +1,4 @@
-namespace sq1code
+namespace Cube
 {
     public enum Goal { 
         SolveShape,

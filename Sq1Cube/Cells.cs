@@ -3,7 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace sq1code
+namespace Cube.Sq1Cube
 {
     class Cells : List<Cell> {
         public Cells(IEnumerable<int> cells) : base(cells.Select(cell => new Cell(cell))) {}

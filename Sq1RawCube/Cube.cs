@@ -1,22 +1,23 @@
 using System.Collections.Generic;
+using Cube;
 
-namespace sq1code
+namespace Cube.Sq1RawCube
 {
-    class Sq1RawCube : ICube {
+    class Cube : ICube {
         public Layer Up { get; }
         public Layer Down { get; }
 
-        public Sq1RawCube(Layer up, Layer down) {
+        public Cube(Layer up, Layer down) {
             Up = up;
             Down = down;
         }
 
-        public static bool operator == (Sq1RawCube lhs, Sq1RawCube rhs) {
+        public static bool operator == (Cube lhs, Cube rhs) {
             return (lhs.Up == rhs.Up && lhs.Down == rhs.Down) || (lhs.Up == rhs.Down && lhs.Down == rhs.Up);
             //return lhs.Up == rhs.Up && lhs.Down == rhs.Down;
         }
 
-        public static bool operator != (Sq1RawCube lhs, Sq1RawCube rhs) {
+        public static bool operator != (Cube lhs, Cube rhs) {
             return !(lhs == rhs);
         }
 
@@ -28,7 +29,7 @@ namespace sq1code
                 return false;
             }
             
-            return this == (obj as Sq1RawCube);
+            return this == (obj as Cube);
         }
         
         // override object.GetHashCode
@@ -51,7 +52,7 @@ namespace sq1code
 
             foreach (Division upDivision in upDivisions) {
                 foreach (Division downDivsion in downDivisions) {
-                    Sq1RawRotation rotation = new Sq1RawRotation(upDivision, downDivsion);
+                    Rotation rotation = new Rotation(upDivision, downDivsion);
                     if (!rotation.IsIdentical()) {
                         rotations.Add(rotation);
                     }
@@ -62,11 +63,11 @@ namespace sq1code
         }
 
         public ICube RotateBy(IRotation iRotation) {
-            Sq1RawRotation rotation = iRotation as Sq1RawRotation;
+            Rotation rotation = iRotation as Rotation;
             Layer up = new Layer(rotation.Up.Left, rotation.Down.Right);
             Layer down = new Layer(rotation.Down.Left, rotation.Up.Right);
 
-            return new Sq1RawCube(up, down);
+            return new Cube(up, down);
         }
 
         public override string ToString()
@@ -87,14 +88,14 @@ namespace sq1code
             return 0;
         }
 
-        public static Sq1RawCube ShapeSolved = 
-            new Sq1RawCube(new Layer(0, 1, 0, 1, 0, 1, 0, 1), new Layer(0, 1, 0, 1, 0, 1, 0, 1));
+        public static Cube ShapeSolved = 
+            new Cube(new Layer(0, 1, 0, 1, 0, 1, 0, 1), new Layer(0, 1, 0, 1, 0, 1, 0, 1));
         public static ISet<ICube> ShapeUnsolvedList = new HashSet<ICube> {
-            new Sq1RawCube(new Layer(0, 0, 1, 1, 1, 1, 1, 1, 1, 1), new Layer(0, 0, 0, 0, 0, 0)),
-            new Sq1RawCube(new Layer(0, 1, 0, 1, 1, 1, 1, 1, 1, 1), new Layer(0, 0, 0, 0, 0, 0)),
-            new Sq1RawCube(new Layer(0, 1, 1, 0, 1, 1, 1, 1, 1, 1), new Layer(0, 0, 0, 0, 0, 0)),
-            new Sq1RawCube(new Layer(0, 1, 1, 1, 0, 1, 1, 1, 1, 1), new Layer(0, 0, 0, 0, 0, 0)),
-            new Sq1RawCube(new Layer(0, 1, 1, 1, 1, 0, 1, 1, 1, 1), new Layer(0, 0, 0, 0, 0, 0))
+            new Cube(new Layer(0, 0, 1, 1, 1, 1, 1, 1, 1, 1), new Layer(0, 0, 0, 0, 0, 0)),
+            new Cube(new Layer(0, 1, 0, 1, 1, 1, 1, 1, 1, 1), new Layer(0, 0, 0, 0, 0, 0)),
+            new Cube(new Layer(0, 1, 1, 0, 1, 1, 1, 1, 1, 1), new Layer(0, 0, 0, 0, 0, 0)),
+            new Cube(new Layer(0, 1, 1, 1, 0, 1, 1, 1, 1, 1), new Layer(0, 0, 0, 0, 0, 0)),
+            new Cube(new Layer(0, 1, 1, 1, 1, 0, 1, 1, 1, 1), new Layer(0, 0, 0, 0, 0, 0))
         };
     }
 }

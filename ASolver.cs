@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace sq1code
+namespace Cube
 {
     class ASolver {
         public enum Mode {

@@ -1,6 +1,6 @@
 using System;
 
-namespace sq1code
+namespace Cube.Sq1RawCube
 {
     class Cell {
         public int Value { get; }

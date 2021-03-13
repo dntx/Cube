@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace sq1code
+namespace Cube
 {
     interface IRotation {
     }

@@ -1,4 +1,4 @@
-namespace sq1code
+namespace Cube.Sq1RawCube
 {
     class Division {
         public Half Left { get; }

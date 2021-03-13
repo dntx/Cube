@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace sq1code
+namespace Cube.Sq1RawCube
 {
     class Half : Cells {
         public Half(IEnumerable<int> cells) : base(cells) {}

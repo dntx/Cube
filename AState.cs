@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace sq1code {
+namespace Cube {
     class AState : IComparable<AState> {
         public int Depth { get; private set; }
         public int PredictedCost { get; }
