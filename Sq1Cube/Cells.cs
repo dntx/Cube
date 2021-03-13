@@ -5,16 +5,14 @@ using System.Linq;
 
 namespace Cube.Sq1Cube
 {
-    class Cells : List<Cell> {
-        public Cells(IEnumerable<int> cells) : base(cells.Select(cell => new Cell(cell))) {}
-
-        public Cells(IEnumerable<Cell> cells) : base(cells) {}
+    class Cells : List<int> {
+        public Cells(IEnumerable<int> cells) : base(cells) {}
         
-        public Cells(List<Cell> first, List<Cell> second) : base(MergeList(first, second)) {}
+        public Cells(List<int> first, List<int> second) : base(MergeList(first, second)) {}
         
-        // Note: MergeList is much faster than first.Contact(second)
-        private static List<Cell> MergeList(List<Cell> first, List<Cell> second) {
-            List<Cell> result = new List<Cell>();
+        // TODO: Note: MergeList is much faster than first.Contact(second)
+        private static List<int> MergeList(List<int> first, List<int> second) {
+            List<int> result = new List<int>();
             result.AddRange(first);
             result.AddRange(second);
             return result;
@@ -24,8 +22,8 @@ namespace Cube.Sq1Cube
             StringBuilder sb = new StringBuilder();
             int degreeSum = 0;
             ForEach(cell => {
-                int degree = cell.Degree;
-                sb.Append(cell);
+                int degree = Cell.GetDegree(cell);
+                sb.AppendFormat("{0:X}", cell);
                 degreeSum += degree;
                 if (degreeSum == degreeBar) {
                     sb.Append(separator);
@@ -37,39 +35,6 @@ namespace Cube.Sq1Cube
 
         public override string ToString() {
             return ToString(0, separator: "");
-        }
-
-        protected int GetPrimaryColor() {
-            int color0Count = 0;
-            int color1Count = 0;
-            ForEach(cell => { 
-                if (cell.Color == 0) {
-                    color0Count++;
-                } else {
-                    color1Count++;
-                }
-            });
-            return (color0Count >= color1Count)? 0 : 1;
-        }
-
-        public int GetSecondaryColorCount() {
-            int primaryColor = GetPrimaryColor();
-            return FindAll(cell => cell.Color != primaryColor).Count;
-        }
-
-        public int GetShape() {
-            int shapeHash = 0;
-            this.ForEach(cell => shapeHash = shapeHash * 10 + cell.Shape);
-            return shapeHash;
-        }
-
-        public bool IsHexagram() {
-            return TrueForAll(cell => cell.Degree == 60);
-        }
-
-        public bool IsSameColor() {
-            int color = this[0].Color;
-            return TrueForAll(cell => cell.Color == color);
         }
 
         public static bool operator == (Cells lhs, Cells rhs) {
@@ -139,7 +104,7 @@ namespace Cube.Sq1Cube
         public override int GetHashCode()
         {
             int code = 0;
-            ForEach(cell => code = code * 16 + cell.Value);
+            ForEach(cell => code = code * 16 + cell);
             return code;
         }
     }

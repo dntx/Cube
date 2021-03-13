@@ -20,7 +20,7 @@ namespace Cube.Sq1Cube
         private static KeyValuePair<Cells, Cells> DivideCells(int[] cells) {
             int degreeSum = 0;
             for (int i = 0; i < cells.Length; i++) {
-                degreeSum += new Cell(i).Degree;
+                degreeSum += Cell.GetDegree(cells[i]);
                 if (degreeSum == 180) {
                     int firstCount = i + 1;
                     int secondCount = cells.Length - firstCount;

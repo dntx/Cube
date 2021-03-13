@@ -55,7 +55,7 @@ namespace Cube.Sq1Cube
                 foreach (Division downDivision in downDivisions) {
                     if (upDivision.Left != downDivision.Left 
                         && upDivision.Right != downDivision.Right
-                        && upDivision.Left[0].Shape == downDivision.Left[0].Shape) 
+                        && Cell.GetShape(upDivision.Left[0]) == Cell.GetShape(downDivision.Left[0]) )
                     {
                         Rotation rotation = new Rotation(upDivision, downDivision);
                         rotations.Add(rotation);
@@ -127,13 +127,13 @@ namespace Cube.Sq1Cube
         private static KeyValuePair<QuarterState, int> GetQuarterState(Layer layer, int startDegree) {
             bool[] isQuarterSolved = new bool[4];
             int quarterSolvedCount = 0;
-            int start = layer.FindIndex(cell => cell.Degree == startDegree);
+            int start = layer.FindIndex(cell => Cell.GetDegree(cell) == startDegree);
             for (int i = start; i < layer.Count; i += 2) {
-                Cell first = layer[i];
-                Cell second = layer[(i + 1) % layer.Count];
-                if (first.Layer == second.Layer) {
-                    if (startDegree == 60 && first.LeftSideColor == second.SideColor
-                        || startDegree == 30 && first.SideColor == second.RightSideColor) {
+                int first = layer[i];
+                int second = layer[(i + 1) % layer.Count];
+                if (Cell.GetLayer(first) == Cell.GetLayer(second)) {
+                    if (startDegree == 60 && Cell.GetLeftSideColor(first) == Cell.GetSideColor(second)
+                        || startDegree == 30 && Cell.GetSideColor(first) == Cell.GetRightSideColor(second)) {
                         isQuarterSolved[i/2] = true;
                         quarterSolvedCount++;
                     }
@@ -197,10 +197,10 @@ namespace Cube.Sq1Cube
         private static List<KeyValuePair<int, int>> BreakCubeToPairs(Cube cube) {
             List<KeyValuePair<int, int>> pairs = new List<KeyValuePair<int, int>>();
             for (int i = 0; i < cube.Up.Count; i++) {
-                pairs.Add(new KeyValuePair<int, int>(cube.Up[i].Value, cube.Up[(i+1) % cube.Up.Count].Value));
+                pairs.Add(new KeyValuePair<int, int>(cube.Up[i], cube.Up[(i+1) % cube.Up.Count]));
             }
             for (int i = 0; i < cube.Down.Count; i++) {
-                pairs.Add(new KeyValuePair<int, int>(cube.Down[i].Value, cube.Down[(i+1) % cube.Down.Count].Value));
+                pairs.Add(new KeyValuePair<int, int>(cube.Down[i], cube.Down[(i+1) % cube.Down.Count]));
             }
 
             return pairs;

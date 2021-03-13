@@ -3,100 +3,31 @@ using System;
 namespace Cube.Sq1Cube
 {
     class Cell {
-        public int Value { get; }
-        public int Order { get; }
-        public int Degree { get; }
-        public int Shape { get; }
-        public int Color { get; }
-        public int Layer { get; }
-        public int SideColor { get; }
-        public int LeftSideColor { get; }
-        public int RightSideColor { get; }
-
-        public Cell(int cell) {
-            Value = cell;
-            Order = GetOrder(cell);
-            Degree = GetDegree(cell);
-            Shape = GetShape(cell);
-            Color = GetColor(cell);
-            Layer = GetLayer(cell);
-            SideColor = (Degree == 30)? GetSideColor(cell) : -1;
-            LeftSideColor = (Degree == 60)? GetLeftSideColor(cell) : -1;
-            RightSideColor = (Degree == 60)? GetRightSideColor(cell) : -1;
-        }
-
-        public override string ToString()
-        {
-            return string.Format("{0:X}", Value);
-        }
-
-        public static bool operator == (Cell lhs, Cell rhs) {
-            if (lhs is null || rhs is null) {
-                return (lhs is null) && (rhs is null);
-            }
-            return lhs.Value == rhs.Value;
-        }
-
-        public static bool operator != (Cell lhs, Cell rhs) {
-            return !(lhs == rhs);
-        }
-
-        public static bool operator < (Cell lhs, Cell rhs) {
-            return lhs.Value < rhs.Value;
-        }
-
-        public static bool operator > (Cell lhs, Cell rhs) {
-            return lhs.Value > rhs.Value;
-        }
-
-        public static bool operator <= (Cell lhs, Cell rhs) {
-            return lhs.Value <= rhs.Value;
-        }
-
-        public static bool operator >= (Cell lhs, Cell rhs) {
-            return lhs.Value >= rhs.Value;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj == null || GetType() != obj.GetType())
-            {
-                return false;
-            }
-            
-            return this.Value == (obj as Cell).Value;
-        }
-        
-        public override int GetHashCode()
-        {
-            return Value;
-        }
-    
-        private static int GetOrder(int cell) {
+        public static int GetOrder(int cell) {
             return cell % 8;
         }
 
-        private static int GetDegree(int cell) {
+        public static int GetDegree(int cell) {
             return (cell % 2 == 1) ? 30 : 60;
         }
 
-        private static int GetShape(int cell) {
+        public static int GetShape(int cell) {
             return cell % 2;
         }
 
-        private static int GetColor(int cell) {
+        public static int GetColor(int cell) {
             // 0,1,2,3,4,5,6,7: color=0, yellow, L3
             // 8,9,A,B,C,D,E,F: color=1, white, L1
             return cell / 8;
         }
 
-        private static int GetLayer(int cell) {
+        public static int GetLayer(int cell) {
             // 0,1,2,3,4,5,6,7: color=0, yellow, L3
             // 8,9,A,B,C,D,E,F: color=1, white, L1
             return (cell / 8 == 0)? 3 : 1;
         }
 
-        private static int GetSideColor(int cell) {
+        public static int GetSideColor(int cell) {
             // 1: color=0, blue
             // 3: color=1, orange
             // 5: color=2, green
@@ -109,7 +40,7 @@ namespace Cube.Sq1Cube
             return (cell - 1) % 8 / 2;
         }
 
-        private static int GetLeftSideColor(int cell) {
+        public static int GetLeftSideColor(int cell) {
             // 0: color=0, blue
             // 2: color=1, orange
             // 4: color=2, green
@@ -122,7 +53,7 @@ namespace Cube.Sq1Cube
             return cell % 8 / 2;
         }
 
-        private static int GetRightSideColor(int cell) {
+        public static int GetRightSideColor(int cell) {
             // 2: color=0, blue
             // 4: color=1, orange
             // 6: color=2, green
