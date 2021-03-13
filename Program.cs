@@ -6,7 +6,8 @@ namespace Cube
     {
         static void Main(string[] args)
         {
-            ASolve(ASolver.Mode.ReverseSearch);
+            Sq1RawCube.Solver.Solve();
+            //ASolve(ASolver.Mode.ReverseSearch);
             //ASolve(ASolver.Mode.ASearch);
             //ASolve(ASolver.Mode.BiDiSearch);
         }
@@ -43,9 +44,6 @@ namespace Cube
         private static bool DoASolve(ASolver solver, Goal goal) {
             switch (goal)
             {
-                case Goal.SolveShape:
-                    return solver.Solve(Sq1RawCube.Cube.UnsolvedList, Sq1RawCube.Cube.Solved);
-
                 // L1 strategy
                 case Goal.SolveL1Quarter123:
                     return solver.Solve(Sq1Cube.Cube.L1Quarter123UnsolvedList, Sq1Cube.Cube.L1Quarter123Solved);
