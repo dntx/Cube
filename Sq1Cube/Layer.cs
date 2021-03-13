@@ -62,36 +62,21 @@ namespace Cube.Sq1Cube
         public ISet<Division> GetDivisions(bool ascendingOnly) {
             bool needTwoDivisionsOnly = (this == Layer.YellowL3) || (this == Layer.WhiteL1);
             ISet<Division> divisions = new HashSet<Division>();
-            int start = 0;
-            int last = 0;
-            int degreeSum = this[start].Degree;
-            while (true) {
-                if (degreeSum < 180) {
-                    last++;
-                    if (last >= Count) {
-                        break;
-                    }
-                    degreeSum += this[last].Degree;
-                } else {
-                    if (degreeSum == 180) {
-                        int end = last + 1;
-                        Cells first = new Cells(GetRange(start, end - start));
-                        Cells second = new Cells(GetRange(end, Count - end), GetRange(0, start));
-
-                        if (first > second) {
-                            Cells temp = first;
-                            first = second;
-                            second = temp;
-                        }
-
-                        divisions.Add(new Division(first, second));
-                        if (!ascendingOnly && !needTwoDivisionsOnly && first != second) {
-                            divisions.Add(new Division(second, first));
-                        }
-                    }
-                    degreeSum -= this[start].Degree;
-                    start++;
+            for (int start = 0; start < 4; start++) {
+                int end = start + 4;
+                Cells first = new Cells(GetRange(start, end - start));
+                Cells second = new Cells(GetRange(end, Count - end), GetRange(0, start));
+                if (first > second) {
+                    Cells temp = first;
+                    first = second;
+                    second = temp;
                 }
+
+                divisions.Add(new Division(first, second));
+                if (!ascendingOnly && !needTwoDivisionsOnly && first != second) {
+                    divisions.Add(new Division(second, first));
+                }
+
                 if (needTwoDivisionsOnly && divisions.Count == 2) {
                     break;
                 }
