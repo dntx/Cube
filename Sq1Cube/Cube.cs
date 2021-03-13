@@ -36,13 +36,7 @@ namespace Cube.Sq1Cube
         // override object.GetHashCode
         public override int GetHashCode()
         {
-            int upHashCode = Up.GetHashCode();
-            int downHashCode = Down.GetHashCode();
-            if (upHashCode <= downHashCode) {
-                return upHashCode * Layer.HashCodeUpperBound + downHashCode;
-            } else {
-                return downHashCode * Layer.HashCodeUpperBound + upHashCode;
-            }
+            return Up.Code ^ Down.Code;
         }
 
         public ICollection<IRotation> GetRotations() {

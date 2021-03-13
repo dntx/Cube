@@ -33,11 +33,9 @@ namespace Cube.Sq1Cube
         private static Cells GetNormalizedCells(Cells cells) {
             Cells minCells = cells;
             for (int start = 1; start < cells.Count; start++) {
-                if (cells[start] <= minCells[0]) {
-                    Cells shiftedCells = new Cells(cells.GetRange(start, cells.Count - start), cells.GetRange(0, start));
-                    if (shiftedCells < minCells) {
-                        minCells = shiftedCells;
-                    }
+                Cells shiftedCells = new Cells(cells.GetRange(start, cells.Count - start), cells.GetRange(0, start));
+                if (shiftedCells < minCells) {
+                    minCells = shiftedCells;
                 }
             }
             return minCells;
@@ -56,8 +54,6 @@ namespace Cube.Sq1Cube
                 return ToString(degreeBar: 180, separator: separator);
             }
         }
-
-        public static int HashCodeUpperBound = 16^10;
 
         public ISet<Division> GetDivisions(bool ascendingOnly) {
             bool needTwoDivisionsOnly = (this == Layer.YellowL3) || (this == Layer.WhiteL1);

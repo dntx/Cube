@@ -31,7 +31,7 @@ namespace Cube.Sq1Cube
         // override object.GetHashCode
         public override int GetHashCode()
         {
-            return Left.GetHashCode() * 16^6 + Right.GetHashCode();
+            return (Left.Code << 16) | Right.Code;
         }
 
         public override string ToString() {

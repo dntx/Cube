@@ -6,9 +6,13 @@ using System.Linq;
 namespace Cube.Sq1Cube
 {
     class Cells : List<int> {
-        public Cells(IEnumerable<int> cells) : base(cells) {}
+        public int Code { get; }
+
+        public Cells(IEnumerable<int> cells) : base(cells) {
+            Code = GetCode(this);
+        }
         
-        public Cells(List<int> first, List<int> second) : base(MergeList(first, second)) {}
+        public Cells(List<int> first, List<int> second) : this(MergeList(first, second)) {}
         
         // TODO: Note: MergeList is much faster than first.Contact(second)
         private static List<int> MergeList(List<int> first, List<int> second) {
@@ -16,6 +20,14 @@ namespace Cube.Sq1Cube
             result.AddRange(first);
             result.AddRange(second);
             return result;
+        }
+
+        protected static int GetCode(IEnumerable<int> cells) {
+            int code = 0;
+            foreach (int cell in cells) {
+                code = (code << 4) | cell;
+            }
+            return code;
         }
 
         protected string ToString(int degreeBar, string separator) {
@@ -42,17 +54,7 @@ namespace Cube.Sq1Cube
                 return (lhs is null) && (rhs is null);
             }
 
-            if (lhs.Count != rhs.Count) {
-                return false;
-            }
-
-            for (int i = 0; i < lhs.Count; i++) {
-                if (lhs[i] != rhs[i]) {
-                    return false;
-                }
-            }
-
-            return true;
+            return lhs.Code == rhs.Code;
         }
 
         public static bool operator != (Cells lhs, Cells rhs) {
@@ -60,35 +62,19 @@ namespace Cube.Sq1Cube
         }
 
         public static bool operator < (Cells lhs, Cells rhs) {
-            int minCount = Math.Min(lhs.Count, rhs.Count);
-            for (int i = 0; i < minCount; i++) {
-                if (lhs[i] < rhs[i]) {
-                    return true;
-                } else if (lhs[i] > rhs[i]) {
-                    return false;
-                }
-            }
-            return (lhs.Count == minCount) && (rhs.Count > minCount);
+            return lhs.Code < rhs.Code;
         }
 
         public static bool operator > (Cells lhs, Cells rhs) {
-            int minCount = Math.Min(lhs.Count, rhs.Count);
-            for (int i = 0; i < minCount; i++) {
-                if (lhs[i] < rhs[i]) {
-                    return false;
-                } else if (lhs[i] > rhs[i]) {
-                    return true;
-                }
-            }
-            return (lhs.Count > minCount) && (rhs.Count == minCount);
+            return lhs.Code > rhs.Code;
         }
 
         public static bool operator <= (Cells lhs, Cells rhs) {
-            return !(lhs > rhs);
+            return lhs.Code <= rhs.Code;
         }
 
         public static bool operator >= (Cells lhs, Cells rhs) {
-            return !(lhs < rhs);
+            return lhs.Code >= rhs.Code;
         }
 
         public override bool Equals(object obj)
@@ -103,9 +89,7 @@ namespace Cube.Sq1Cube
         
         public override int GetHashCode()
         {
-            int code = 0;
-            ForEach(cell => code = code * 16 + cell);
-            return code;
+            return Code;
         }
     }
 }
