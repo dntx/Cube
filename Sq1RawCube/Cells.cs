@@ -5,31 +5,39 @@ using System.Linq;
 
 namespace Cube.Sq1RawCube
 {
-    class Cells : List<Cell> {
-        public Cells(IEnumerable<int> cells) : base(cells.Select(cell => new Cell(cell))) {}
+    class Cells : List<int> {
+        public int Code { get; }
 
-        public Cells(IEnumerable<Cell> cells) : base(cells) {}
+        public Cells(IEnumerable<int> cells) : base(cells) {
+            Code = GetCode();
+        }
         
-        public Cells(List<Cell> first, List<Cell> second) : base(MergeList(first, second)) {}
+        public Cells(List<int> first, List<int> second) : this(MergeList(first, second)) {}
         
         // Note: MergeList is much faster than first.Contact(second)
-        private static List<Cell> MergeList(List<Cell> first, List<Cell> second) {
-            List<Cell> result = new List<Cell>();
+        private static List<int> MergeList(List<int> first, List<int> second) {
+            List<int> result = new List<int>();
             result.AddRange(first);
             result.AddRange(second);
             return result;
         }
 
-        protected string ToString(int degreeBar, string separator) {
-            return TrueForAll(cell => cell.Value == cell.Shape)? ToColorlessString(degreeBar, separator) : ToLiteralString(degreeBar, separator);
+        private int GetCode() {
+            int code = 0;
+            ForEach(cell => {
+                int degree = (int)cell;
+                code = code * 2 + (degree == 30 ? 1 : 0);
+            });
+            return code;
         }
 
-        private string ToColorlessString(int degreeBar, string separator) {
+        protected string ToString(string separator) {
             StringBuilder sb = new StringBuilder();
             int countOf30 = 0;
             int degreeSum = 0;
-            ForEach(cell => {
-                int degree = cell.Degree;
+            for (int i = 0; i < Count; i++) {
+                bool isLast = (i == Count - 1);
+                int degree = this[i];
                 if (degree == 30) {
                     degreeSum += degree;
                     countOf30++;
@@ -37,18 +45,18 @@ namespace Cube.Sq1RawCube
                     if (countOf30 > 0) {
                         sb.Append(countOf30);
                         countOf30 = 0;
-                        if (degreeSum == degreeBar) {
+                        if (degreeSum == 180 && !isLast) {
                             sb.Append(separator);
                         }
                     }
 
                     sb.AppendFormat("0");
                     degreeSum += degree;
-                    if (degreeSum == degreeBar) {
+                    if (degreeSum == 180 && !isLast) {
                         sb.Append(separator);
                     }
                 }
-            });
+            }
 
             if (countOf30 > 0) {
                 sb.Append(countOf30);
@@ -58,65 +66,8 @@ namespace Cube.Sq1RawCube
             return sb.ToString();
         }
 
-        private string ToLiteralString(int degreeBar, string separator) {
-            StringBuilder sb = new StringBuilder();
-            int degreeSum = 0;
-            ForEach(cell => {
-                int degree = cell.Degree;
-                sb.Append(cell);
-                degreeSum += degree;
-                if (degreeSum == degreeBar) {
-                    sb.Append(separator);
-                }
-            });
-
-            return sb.ToString();
-        }
-
         public override string ToString() {
-            return ToString(0, separator: "");
-        }
-
-        protected int GetPrimaryColor() {
-            int color0Count = 0;
-            int color1Count = 0;
-            ForEach(cell => { 
-                if (cell.Color == 0) {
-                    color0Count++;
-                } else {
-                    color1Count++;
-                }
-            });
-            return (color0Count >= color1Count)? 0 : 1;
-        }
-
-        public int GetSecondaryColorCount() {
-            int primaryColor = GetPrimaryColor();
-            return FindAll(cell => cell.Color != primaryColor).Count;
-        }
-
-        public int GetShape() {
-            int shapeHash = 0;
-            this.ForEach(cell => shapeHash = shapeHash * 10 + cell.Shape);
-            return shapeHash;
-        }
-
-        public bool IsHexagram() {
-            return TrueForAll(cell => cell.Degree == 60);
-        }
-
-        public bool IsSameColor() {
-            int color = this[0].Color;
-            return TrueForAll(cell => cell.Color == color);
-        }
-
-        public bool IsSquare() {
-            for (int i = 1; i < Count; i++) {
-                if (this[i].Shape == this[i-1].Shape) {
-                    return false;
-                }
-            }
-            return true;
+            return ToString(separator: "");
         }
 
         public static bool operator == (Cells lhs, Cells rhs) {
@@ -124,17 +75,7 @@ namespace Cube.Sq1RawCube
                 return (lhs is null) && (rhs is null);
             }
 
-            if (lhs.Count != rhs.Count) {
-                return false;
-            }
-
-            for (int i = 0; i < lhs.Count; i++) {
-                if (lhs[i] != rhs[i]) {
-                    return false;
-                }
-            }
-
-            return true;
+            return lhs.Code == rhs.Code;
         }
 
         public static bool operator != (Cells lhs, Cells rhs) {
@@ -142,35 +83,19 @@ namespace Cube.Sq1RawCube
         }
 
         public static bool operator < (Cells lhs, Cells rhs) {
-            int minCount = Math.Min(lhs.Count, rhs.Count);
-            for (int i = 0; i < minCount; i++) {
-                if (lhs[i] < rhs[i]) {
-                    return true;
-                } else if (lhs[i] > rhs[i]) {
-                    return false;
-                }
-            }
-            return (lhs.Count == minCount) && (rhs.Count > minCount);
+            return lhs.Code < rhs.Code;
         }
 
         public static bool operator > (Cells lhs, Cells rhs) {
-            int minCount = Math.Min(lhs.Count, rhs.Count);
-            for (int i = 0; i < minCount; i++) {
-                if (lhs[i] < rhs[i]) {
-                    return false;
-                } else if (lhs[i] > rhs[i]) {
-                    return true;
-                }
-            }
-            return (lhs.Count > minCount) && (rhs.Count == minCount);
+            return lhs.Code > rhs.Code;
         }
 
         public static bool operator <= (Cells lhs, Cells rhs) {
-            return !(lhs > rhs);
+            return lhs.Code <= rhs.Code;
         }
 
         public static bool operator >= (Cells lhs, Cells rhs) {
-            return !(lhs < rhs);
+            return lhs.Code >= rhs.Code;
         }
 
         public override bool Equals(object obj)
@@ -182,12 +107,10 @@ namespace Cube.Sq1RawCube
             
             return this == (obj as Cells);
         }
-        
+
         public override int GetHashCode()
         {
-            int code = 0;
-            ForEach(cell => code = code * 16 + cell.Value);
-            return code;
+            return Code;
         }
     }
 }

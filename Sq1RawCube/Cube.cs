@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Cube;
+using System.Linq;
 
 namespace Cube.Sq1RawCube
 {
@@ -14,7 +14,6 @@ namespace Cube.Sq1RawCube
 
         public static bool operator == (Cube lhs, Cube rhs) {
             return (lhs.Up == rhs.Up && lhs.Down == rhs.Down) || (lhs.Up == rhs.Down && lhs.Down == rhs.Up);
-            //return lhs.Up == rhs.Up && lhs.Down == rhs.Down;
         }
 
         public static bool operator != (Cube lhs, Cube rhs) {
@@ -38,9 +37,9 @@ namespace Cube.Sq1RawCube
             int upHashCode = Up.GetHashCode();
             int downHashCode = Down.GetHashCode();
             if (upHashCode <= downHashCode) {
-                return upHashCode * Layer.HashCodeUpperBound + downHashCode;
+                return upHashCode * 2^10 + downHashCode;
             } else {
-                return downHashCode * Layer.HashCodeUpperBound + upHashCode;
+                return downHashCode * 2^10 + upHashCode;
             }
         }
 
@@ -64,20 +63,15 @@ namespace Cube.Sq1RawCube
 
         public ICube RotateBy(IRotation iRotation) {
             Rotation rotation = iRotation as Rotation;
-            Layer up = new Layer(rotation.Up.Left, rotation.Down.Right);
-            Layer down = new Layer(rotation.Down.Left, rotation.Up.Right);
+            Layer up = new Layer(rotation.Up.Left.Concat(rotation.Down.Right));
+            Layer down = new Layer(rotation.Down.Left.Concat(rotation.Up.Right));
 
             return new Cube(up, down);
         }
 
         public override string ToString()
         {
-            return ToString(verbose: false);
-        }
-
-        public string ToString(bool verbose)
-        {
-            return string.Format("{0},{1}", Up.ToString(verbose), Down.ToString(verbose));
+            return string.Format("{0,9},{1,-9}", Up, Down);
         }
 
         public int PredictCost(ICollection<ICube> targetCubes) {
@@ -88,14 +82,14 @@ namespace Cube.Sq1RawCube
             return 0;
         }
 
-        public static Cube ShapeSolved = 
-            new Cube(new Layer(0, 1, 0, 1, 0, 1, 0, 1), new Layer(0, 1, 0, 1, 0, 1, 0, 1));
-        public static ISet<ICube> ShapeUnsolvedList = new HashSet<ICube> {
-            new Cube(new Layer(0, 0, 1, 1, 1, 1, 1, 1, 1, 1), new Layer(0, 0, 0, 0, 0, 0)),
-            new Cube(new Layer(0, 1, 0, 1, 1, 1, 1, 1, 1, 1), new Layer(0, 0, 0, 0, 0, 0)),
-            new Cube(new Layer(0, 1, 1, 0, 1, 1, 1, 1, 1, 1), new Layer(0, 0, 0, 0, 0, 0)),
-            new Cube(new Layer(0, 1, 1, 1, 0, 1, 1, 1, 1, 1), new Layer(0, 0, 0, 0, 0, 0)),
-            new Cube(new Layer(0, 1, 1, 1, 1, 0, 1, 1, 1, 1), new Layer(0, 0, 0, 0, 0, 0))
+        public static Cube Solved = 
+            new Cube(new Layer(60, 30, 60, 30, 60, 30, 60, 30), new Layer(60, 30, 60, 30, 60, 30, 60, 30));
+        public static ISet<ICube> UnsolvedList = new HashSet<ICube> {
+            new Cube(new Layer(60, 60, 30, 30, 30, 30, 30, 30, 30, 30), new Layer(60, 60, 60, 60, 60, 60)),
+            new Cube(new Layer(60, 30, 60, 30, 30, 30, 30, 30, 30, 30), new Layer(60, 60, 60, 60, 60, 60)),
+            new Cube(new Layer(60, 30, 30, 60, 30, 30, 30, 30, 30, 30), new Layer(60, 60, 60, 60, 60, 60)),
+            new Cube(new Layer(60, 30, 30, 30, 60, 30, 30, 30, 30, 30), new Layer(60, 60, 60, 60, 60, 60)),
+            new Cube(new Layer(60, 30, 30, 30, 30, 60, 30, 30, 30, 30), new Layer(60, 60, 60, 60, 60, 60))
         };
     }
 }

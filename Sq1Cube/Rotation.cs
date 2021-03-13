@@ -23,6 +23,10 @@ namespace Cube.Sq1Cube
         public override string ToString() {
             return string.Format("{0},{1}", Up, Down);
         }
+        public IRotation GetReversedRotation() {
+            Division reversedUp = new Division(Up.Left, Down.Right);
+            Division reversedDown = new Division(Down.Left, Up.Right);
+            return new Rotation(reversedUp, reversedDown);
+        }
     }
-
 }

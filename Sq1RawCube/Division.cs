@@ -1,10 +1,10 @@
 namespace Cube.Sq1RawCube
 {
     class Division {
-        public Half Left { get; }
-        public Half Right { get; }
+        public Cells Left { get; }
+        public Cells Right { get; }
 
-        public Division(Half left, Half right) {
+        public Division(Cells left, Cells right) {
             Left = left;
             Right = right;
         }
@@ -31,7 +31,7 @@ namespace Cube.Sq1RawCube
         // override object.GetHashCode
         public override int GetHashCode()
         {
-            return Left.GetHashCode() * Half.HashCodeUpperBound + Right.GetHashCode();
+            return Left.Code * 2^6 + Right.Code;
         }
 
         public override string ToString() {

@@ -16,7 +16,13 @@ namespace Cube.Sq1RawCube
         }
 
         public override string ToString() {
-            return string.Format("{0},{1}", Up, Down);
+            return string.Format("{0,9},{1,-9}", Up, Down);
+        }
+
+        public IRotation GetReversedRotation() {
+            Division reversedUp = new Division(Up.Left, Down.Right);
+            Division reversedDown = new Division(Down.Left, Up.Right);
+            return new Rotation(reversedUp, reversedDown);
         }
     }
 

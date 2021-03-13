@@ -191,22 +191,22 @@ namespace Cube
                     targetStates.Values.ToList().ForEach(targetState => OutputSolution(startState, targetState));
                     break;
                 case Mode.ReverseSearch:
-                    targetStates.Values.ToList().ForEach(targetState => OutputReverseSolution(startState, targetState));
+                    targetStates.Values.ToList().ForEach(targetState => OutputReversedSolution(startState, targetState));
                     break;
                 case Mode.BiDiSearch:
                     OutputSolution(startState, midStateFromStart);
-                    OutputReverseSolution(targetState, midStateFromTarget);
+                    OutputReversedSolution(targetState, midStateFromTarget);
                     break;
             }
             Console.WriteLine();
-            Console.WriteLine("cubes: {0}, solutions: {1}, closed: {2}", seenCubeStates.Count, targetStates.Count, closedStateCount);
+            Console.WriteLine("cubes: {0}, solutions: {1}, closed: {2}, remaining opened: {3}", seenCubeStates.Count, targetStates.Count, closedStateCount, openStates.Count);
             Console.WriteLine("edges: {0}, net: {1}", totalEdgeCount, netEdgeCount);
             return true;
         }
 
-        private void OutputReverseSolution(AState startState, AState targetState) {
-            Console.WriteLine("cube: {0}", targetState.Cube);
-            Console.WriteLine("depth：{0}", targetState.Depth);
+        private void OutputReversedSolution(AState startState, AState targetState) {
+            Console.WriteLine("start cube: {0}", targetState.Cube);
+            Console.WriteLine("solution depth：{0}", targetState.Depth);
             AState state = targetState;
             do {
                 AState fromState = state.FromState;
@@ -214,21 +214,24 @@ namespace Cube
 
                 // todo: consider up/down reverse situation if necessary
                 // todo: consider change case 301-0101 to 0101-301
-                ICube rotatedCube = (fromState != null)? fromState.Cube.RotateBy(fromRotation) : state.Cube;
-
                 Console.WriteLine(
                     " ==> {0} | {1}", 
-                    rotatedCube,
+                    fromRotation.GetReversedRotation(),
                     state.CubeId
                     );
                 state = fromState;
-            } while (state != null);
+            } while (state.FromRotation != null);
+            Console.WriteLine(
+                " ==> {0} | {1}", 
+                startState.Cube,
+                startState.CubeId
+                );
             Console.WriteLine();
         }
 
         private void OutputSolution(AState startState, AState targetState) {
-            Console.WriteLine("cube: {0}", startState.Cube);
-            Console.WriteLine("depth：{0}", targetState.Depth);
+            Console.WriteLine("start cube: {0}", startState.Cube);
+            Console.WriteLine("solution depth：{0}", targetState.Depth);
             
             Stack<AState> solutionPath = new Stack<AState>();
             for (AState state = targetState; state.FromState != null; state = state.FromState) {

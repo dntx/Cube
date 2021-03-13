@@ -6,8 +6,8 @@ namespace Cube
     {
         static void Main(string[] args)
         {
-            //ASolve(ASolver.Mode.ReverseSearch);
-            ASolve(ASolver.Mode.ASearch);
+            ASolve(ASolver.Mode.ReverseSearch);
+            //ASolve(ASolver.Mode.ASearch);
             //ASolve(ASolver.Mode.BiDiSearch);
         }
 
@@ -15,12 +15,12 @@ namespace Cube
             DateTime startTime = DateTime.Now;
             bool successful = true;
             successful &= DoASolve(Goal.SolveShape, mode);
-            successful &= DoASolve(Goal.SolveL1Quarter123, mode);
-            successful &= DoASolve(Goal.SolveL1Quarter4, mode);
-            successful &= DoASolve(Goal.SolveL3Cell01, mode);
-            successful &= DoASolve(Goal.SolveL3Cell2, mode);
-            successful &= DoASolve(Goal.SolveL3Cell3, mode);
-            successful &= DoASolve(Goal.SolveL3Cell46, mode);
+            //successful &= DoASolve(Goal.SolveL1Quarter123, mode);
+            //successful &= DoASolve(Goal.SolveL1Quarter4, mode);
+            //successful &= DoASolve(Goal.SolveL3Cell01, mode);
+            //successful &= DoASolve(Goal.SolveL3Cell2, mode);
+            //successful &= DoASolve(Goal.SolveL3Cell3, mode);
+            //successful &= DoASolve(Goal.SolveL3Cell46, mode);
             //successful &= DoASolve(Goal.SolveL3Cell57Then, mode);
             //successful &= DoASolve(Goal.SolveL3Cell57, mode);
             //successful &= DoASolve(Goal.SolveL3Cell46Then, mode);
@@ -44,7 +44,7 @@ namespace Cube
             switch (goal)
             {
                 case Goal.SolveShape:
-                    return solver.Solve(Sq1RawCube.Cube.ShapeUnsolvedList, Sq1RawCube.Cube.ShapeSolved);
+                    return solver.Solve(Sq1RawCube.Cube.UnsolvedList, Sq1RawCube.Cube.Solved);
 
                 // L1 strategy
                 case Goal.SolveL1Quarter123:
