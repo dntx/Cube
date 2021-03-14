@@ -6,7 +6,7 @@ using System.Linq;
 namespace Cube.Sq1Cube
 {
     class Cells : List<int> {
-        public int Code { get; }
+        public uint Code { get; }
 
         public Cells(IEnumerable<int> cells) : base(cells) {
             Code = GetCode(this);
@@ -22,9 +22,9 @@ namespace Cube.Sq1Cube
             return result;
         }
 
-        protected static int GetCode(IEnumerable<int> cells) {
-            int code = 0;
-            foreach (int cell in cells) {
+        protected static uint GetCode(IEnumerable<int> cells) {
+            uint code = 0;
+            foreach (uint cell in cells) {
                 code = (code << 4) | cell;
             }
             return code;
@@ -89,7 +89,7 @@ namespace Cube.Sq1Cube
         
         public override int GetHashCode()
         {
-            return Code;
+            return (int)Code;
         }
     }
 }
