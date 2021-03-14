@@ -70,11 +70,6 @@ namespace Cube.Sq1Cube
 
         public override string ToString()
         {
-            return ToString(verbose: false);
-        }
-
-        public string ToString(bool verbose)
-        {
             return string.Format("{0,9},{1,-9}", Up, Down);
         }
 

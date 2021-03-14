@@ -24,18 +24,13 @@ namespace Cube.Sq1Cube
             return first.Concat(second);
         }
 
-        public override string ToString()
-        {
-            return ToString(degreeBar: 180, separator: "-");
-        }
-
         public ISet<Division> GetDivisions(bool ascendingOnly) {
             bool needTwoDivisionsOnly = (this == Layer.YellowL3) || (this == Layer.WhiteL1);
             ISet<Division> divisions = new HashSet<Division>();
             for (int start = 0; start < 4; start++) {
                 int end = start + 4;
                 Cells first = new Cells(GetRange(start, end - start));
-                Cells second = new Cells(GetRange(end, Count - end), GetRange(0, start));
+                Cells second = new Cells(GetRange(end, Count - end).Concat(GetRange(0, start)));
                 if (first.Code > second.Code) {
                     Cells temp = first;
                     first = second;

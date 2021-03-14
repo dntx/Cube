@@ -1,7 +1,5 @@
-using System;
 using System.Text;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Cube.Sq1Cube
 {
@@ -12,16 +10,6 @@ namespace Cube.Sq1Cube
             Code = GetCode(this);
         }
         
-        public Cells(List<int> first, List<int> second) : this(MergeList(first, second)) {}
-        
-        // TODO: Note: MergeList is much faster than first.Contact(second)
-        private static List<int> MergeList(List<int> first, List<int> second) {
-            List<int> result = new List<int>();
-            result.AddRange(first);
-            result.AddRange(second);
-            return result;
-        }
-
         protected static uint GetCode(IEnumerable<int> cells) {
             uint code = 0;
             foreach (uint cell in cells) {
@@ -30,23 +18,20 @@ namespace Cube.Sq1Cube
             return code;
         }
 
-        protected string ToString(int degreeBar, string separator) {
+        public override string ToString() {
             StringBuilder sb = new StringBuilder();
             int degreeSum = 0;
-            ForEach(cell => {
+            for (int i = 0; i < Count; i++) {
+                int cell = this[i];
+                bool isLast = (i == Count - 1);
                 int degree = Cell.GetDegree(cell);
                 sb.AppendFormat("{0:X}", cell);
                 degreeSum += degree;
-                if (degreeSum == degreeBar) {
-                    sb.Append(separator);
+                if (degreeSum == 180 && !isLast) {
+                    sb.Append("-");
                 }
-            });
-
+            }
             return sb.ToString();
-        }
-
-        public override string ToString() {
-            return ToString(0, separator: "");
         }
 
         public static bool operator == (Cells lhs, Cells rhs) {
