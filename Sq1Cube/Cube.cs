@@ -62,8 +62,8 @@ namespace Cube.Sq1Cube
 
         public ICube RotateBy(IRotation iRotation) {
             Rotation rotation = iRotation as Rotation;
-            Layer up = new Layer(rotation.Up.Left, rotation.Down.Right);
-            Layer down = new Layer(rotation.Down.Left, rotation.Up.Right);
+            Layer up = new Layer(rotation.Up.Left.Concat(rotation.Down.Right));
+            Layer down = new Layer(rotation.Down.Left.Concat(rotation.Up.Right));
 
             return new Cube(up, down);
         }

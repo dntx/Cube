@@ -61,22 +61,6 @@ namespace Cube.Sq1Cube
             return !(lhs == rhs);
         }
 
-        public static bool operator < (Cells lhs, Cells rhs) {
-            return lhs.Code < rhs.Code;
-        }
-
-        public static bool operator > (Cells lhs, Cells rhs) {
-            return lhs.Code > rhs.Code;
-        }
-
-        public static bool operator <= (Cells lhs, Cells rhs) {
-            return lhs.Code <= rhs.Code;
-        }
-
-        public static bool operator >= (Cells lhs, Cells rhs) {
-            return lhs.Code >= rhs.Code;
-        }
-
         public override bool Equals(object obj)
         {
             if (obj == null || GetType() != obj.GetType())

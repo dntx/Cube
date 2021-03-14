@@ -5,35 +5,23 @@ using System.Linq;
 namespace Cube.Sq1Cube
 {
     class Layer : Cells {
-        public Layer(Cells left, Cells right) : base(GetNormalizedCells(new Cells(left, right))) {
-        }
+        public Layer(params int[] cells) : base(GetMaxPermutedCells(cells)) {}
+        public Layer(IEnumerable<int> cells) : base(GetMaxPermutedCells(cells)) {}
 
-        public Layer(params int[] cells) 
-                : this(DivideCells(cells).Key, DivideCells(cells).Value) {
-        }
-
-        private static KeyValuePair<Cells, Cells> DivideCells(int[] cells) {
-            int degreeSum = 0;
-            for (int i = 0; i < cells.Length; i++) {
-                degreeSum += Cell.GetDegree(cells[i]);
-                if (degreeSum == 180) {
-                    int firstCount = i + 1;
-                    int secondCount = cells.Length - firstCount;
-                    return new KeyValuePair<Cells, Cells>(new Cells(cells.Take(firstCount)), new Cells(cells.TakeLast(secondCount)));
+        private static IEnumerable<int> GetMaxPermutedCells(IEnumerable<int> rawCells) {
+            List<int> cells = rawCells.ToList();
+            int maxCell = cells[0];
+            int maxIndex = 0;
+            for (int i = 1; i < cells.Count; i++) {
+                if (cells[i] > maxCell) {
+                    maxCell = cells[i];
+                    maxIndex = i;
                 }
             }
-            throw new ArgumentException("the given cells can't be divided as two halves");
-        }
-
-        private static Cells GetNormalizedCells(Cells cells) {
-            Cells minCells = cells;
-            for (int start = 1; start < cells.Count; start++) {
-                Cells shiftedCells = new Cells(cells.GetRange(start, cells.Count - start), cells.GetRange(0, start));
-                if (shiftedCells < minCells) {
-                    minCells = shiftedCells;
-                }
-            }
-            return minCells;
+            int start = maxIndex;
+            IEnumerable<int> first = cells.GetRange(start, cells.Count - start);
+            IEnumerable<int> second = cells.GetRange(0, start);
+            return first.Concat(second);
         }
 
         public override string ToString()
@@ -48,7 +36,7 @@ namespace Cube.Sq1Cube
                 int end = start + 4;
                 Cells first = new Cells(GetRange(start, end - start));
                 Cells second = new Cells(GetRange(end, Count - end), GetRange(0, start));
-                if (first > second) {
+                if (first.Code > second.Code) {
                     Cells temp = first;
                     first = second;
                     second = temp;
