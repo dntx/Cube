@@ -5,12 +5,7 @@ using System.Linq;
 namespace Cube.Sq1Cube
 {
     class Layer : Cells {
-        public Cells Left { get; }
-        public Cells Right { get; }
-
         public Layer(Cells left, Cells right) : base(GetNormalizedCells(new Cells(left, right))) {
-            Left = left;
-            Right = right;
         }
 
         public Layer(params int[] cells) 
@@ -43,16 +38,7 @@ namespace Cube.Sq1Cube
 
         public override string ToString()
         {
-            return ToString(verbose:false);
-        }
-
-        public string ToString(bool verbose) {
-            String separator = "-";
-            if (verbose) {
-                return string.Format("{0,4}{1}{2,-4}", Left, separator, Right);
-            } else {
-                return ToString(degreeBar: 180, separator: separator);
-            }
+            return ToString(degreeBar: 180, separator: "-");
         }
 
         public ISet<Division> GetDivisions(bool ascendingOnly) {

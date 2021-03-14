@@ -75,7 +75,7 @@ namespace Cube.Sq1Cube
 
         public string ToString(bool verbose)
         {
-            return string.Format("{0},{1}", Up.ToString(verbose), Down.ToString(verbose));
+            return string.Format("{0,9},{1,-9}", Up, Down);
         }
 
         private enum QuarterState { 
