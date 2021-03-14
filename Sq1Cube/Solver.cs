@@ -9,7 +9,7 @@ namespace Cube.Sq1Cube
             //ASolver.Mode mode = ASolver.Mode.ReverseSearch;
             ASolver.Mode mode = ASolver.Mode.ASearch;
             //ASolver.Mode mode = ASolver.Mode.BiDiSearch;
-            
+
             DateTime startTime = DateTime.Now;
             bool successful = true;
 
@@ -19,7 +19,7 @@ namespace Cube.Sq1Cube
             successful &= DoASolve(Goal.SolveL3Cell2, mode);
             successful &= DoASolve(Goal.SolveL3Cell3, mode);
             successful &= DoASolve(Goal.SolveL3Cell46, mode);
-            //successful &= DoASolve(Goal.SolveL3Cell57Then, mode);
+            successful &= DoASolve(Goal.SolveL3Cell57Then, mode, 1000000);
             //successful &= DoASolve(Goal.SolveL3Cell57, mode);
             //successful &= DoASolve(Goal.SolveL3Cell46Then, mode);
 
@@ -31,9 +31,13 @@ namespace Cube.Sq1Cube
         }
 
         private static bool DoASolve(Goal goal, ASolver.Mode mode) {
+            return DoASolve(goal, mode, int.MaxValue);
+        }
+
+        private static bool DoASolve(Goal goal, ASolver.Mode mode, int maxStateCount) {
             Console.WriteLine("start {0} ...", goal);
             
-            bool successful = DoASolve(new ASolver(mode), goal);
+            bool successful = DoASolve(new ASolver(mode, maxStateCount), goal);
 
             Console.WriteLine("end {0}, successful: {1}", goal, successful);
             Console.WriteLine("############################################");

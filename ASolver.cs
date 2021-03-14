@@ -12,9 +12,14 @@ namespace Cube
         }
 
         private Mode mode;
+        private int maxStateCount;
 
-        public ASolver(Mode mode) {
+        public ASolver(Mode mode) : this(mode, int.MaxValue) {
+        }
+
+        public ASolver(Mode mode, int maxStateCount) {
             this.mode = mode;
+            this.maxStateCount = maxStateCount;
         }
 
         public bool Solve(ICube startCube, ICube targetCube) {
@@ -90,6 +95,7 @@ namespace Cube
             }
 
             bool completed = false;
+            bool needStop = false;
             do {
                 AState state = openStates.Min;
                 openStates.Remove(state);
@@ -161,7 +167,8 @@ namespace Cube
                 }
 
                 closedStateCount++;
-                if (completed || openStates.Count == 0 || closedStateCount % 10000 == 0) {
+                needStop = completed || openStates.Count == 0 || (closedStateCount + openStates.Count) >= maxStateCount;
+                if (needStop || closedStateCount % 1000 == 0) {
                     int totalCount = closedStateCount + openStates.Count;
                     Console.WriteLine(
                         "sec: {0:0.00}, {1}{2}, g: {3}, h: {4}, solved: {5}, closed: {6}({7:p}), open: {8}({9:p}), reopened: {10}({11:p})", 
@@ -179,7 +186,7 @@ namespace Cube
                         (float)reopenStateCount / openStates.Count
                         );
                 }
-            } while (!completed && openStates.Count > 0);
+            } while (!needStop);
             Console.WriteLine();
 
             if (!completed) {
