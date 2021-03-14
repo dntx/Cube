@@ -1,4 +1,4 @@
-namespace Cube
+namespace Cube.Sq1Cube
 {
     public enum Goal { 
         // L1 strategy
