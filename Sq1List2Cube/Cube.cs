@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Cube.Sq1RawCube
+namespace Cube.Sq1List2Cube
 {
     class Cube : ICube {
         public Layer Up { get; }

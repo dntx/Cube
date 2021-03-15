@@ -2,7 +2,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Cube.Sq1RawCube
+namespace Cube.Sq1List2Cube
 {
     class Cells : List<int> {
         public int Code { get; }

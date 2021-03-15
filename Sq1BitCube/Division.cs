@@ -1,4 +1,4 @@
-namespace Cube.Sq1Cube
+namespace Cube.Sq1BitCube
 {
     class Division {
         public Cells Left { get; }

@@ -1,4 +1,4 @@
-namespace Cube.Sq1RawCube
+namespace Cube.Sq1List2Cube
 {
     class Division {
         public Cells Left { get; }

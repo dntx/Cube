@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Cube.Sq1Cube
+namespace Cube.Sq1BitCube
 {
     class Cube : ICube {
         public Layer Up { get; }

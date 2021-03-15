@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Cube.Sq1RawCube
+namespace Cube.Sq1List2Cube
 {
     class Layer : Cells {
         public Layer(params int[] cells) : base(GetMinPermutedCells(cells)) {}

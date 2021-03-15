@@ -1,7 +1,7 @@
 using System.Text;
 using System.Collections.Generic;
 
-namespace Cube.Sq1Cube
+namespace Cube.Sq1List16Cube
 {
     class Cells : List<int> {
         public uint Code { get; }

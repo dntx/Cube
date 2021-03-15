@@ -1,6 +1,6 @@
 using System;
 
-namespace Cube.Sq1Cube
+namespace Cube.Sq1List16Cube
 {
     class Cell {
         public static int GetOrder(int cell) {

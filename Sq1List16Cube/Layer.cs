@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Cube.Sq1Cube
+namespace Cube.Sq1List16Cube
 {
     class Layer : Cells {
         public Layer(params int[] cells) : base(GetMaxPermutedCells(cells)) {}
