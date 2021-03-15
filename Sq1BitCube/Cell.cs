@@ -3,31 +3,31 @@ using System;
 namespace Cube.Sq1BitCube
 {
     class Cell {
-        public static int GetOrder(int cell) {
+        public static uint GetOrder(uint cell) {
             return cell % 8;
         }
 
-        public static int GetDegree(int cell) {
+        public static uint GetDegree(uint cell) {
             return (cell % 2 == 1) ? 30 : 60;
         }
 
-        public static int GetShape(int cell) {
+        public static uint GetShape(uint cell) {
             return cell % 2;
         }
 
-        public static int GetColor(int cell) {
+        public static uint GetColor(uint cell) {
             // 0,1,2,3,4,5,6,7: color=0, yellow, L3
             // 8,9,A,B,C,D,E,F: color=1, white, L1
             return cell / 8;
         }
 
-        public static int GetLayer(int cell) {
+        public static uint GetLayer(uint cell) {
             // 0,1,2,3,4,5,6,7: color=0, yellow, L3
             // 8,9,A,B,C,D,E,F: color=1, white, L1
             return (cell / 8 == 0)? 3 : 1;
         }
 
-        public static int GetSideColor(int cell) {
+        public static uint GetSideColor(uint cell) {
             // 1: color=0, blue
             // 3: color=1, orange
             // 5: color=2, green
@@ -40,7 +40,7 @@ namespace Cube.Sq1BitCube
             return (cell - 1) % 8 / 2;
         }
 
-        public static int GetLeftSideColor(int cell) {
+        public static uint GetLeftSideColor(uint cell) {
             // 0: color=0, blue
             // 2: color=1, orange
             // 4: color=2, green
@@ -53,7 +53,7 @@ namespace Cube.Sq1BitCube
             return cell % 8 / 2;
         }
 
-        public static int GetRightSideColor(int cell) {
+        public static uint GetRightSideColor(uint cell) {
             // 2: color=0, blue
             // 4: color=1, orange
             // 6: color=2, green

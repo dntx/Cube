@@ -1,21 +1,21 @@
 namespace Cube.Sq1BitCube
 {
     class Rotation : IRotation {
-        public Division Up { get; }
-        public Division Down { get; }
+        public int UpStartIndex { get; }
+        public int DownStartIndex { get; }
 
-        public Rotation(Division up, Division down) {
-            Up = up;
-            Down = down;
+        public Rotation(int upStartIndex, int downStartIndex) {
+            UpStartIndex = upStartIndex;
+            DownStartIndex = downStartIndex;
         }
 
         public override string ToString() {
             return string.Format("{0},{1}", Up, Down);
         }
         public IRotation GetReversedRotation() {
-            Division reversedUp = new Division(Up.Left, Down.Right);
-            Division reversedDown = new Division(Down.Left, Up.Right);
-            return new Rotation(reversedUp, reversedDown);
+            return this;
         }
+
+        public ISet<Rotation> AllRotations = new HashSet
     }
 }
