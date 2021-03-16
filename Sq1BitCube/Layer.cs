@@ -7,30 +7,36 @@ namespace Cube.Sq1BitCube
     class Layer {
         public uint Code { get; }
 
-        public Layer(params int[] cells) : this(cells as IEnumerable<int>) {}
-        
-        public Layer(IEnumerable<int> cells) {
-            IEnumerable<int> maxPermutedCells = GetMaxPermutedCells(cells);
-            Code = GetCode(cells);
-        }
-        
-        private static IEnumerable<int> GetMaxPermutedCells(IEnumerable<int> rawCells) {
-            List<int> cells = rawCells.ToList();
-            int maxCell = cells[0];
-            int maxIndex = 0;
-            for (int i = 1; i < cells.Count; i++) {
-                if (cells[i] > maxCell) {
-                    maxCell = cells[i];
-                    maxIndex = i;
-                }
-            }
-            int start = maxIndex;
-            IEnumerable<int> first = cells.GetRange(start, cells.Count - start);
-            IEnumerable<int> second = cells.GetRange(0, start);
-            return first.Concat(second);
+        public Layer(uint rawCode) {
+            Code = GetMaxPermutedCode(rawCode);
         }
 
-        protected static uint GetCode(IEnumerable<int> cells) {
+        public Layer(params uint[] cells) : this(GetCode(cells)) {}
+        
+        private static uint GetMaxPermutedCode(uint rawCode) {
+            uint maxCell = 0;
+            int maxIndex = 0;
+            uint code = rawCode;
+            for (int i = 7; i >= 0; i--) {
+                uint cell = (code & 0xF);
+                if (Cell.GetDegree(cell) == 30 && cell > maxCell) {
+                    maxCell = cell;
+                    maxIndex = i;
+                }
+                code >>= 4;
+            }
+            return RotateLeft(rawCode, maxIndex);
+        }
+
+        public static uint RotateLeft(uint code, int indexShift) {
+            if (indexShift == 0) {
+                return code;
+            } else {
+                return (code << (4 * indexShift)) | (code >> (32 - (4 * indexShift)));
+            }
+        }
+
+        protected static uint GetCode(IEnumerable<uint> cells) {
             uint code = 0;
             foreach (uint cell in cells) {
                 code = (code << 4) | cell;
@@ -40,17 +46,13 @@ namespace Cube.Sq1BitCube
 
         public override string ToString() {
             StringBuilder sb = new StringBuilder();
-            uint degreeSum = 0;
             uint code = Code;
             for (int i = 0; i < 8; i++) {
-                uint cell = code & 0xF;
-                code >>= 4;
-                uint degree = Cell.GetDegree(cell);
-                sb.Insert(0, string.Format("{0:X}", cell));
-                degreeSum += degree;
-                if (degreeSum == 180) {
+                if (i == 4) {
                     sb.Insert(0, "-");
                 }
+                sb.Insert(0, string.Format("{0:X}", code & 0xF));
+                code >>= 4;
             }
             return sb.ToString();
         }

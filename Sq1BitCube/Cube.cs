@@ -9,13 +9,17 @@ namespace Cube.Sq1BitCube
         public Layer Down { get; }
 
         public Cube(Layer up, Layer down) {
-            Up = up;
-            Down = down;
+            if (up.Code <= down.Code) {
+                Up = up;
+                Down = down;
+            } else {
+                Up = down;
+                Down = up;
+            }
         }
 
         public static bool operator == (Cube lhs, Cube rhs) {
-            return (lhs.Up == rhs.Up && lhs.Down == rhs.Down) || (lhs.Up == rhs.Down && lhs.Down == rhs.Up);
-            //return lhs.Up == rhs.Up && lhs.Down == rhs.Down;
+            return (lhs.Up == rhs.Up && lhs.Down == rhs.Down);
         }
 
         public static bool operator != (Cube lhs, Cube rhs) {
@@ -40,32 +44,19 @@ namespace Cube.Sq1BitCube
         }
 
         public ICollection<IRotation> GetRotations() {
-            List<IRotation> rotations = new List<IRotation>();
-
-            ISet<Division> upDivisions = Up.GetDivisions(ascendingOnly: true);
-            ISet<Division> downDivisions = Down.GetDivisions(ascendingOnly: false);
-
-            foreach (Division upDivision in upDivisions) {
-                foreach (Division downDivision in downDivisions) {
-                    if (upDivision.Left != downDivision.Left 
-                        && upDivision.Right != downDivision.Right
-                        && Cell.GetShape(upDivision.Left[0]) == Cell.GetShape(downDivision.Left[0]) )
-                    {
-                        Rotation rotation = new Rotation(upDivision, downDivision);
-                        rotations.Add(rotation);
-                    }
-                }
-            }
-
-            return rotations;
+            return Rotation.AllRotations;
         }
 
         public ICube RotateBy(IRotation iRotation) {
             Rotation rotation = iRotation as Rotation;
-            Layer up = new Layer(rotation.Up.Left.Concat(rotation.Down.Right));
-            Layer down = new Layer(rotation.Down.Left.Concat(rotation.Up.Right));
+            
+            uint upCode = Layer.RotateLeft(Up.Code, rotation.UpRightStart);
+            uint downCode = Layer.RotateLeft(Down.Code, rotation.DownRightStart);
+            
+            uint rotatedUpCode = (downCode & 0xFFFF0000) | (upCode & 0xFFFF);
+            uint rotatedDownCode = (upCode & 0xFFFF0000) | (downCode & 0xFFFF);
 
-            return new Cube(up, down);
+            return new Cube(new Layer(rotatedUpCode), new Layer(rotatedDownCode));
         }
 
         public override string ToString()
@@ -83,17 +74,18 @@ namespace Cube.Sq1BitCube
         };
 
         public int PredictCost(ICollection<ICube> targetCubes) {
-            if (targetCubes.Count > 1) {
-                // todo: even for multiple target cubes, we still can give some meaningful prediction
-                return 0;
-            } else {
-                return PredictCost(targetCubes.First());
-            }
+            return 0;
+            // if (targetCubes.Count > 1) {
+            //     // todo: even for multiple target cubes, we still can give some meaningful prediction
+            //     return 0;
+            // } else {
+            //     return PredictCost(targetCubes.First());
+            // }
         }
 
         public int PredictCost(ICube iTargetCube) {
             Cube targetCube = iTargetCube as Cube;
-            //return 0; /*
+            return 0; /*
             if (targetCube != Cube.Solved) {
                 return PredictCostByPairs(this, targetCube);
             } else {
@@ -114,35 +106,36 @@ namespace Cube.Sq1BitCube
         }
 
         private static KeyValuePair<QuarterState, int> GetQuarterState(Layer layer, int startDegree) {
-            bool[] isQuarterSolved = new bool[4];
-            int quarterSolvedCount = 0;
-            int start = layer.FindIndex(cell => Cell.GetDegree(cell) == startDegree);
-            for (int i = start; i < layer.Count; i += 2) {
-                int first = layer[i];
-                int second = layer[(i + 1) % layer.Count];
-                if (Cell.GetLayer(first) == Cell.GetLayer(second)) {
-                    if (startDegree == 60 && Cell.GetLeftSideColor(first) == Cell.GetSideColor(second)
-                        || startDegree == 30 && Cell.GetSideColor(first) == Cell.GetRightSideColor(second)) {
-                        isQuarterSolved[i/2] = true;
-                        quarterSolvedCount++;
-                    }
-                }
-            }
+            // bool[] isQuarterSolved = new bool[4];
+            // int quarterSolvedCount = 0;
+            // int start = layer.FindIndex(cell => Cell.GetDegree(cell) == startDegree);
+            // for (int i = start; i < layer.Count; i += 2) {
+            //     int first = layer[i];
+            //     int second = layer[(i + 1) % layer.Count];
+            //     if (Cell.GetLayer(first) == Cell.GetLayer(second)) {
+            //         if (startDegree == 60 && Cell.GetLeftSideColor(first) == Cell.GetSideColor(second)
+            //             || startDegree == 30 && Cell.GetSideColor(first) == Cell.GetRightSideColor(second)) {
+            //             isQuarterSolved[i/2] = true;
+            //             quarterSolvedCount++;
+            //         }
+            //     }
+            // }
 
-            switch (quarterSolvedCount) {
-                case 0:
-                    return new KeyValuePair<QuarterState, int>(QuarterState.SolvedNone, 0);
-                case 1:
-                    return new KeyValuePair<QuarterState, int>(QuarterState.Solved1, 1);
-                case 2:
-                    QuarterState state = (isQuarterSolved[0] && isQuarterSolved[2] || isQuarterSolved[1] && isQuarterSolved[3])? QuarterState.Solved13 : QuarterState.Solved12;
-                    return new KeyValuePair<QuarterState, int>(state, 2);
-                case 3:
-                    return new KeyValuePair<QuarterState, int>(QuarterState.Solved123, 3);
-                case 4:
-                    return new KeyValuePair<QuarterState, int>(QuarterState.Solved1234, 4);
-            }
-            throw new Exception(string.Format("Quarter ready count {0} is not valid", quarterSolvedCount));
+            // switch (quarterSolvedCount) {
+            //     case 0:
+            //         return new KeyValuePair<QuarterState, int>(QuarterState.SolvedNone, 0);
+            //     case 1:
+            //         return new KeyValuePair<QuarterState, int>(QuarterState.Solved1, 1);
+            //     case 2:
+            //         QuarterState state = (isQuarterSolved[0] && isQuarterSolved[2] || isQuarterSolved[1] && isQuarterSolved[3])? QuarterState.Solved13 : QuarterState.Solved12;
+            //         return new KeyValuePair<QuarterState, int>(state, 2);
+            //     case 3:
+            //         return new KeyValuePair<QuarterState, int>(QuarterState.Solved123, 3);
+            //     case 4:
+            //         return new KeyValuePair<QuarterState, int>(QuarterState.Solved1234, 4);
+            // }
+            //throw new Exception(string.Format("Quarter ready count {0} is not valid", quarterSolvedCount));
+            throw new NotImplementedException();
         }
 
         private static int PredictCostByQuarterState(KeyValuePair<QuarterState, int> upState, KeyValuePair<QuarterState, int> downState) {
@@ -185,13 +178,12 @@ namespace Cube.Sq1BitCube
 
         private static List<KeyValuePair<int, int>> BreakCubeToPairs(Cube cube) {
             List<KeyValuePair<int, int>> pairs = new List<KeyValuePair<int, int>>();
-            for (int i = 0; i < cube.Up.Count; i++) {
-                pairs.Add(new KeyValuePair<int, int>(cube.Up[i], cube.Up[(i+1) % cube.Up.Count]));
-            }
-            for (int i = 0; i < cube.Down.Count; i++) {
-                pairs.Add(new KeyValuePair<int, int>(cube.Down[i], cube.Down[(i+1) % cube.Down.Count]));
-            }
-
+            // for (int i = 0; i < cube.Up.Count; i++) {
+            //     pairs.Add(new KeyValuePair<int, int>(cube.Up[i], cube.Up[(i+1) % cube.Up.Count]));
+            // }
+            // for (int i = 0; i < cube.Down.Count; i++) {
+            //     pairs.Add(new KeyValuePair<int, int>(cube.Down[i], cube.Down[(i+1) % cube.Down.Count]));
+            // }
             return pairs;
         }
  

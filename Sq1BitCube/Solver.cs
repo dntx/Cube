@@ -6,8 +6,8 @@ namespace Cube.Sq1BitCube
     {
         public static bool Solve()
         {
-            //ASolver.Mode mode = ASolver.Mode.ReverseSearch;
-            ASolver.Mode mode = ASolver.Mode.ASearch;
+            ASolver.Mode mode = ASolver.Mode.ReverseSearch;
+            //ASolver.Mode mode = ASolver.Mode.ASearch;
             //ASolver.Mode mode = ASolver.Mode.BiDiSearch;
 
             DateTime startTime = DateTime.Now;
@@ -19,7 +19,7 @@ namespace Cube.Sq1BitCube
             successful &= DoASolve(Goal.SolveL3Cell2, mode);
             successful &= DoASolve(Goal.SolveL3Cell3, mode);
             successful &= DoASolve(Goal.SolveL3Cell46, mode);
-            successful &= DoASolve(Goal.SolveL3Cell57Then, mode, 1000000);
+            //successful &= DoASolve(Goal.SolveL3Cell57Then, mode, 1000000);
             //successful &= DoASolve(Goal.SolveL3Cell57, mode);
             //successful &= DoASolve(Goal.SolveL3Cell46Then, mode);
 
