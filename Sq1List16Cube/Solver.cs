@@ -4,7 +4,7 @@ namespace Cube.Sq1List16Cube
 {
     class Solver
     {
-        public static bool Solve(ASolver.Mode mode)
+        public static bool SolveEasy(ASolver.Mode mode)
         {
             DateTime startTime = DateTime.Now;
             bool successful = true;
@@ -15,10 +15,21 @@ namespace Cube.Sq1List16Cube
             successful &= DoASolve(Goal.SolveL3Cell2, mode);
             successful &= DoASolve(Goal.SolveL3Cell3, mode);
             successful &= DoASolve(Goal.SolveL3Cell46, mode);
-            //successful &= DoASolve(Goal.SolveL3Cell57Then, mode, 1000000);
-            //successful &= DoASolve(Goal.SolveL3Cell57, mode);
-            //successful &= DoASolve(Goal.SolveL3Cell46Then, mode);
+            
+            Console.WriteLine("total seconds: {0:0.00}, successful: {1}", 
+                DateTime.Now.Subtract(startTime).TotalSeconds,
+                successful);
+            Console.WriteLine();
+            return successful;
+        }
 
+        public static bool SolveHard(ASolver.Mode mode)
+        {
+            DateTime startTime = DateTime.Now;
+            bool successful = true;
+
+            successful &= DoASolve(Goal.SolveL3Cell57Then, mode, 1000000);
+            
             Console.WriteLine("total seconds: {0:0.00}, successful: {1}", 
                 DateTime.Now.Subtract(startTime).TotalSeconds,
                 successful);

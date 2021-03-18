@@ -3,14 +3,18 @@ using System.Collections.Generic;
 
 namespace Cube.Sq1List16Cube
 {
-    class Cells : List<int> {
+    class Cells : List<uint> {
         public uint Code { get; }
 
-        public Cells(IEnumerable<int> cells) : base(cells) {
+        public Cells(IEnumerable<uint> cells) : base(cells) {
             Code = GetCode(this);
         }
         
-        protected static uint GetCode(IEnumerable<int> cells) {
+        public static uint GetCode(uint cell1, uint cell2) {
+            return (cell1 << 4) | cell2;
+        }
+
+        protected static uint GetCode(IEnumerable<uint> cells) {
             uint code = 0;
             foreach (uint cell in cells) {
                 code = (code << 4) | cell;
@@ -20,16 +24,11 @@ namespace Cube.Sq1List16Cube
 
         public override string ToString() {
             StringBuilder sb = new StringBuilder();
-            int degreeSum = 0;
             for (int i = 0; i < Count; i++) {
-                int cell = this[i];
-                bool isLast = (i == Count - 1);
-                int degree = Cell.GetDegree(cell);
-                sb.AppendFormat("{0:X}", cell);
-                degreeSum += degree;
-                if (degreeSum == 180 && !isLast) {
+                if (i == 4) {
                     sb.Append("-");
                 }
+                sb.AppendFormat("{0:X}", this[i]);
             }
             return sb.ToString();
         }
