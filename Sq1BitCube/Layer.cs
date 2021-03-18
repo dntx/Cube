@@ -14,12 +14,12 @@ namespace Cube.Sq1BitCube
         public Layer(params uint[] cells) : this(GetCode(cells)) {}
         
         private static uint GetMinPermutedCode(uint rawCode) {
-            uint minCell = 0;
-            int minIndex = 0;
+            uint minCell = uint.MaxValue;
+            int minIndex = -1;
             uint code = rawCode;
-            for (int i = 7; i > 0; i--) {
+            for (int i = 7; i >= 0; i--) {
                 uint cell = (code & 0xF);
-                if (Cell.GetDegree(cell) == 60 && cell < minCell) {
+                if (cell % 2 == 0 && cell < minCell) {
                     minCell = cell;
                     minIndex = i;
                 }
