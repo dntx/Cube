@@ -8,24 +8,24 @@ namespace Cube.Sq1BitCube
         public uint Code { get; }
 
         public Layer(uint rawCode) {
-            Code = GetMaxPermutedCode(rawCode);
+            Code = GetMinPermutedCode(rawCode);
         }
 
         public Layer(params uint[] cells) : this(GetCode(cells)) {}
         
-        private static uint GetMaxPermutedCode(uint rawCode) {
-            uint maxCell = 0;
-            int maxIndex = 0;
+        private static uint GetMinPermutedCode(uint rawCode) {
+            uint minCell = 0;
+            int minIndex = 0;
             uint code = rawCode;
-            for (int i = 7; i >= 0; i--) {
+            for (int i = 7; i > 0; i--) {
                 uint cell = (code & 0xF);
-                if (Cell.GetDegree(cell) == 30 && cell > maxCell) {
-                    maxCell = cell;
-                    maxIndex = i;
+                if (Cell.GetDegree(cell) == 60 && cell < minCell) {
+                    minCell = cell;
+                    minIndex = i;
                 }
                 code >>= 4;
             }
-            return RotateLeft(rawCode, maxIndex);
+            return RotateLeft(rawCode, minIndex);
         }
 
         public static uint RotateLeft(uint code, int indexShift) {
@@ -85,6 +85,5 @@ namespace Cube.Sq1BitCube
         }
 
         public static Layer WhiteL1 = new Layer(0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF);
-        public static Layer YellowL3 = new Layer(0, 1, 2, 3, 4, 5, 6, 7);
     }
 }

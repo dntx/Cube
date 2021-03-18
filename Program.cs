@@ -8,9 +8,9 @@ namespace Cube
         {
             bool successful = true;
             //successful &= Sq1List2Cube.Solver.Solve(ASolver.Mode.ReverseBfSearch);
-            successful &= Sq1List16Cube.Solver.SolveEasy(ASolver.Mode.BidiASearch);
+            //successful &= Sq1List16Cube.Solver.SolveEasy(ASolver.Mode.BidiASearch);
             //successful &= Sq1List16Cube.Solver.SolveHard(ASolver.Mode.BidiASearch);
-            //successful &= Sq1BitCube.Solver.Solve();
+            successful &= Sq1BitCube.Solver.Solve(ASolver.Mode.BidiBfSearch);
             Console.WriteLine("overall successful: {0}", successful);
             Console.WriteLine();
         }
