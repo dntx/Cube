@@ -8,7 +8,5 @@ namespace Cube
         ICube RotateBy(IRotation rotation);
 
         int PredictCost(ICube targetCube);
-
-        int PredictCost(ICollection<ICube> targetCubes);
     }
 }

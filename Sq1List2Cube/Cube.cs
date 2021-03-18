@@ -67,10 +67,6 @@ namespace Cube.Sq1List2Cube
             return string.Format("{0,9},{1,-9}", Up, Down);
         }
 
-        public int PredictCost(ICollection<ICube> targetCubes) {
-            return 0;
-        }
-
         public int PredictCost(ICube iTargetCube) {
             return 0;
         }

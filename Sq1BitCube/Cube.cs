@@ -73,16 +73,6 @@ namespace Cube.Sq1BitCube
             Solved1234
         };
 
-        public int PredictCost(ICollection<ICube> targetCubes) {
-            return 0;
-            // if (targetCubes.Count > 1) {
-            //     // todo: even for multiple target cubes, we still can give some meaningful prediction
-            //     return 0;
-            // } else {
-            //     return PredictCost(targetCubes.First());
-            // }
-        }
-
         public int PredictCost(ICube iTargetCube) {
             Cube targetCube = iTargetCube as Cube;
             return 0; /*

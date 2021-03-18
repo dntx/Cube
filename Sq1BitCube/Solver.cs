@@ -4,12 +4,8 @@ namespace Cube.Sq1BitCube
 {
     class Solver
     {
-        public static bool Solve()
+        public static bool Solve(ASolver.Mode mode)
         {
-            ASolver.Mode mode = ASolver.Mode.ReverseSearch;
-            //ASolver.Mode mode = ASolver.Mode.ASearch;
-            //ASolver.Mode mode = ASolver.Mode.BiDiSearch;
-
             DateTime startTime = DateTime.Now;
             bool successful = true;
 

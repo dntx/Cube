@@ -4,12 +4,8 @@ namespace Cube.Sq1List16Cube
 {
     class Solver
     {
-        public static bool Solve()
+        public static bool Solve(ASolver.Mode mode)
         {
-            //ASolver.Mode mode = ASolver.Mode.ReverseSearch;
-            ASolver.Mode mode = ASolver.Mode.ASearch;
-            //ASolver.Mode mode = ASolver.Mode.BiDiSearch;
-
             DateTime startTime = DateTime.Now;
             bool successful = true;
 
@@ -19,7 +15,7 @@ namespace Cube.Sq1List16Cube
             successful &= DoASolve(Goal.SolveL3Cell2, mode);
             successful &= DoASolve(Goal.SolveL3Cell3, mode);
             successful &= DoASolve(Goal.SolveL3Cell46, mode);
-            successful &= DoASolve(Goal.SolveL3Cell57Then, mode, 1000000);
+            //successful &= DoASolve(Goal.SolveL3Cell57Then, mode, 1000000);
             //successful &= DoASolve(Goal.SolveL3Cell57, mode);
             //successful &= DoASolve(Goal.SolveL3Cell46Then, mode);
 
