@@ -7,7 +7,7 @@ namespace Cube.Sq1List2Cube
         public static bool Solve(ASolver.Mode mode)
         {
             DateTime startTime = DateTime.Now;
-            bool successful = new ASolver(mode).Solve(Cube.UnsolvedList, Cube.Solved);
+            bool successful = new ASolver(mode).Solve(Cube.UnsolvedList, Cube.Solved, targetCube => new Predictor(targetCube));
             Console.WriteLine("total seconds: {0:0.00}, successful: {1}", 
                 DateTime.Now.Subtract(startTime).TotalSeconds,
                 successful);

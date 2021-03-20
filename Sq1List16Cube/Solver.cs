@@ -53,18 +53,20 @@ namespace Cube.Sq1List16Cube
         }
 
         private static bool DoASolve(ASolver solver, Goal goal) {
+            ASolver.CreatePredictor createPredictor = (targetCube => new Predictor(targetCube));
+
             switch (goal)
             {
                 // L1 strategy
                 case Goal.SolveL1Quarter123:
-                    return solver.Solve(Cube.L1Quarter123UnsolvedList, Cube.L1Quarter123Solved);
+                    return solver.Solve(Cube.L1Quarter123UnsolvedList, Cube.L1Quarter123Solved, createPredictor);
 
                 case Goal.SolveL1Quarter4:
-                    return solver.Solve(Cube.L1Quarter4UnsolvedList, Cube.L1Quarter4Solved);
+                    return solver.Solve(Cube.L1Quarter4UnsolvedList, Cube.L1Quarter4Solved, createPredictor);
 
                 // L3 strategy 1
                 case Goal.SolveL3Cross:
-                    return solver.Solve(Cube.L3CrossUnsolvedList, Cube.L3CrossSolved);
+                    return solver.Solve(Cube.L3CrossUnsolvedList, Cube.L3CrossSolved, createPredictor);
 
                 case Goal.SolveL3CornersThen:
                     throw new NotImplementedException();
@@ -78,31 +80,31 @@ namespace Cube.Sq1List16Cube
 
                 // L3 strategy 3
                 case Goal.SolveL3Cell01:
-                    return solver.Solve(Cube.L3Cell01UnsolvedList, Cube.L3Cell01Solved);
+                    return solver.Solve(Cube.L3Cell01UnsolvedList, Cube.L3Cell01Solved, createPredictor);
 
                 case Goal.SolveL3Cell2:
-                    return solver.Solve(Cube.L3Cell012UnsolvedList, Cube.L3Cell012Solved);
+                    return solver.Solve(Cube.L3Cell012UnsolvedList, Cube.L3Cell012Solved, createPredictor);
 
                 case Goal.SolveL3Cell3:
-                    return solver.Solve(Cube.L3Cell0123UnsolvedList, Cube.L3Cell0123Solved);
+                    return solver.Solve(Cube.L3Cell0123UnsolvedList, Cube.L3Cell0123Solved, createPredictor);
 
                 // L3 strategy 3.1
                 case Goal.SolveL3Cell46:
-                    return solver.Solve(Cube.L3Cell012364, Cube.L3Cell012346);
+                    return solver.Solve(Cube.L3Cell012364, Cube.L3Cell012346, createPredictor);
 
                 case Goal.SolveL3Cell57Then:
-                    return solver.Solve(Cube.L3Cell01234765, Cube.Solved);
+                    return solver.Solve(Cube.L3Cell01234765, Cube.Solved, createPredictor);
 
                 // L3 strategy 3.2
                 case Goal.SolveL3Cell57:
-                    return solver.Solve(Cube.L3Cell012375, Cube.L3Cell012357);
+                    return solver.Solve(Cube.L3Cell012375, Cube.L3Cell012357, createPredictor);
 
                 case Goal.SolveL3Cell46Then:
-                    return solver.Solve(Cube.L3Cell01236547, Cube.Solved);
+                    return solver.Solve(Cube.L3Cell01236547, Cube.Solved, createPredictor);
 
                 // scratch
                 case Goal.Scratch:
-                    return solver.Solve(Cube.Solved, Cube.L1L3Cell08Swapped);
+                    return solver.Solve(Cube.Solved, Cube.L1L3Cell08Swapped, createPredictor);
             }
             return false;
         }

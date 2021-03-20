@@ -69,35 +69,6 @@ namespace Cube.Sq1List16Cube
             return string.Format("{0,9},{1,-9}", Up, Down);
         }
 
-        public int PredictCost(ICube iTargetCube) {
-            return PredictCostByBigrams(this, iTargetCube as Cube);
-        }
-
-        private static int PredictCostByBigrams(Cube cube, Cube targetCube) {
-            List<uint> currentBigrams = BreakCubeToBigrams(cube);
-            List<uint> targetBigrams = BreakCubeToBigrams(targetCube);
-            for (int i = 0; i < currentBigrams.Count; i++) {
-                for (int j = 0; j < targetBigrams.Count; j++) {
-                    if (targetBigrams[j] == currentBigrams[i]) {
-                        targetBigrams.RemoveAt(j);
-                        break;                        
-                    }
-                }
-            }
-            return (targetBigrams.Count + 3) / 4;
-        }
-
-        private static List<uint> BreakCubeToBigrams(Cube cube) {
-            List<uint> bigrams = new List<uint>();
-            for (int i = 0; i < cube.Up.Count; i++) {
-                bigrams.Add(Cells.GetCode(cube.Up[i], cube.Up[(i+1) % cube.Up.Count]));
-            }
-            for (int i = 0; i < cube.Down.Count; i++) {
-                bigrams.Add(Cells.GetCode(cube.Down[i], cube.Down[(i+1) % cube.Down.Count]));
-            }
-            return bigrams;
-        }
- 
         public static Cube Solved = new Cube(Layer.YellowL3, Layer.WhiteL1);
 
         // cubes that L1 need solved first

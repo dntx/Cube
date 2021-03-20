@@ -23,21 +23,23 @@ namespace Cube
             this.maxStateCount = maxStateCount;
         }
 
-        public bool Solve(ICube startCube, ICube targetCube) {
+        public delegate IPredictor CreatePredictor(ICube targetCube);
+
+        public bool Solve(ICube startCube, ICube targetCube, CreatePredictor createPredictor) {
             switch (mode) {
                 case Mode.ReverseBfSearch:
                     return ReverseBfSearch(targetCube, new HashSet<ICube>{startCube});
                 case Mode.ASearch:
-                    return ASearch(startCube, targetCube);
+                    return ASearch(startCube, targetCube, createPredictor);
                 case Mode.BidiBfSearch:
                 case Mode.BidiASearch:
-                    return BidiSearch(startCube, targetCube);
+                    return BidiSearch(startCube, targetCube, createPredictor);
             }
 
             throw new Exception(string.Format("Mode {0} is not recognized", mode));
         }
 
-        public bool Solve(ICollection<ICube> startCubes, ICube targetCube) {
+        public bool Solve(ICollection<ICube> startCubes, ICube targetCube, CreatePredictor createPredictor) {
             if (mode == Mode.ReverseBfSearch) {
                 return ReverseBfSearch(targetCube, startCubes);
             } else {
@@ -49,7 +51,7 @@ namespace Cube
                 foreach (ICube startCube in startCubes) {
                     searchedCount++;
                     Console.WriteLine("searching solution for \"{0}\": {1}/{2} ...", targetCube, searchedCount, startCubes.Count);
-                    bool successful = Solve(startCube, targetCube);
+                    bool successful = Solve(startCube, targetCube, createPredictor);
                     if (successful) {
                         solvedCount++;
                     }
@@ -151,7 +153,7 @@ namespace Cube
             return true;
         }
 
-        private bool ASearch(ICube startCube, ICube targetCube) {
+        private bool ASearch(ICube startCube, ICube targetCube, CreatePredictor createPredictor) {
             DateTime startTime = DateTime.Now;
 
             int reopenStateCount = 0;
@@ -164,6 +166,7 @@ namespace Cube
             AState startState = new AState(startCube, seenCubeStates.Count);
             openStates.Add(startState);
             seenCubeStates.Add(startCube, startState);
+            IPredictor predictor = createPredictor(targetCube);
             AState targetState = null;
 
             bool completed = false;
@@ -197,8 +200,8 @@ namespace Cube
                         }
                     } else {
                         // new cube
-                        int predictedCost = nextCube.PredictCost(targetCube);
                         int nextCubeId = seenCubeStates.Count;
+                        int predictedCost = predictor.PredictCost(nextCube);
                         AState nextState = new AState(nextCube, nextCubeId, predictedCost, state, rotation);
                         netEdgeCount++;
 
@@ -247,7 +250,7 @@ namespace Cube
             return true;
         }
 
-        private bool BidiSearch(ICube startCube, ICube targetCube) {
+        private bool BidiSearch(ICube startCube, ICube targetCube, CreatePredictor createPredictor) {
             DateTime startTime = DateTime.Now;
 
             int startStateCount = 0;
@@ -264,12 +267,14 @@ namespace Cube
             openStates.Add(startState);
             seenCubeStates.Add(startCube, startState);
             startStateCount++;
+            IPredictor forwardPredictor = createPredictor(targetCube);
 
             // set target state
             AState targetState = new AState(targetCube, targetCube, seenCubeStates.Count);
             openStates.Add(targetState);
             seenCubeStates.Add(targetCube, targetState);
             targetStateCount++;
+            IPredictor backwardPredictor = createPredictor(startCube);
 
             // solution for Bidi Search
             AState midStateFromStart = null;
@@ -332,8 +337,15 @@ namespace Cube
                         }
                     } else {
                         // new cube
-                        int predictedCost = (mode == Mode.BidiBfSearch)? 0 : nextCube.PredictCost(targetCube);
                         int nextCubeId = seenCubeStates.Count;
+                        int predictedCost = 0;
+                        if (mode == Mode.BidiASearch) {
+                            if (state.StartCube == startCube) {
+                                predictedCost = forwardPredictor.PredictCost(nextCube);
+                            } else {
+                                predictedCost = backwardPredictor.PredictCost(nextCube);
+                            }
+                        }
                         AState nextState = new AState(state.StartCube, nextCube, nextCubeId, predictedCost, state, rotation);
                         netEdgeCount++;
 

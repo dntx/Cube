@@ -6,7 +6,5 @@ namespace Cube
         ICollection<IRotation> GetRotations();
 
         ICube RotateBy(IRotation rotation);
-
-        int PredictCost(ICube targetCube);
     }
 }

@@ -67,10 +67,6 @@ namespace Cube.Sq1List2Cube
             return string.Format("{0,9},{1,-9}", Up, Down);
         }
 
-        public int PredictCost(ICube iTargetCube) {
-            return 0;
-        }
-
         public static Cube Solved = new Cube(Layer.Squre, Layer.Squre);
         public static ISet<ICube> UnsolvedList = new HashSet<ICube> {
             new Cube(new Layer(60, 60, 30, 30, 30, 30, 30, 30, 30, 30), Layer.Hexagram),

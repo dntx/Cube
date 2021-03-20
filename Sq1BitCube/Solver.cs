@@ -35,13 +35,15 @@ namespace Cube.Sq1BitCube
         }
 
         private static bool DoASolve(ASolver solver, Goal goal) {
+            ASolver.CreatePredictor createPredictor = (targetCube => new Predictor(targetCube));
+
             switch (goal)
             {
                 case Goal.SwapCell46:
-                    return solver.Solve(Cube.Cell46Swapped, Cube.Solved);
+                    return solver.Solve(Cube.Cell46Swapped, Cube.Solved, createPredictor);
 
                 case Goal.SwapCell57:
-                    return solver.Solve(Cube.Cell57Swapped, Cube.Solved);
+                    return solver.Solve(Cube.Cell57Swapped, Cube.Solved, createPredictor);
             }
             return false;
         }
