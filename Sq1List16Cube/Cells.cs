@@ -10,10 +10,8 @@ namespace Cube.Sq1List16Cube
             Code = GetCode(this);
         }
         
-        public static uint GetCode(uint cell1, uint cell2) {
-            return (cell1 << 4) | cell2;
-        }
-
+        public Cells(params uint[] cells) : this(cells as IEnumerable<uint>) {}
+        
         protected static uint GetCode(IEnumerable<uint> cells) {
             uint code = 0;
             foreach (uint cell in cells) {

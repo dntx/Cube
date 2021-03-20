@@ -1,39 +1,52 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Cube.Sq1List16Cube
 {
     class Predictor : IPredictor {
-        List<uint> TargetQuarters { get; }
+        Dictionary<Cells, int> TargetQuarters { get; }
 
-        public Predictor(ICube targetCube) {
-            TargetQuarters = BreakCubeToQuarters(targetCube as Cube);
+        public Predictor(ICube iTargetCube) {
+            Cube targetCube = iTargetCube as Cube;
+            var upQuarters = BreakLayerToQuarters(targetCube.Up);
+            var downQuarters = BreakLayerToQuarters(targetCube.Down);
+
+            // note: peformance of this linq option maybe a little slow
+            // it should be acceptable as it will only be called once
+            TargetQuarters = upQuarters.Concat(downQuarters).GroupBy(pair => pair.Key)
+                    .ToDictionary(pair => pair.Key, pair => pair.Sum(pair => pair.Value));
         }
         
-        public int PredictCost(ICube cube) {
-            // note: the quarter list may contain redundant elements
-            List<uint> quarters = BreakCubeToQuarters(cube as Cube);
-            List<uint> targetQuarters = new List<uint>(TargetQuarters);
-            for (int i = quarters.Count - 1; i >= 0; i--) {
-                for (int j = 0; j < targetQuarters.Count; j++) {
-                    if (quarters[i] == targetQuarters[j]) {
-                        quarters.RemoveAt(i);
-                        targetQuarters.RemoveAt(j);
-                        break;                        
-                    }
-                }
-            }
-            return (quarters.Count + 3) / 4;
+        public int PredictCost(ICube iCube) {
+            Cube cube = iCube as Cube;
+            int unsolvedUpQuarterCount = GetLayerUnsolvedQuarterCount(cube.Up);
+            int unsolvedDownQuarterCount = GetLayerUnsolvedQuarterCount(cube.Down);
+            return (unsolvedUpQuarterCount + unsolvedDownQuarterCount + 3) / 4;
         }
 
-        private static List<uint> BreakCubeToQuarters(Cube cube) {
-            List<uint> Quarters = new List<uint>();
-            for (int i = 0; i < cube.Up.Count; i++) {
-                Quarters.Add(Cells.GetCode(cube.Up[i], cube.Up[(i+1) % cube.Up.Count]));
+        private int GetLayerUnsolvedQuarterCount(Layer layer) {
+            var quarters = BreakLayerToQuarters(layer);
+            foreach (var quarter in quarters.Keys) {
+                if (TargetQuarters.ContainsKey(quarter)) {
+                    int unsolvedCount = Math.Max(0, quarters[quarter] - TargetQuarters[quarter]);
+                    quarters[quarter] = unsolvedCount;
+                }
             }
-            for (int i = 0; i < cube.Down.Count; i++) {
-                Quarters.Add(Cells.GetCode(cube.Down[i], cube.Down[(i+1) % cube.Down.Count]));
-            }
-            return Quarters;
+            return quarters.Sum(pair => pair.Value);
         }
-    }
+
+        private static Dictionary<Cells, int> BreakLayerToQuarters(Layer layer) {
+            Dictionary<Cells, int> quarters = new Dictionary<Cells, int>();
+            for (int i = 0; i < 8; i++) {
+                Cells quarter = new Cells(layer[i], layer[(i + 1) % 8]);
+                if (!quarters.ContainsKey(quarter)) {
+                    quarters.Add(quarter, 1);
+                } else {
+                    quarters[quarter]++;
+                }
+            }
+            return quarters;
+        }
+      }
 }
