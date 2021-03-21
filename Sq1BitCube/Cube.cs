@@ -67,5 +67,7 @@ namespace Cube.Sq1BitCube
         public static Cube Solved = new Cube(new Layer(0, 1, 2, 3, 4, 5, 6, 7), Layer.WhiteL1);
         public static Cube Cell46Swapped = new Cube(new Layer(0, 1, 2, 3, 6, 5, 4, 7), Layer.WhiteL1);
         public static Cube Cell57Swapped = new Cube(new Layer(0, 1, 2, 3, 4, 7, 6, 5), Layer.WhiteL1);
+
+        public static Cube CellDepth6 = new Cube(new Layer(0, 5, 0x8, 7, 6, 0xB, 2, 0xD), new Layer(4, 0x9, 0xA, 0xF, 0xE, 1, 0xC, 3));
     }
 }

@@ -13,10 +13,13 @@ namespace Cube {
         public bool IsClosed { get; set; }
 
         public AState(ICube cube, int cubeId) 
-                : this(startCube:null, cube, cubeId) {}
+                : this(cube, cubeId, predictedCost:0) {}
 
-        public AState(ICube startCube, ICube cube, int cubeId) 
-                : this(startCube, cube, cubeId, predictedCost:0, fromState:null, fromRotation:null) {}
+        public AState(ICube cube, int cubeId, int predictedCost) 
+                : this(startCube:null, cube, cubeId, predictedCost) {}
+
+        public AState(ICube startCube, ICube cube, int cubeId, int predictedCost) 
+                : this(startCube, cube, cubeId, predictedCost, fromState:null, fromRotation:null) {}
 
         public AState(ICube cube, int cubeId, int predictedCost, AState fromState, IRotation fromRotation) 
                 : this(startCube:null, cube, cubeId, predictedCost, fromState, fromRotation) {}

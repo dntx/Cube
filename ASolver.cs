@@ -6,8 +6,9 @@ namespace Cube
 {
     class ASolver {
         public enum Mode {
+            BfSearch,
             ASearch,
-            ReverseBfSearch,
+            BackwardBfSearch,
             BidiBfSearch,
             BidiASearch
         }
@@ -27,10 +28,11 @@ namespace Cube
 
         public bool Solve(ICube startCube, ICube targetCube, CreatePredictor createPredictor) {
             switch (mode) {
-                case Mode.ReverseBfSearch:
-                    return ReverseBfSearch(targetCube, new HashSet<ICube>{startCube});
+                case Mode.BackwardBfSearch:
+                    return BackwardBfSearch(targetCube, new HashSet<ICube>{startCube});
+                case Mode.BfSearch:
                 case Mode.ASearch:
-                    return ASearch(startCube, targetCube, createPredictor);
+                    return ForwardSearch(startCube, targetCube, createPredictor);
                 case Mode.BidiBfSearch:
                 case Mode.BidiASearch:
                     return BidiSearch(startCube, targetCube, createPredictor);
@@ -40,8 +42,8 @@ namespace Cube
         }
 
         public bool Solve(ICollection<ICube> startCubes, ICube targetCube, CreatePredictor createPredictor) {
-            if (mode == Mode.ReverseBfSearch) {
-                return ReverseBfSearch(targetCube, startCubes);
+            if (mode == Mode.BackwardBfSearch) {
+                return BackwardBfSearch(targetCube, startCubes);
             } else {
                 DateTime startTime = DateTime.Now;
                 Console.WriteLine("total request for \"{0}\": {1}", targetCube, startCubes.Count);
@@ -70,7 +72,7 @@ namespace Cube
             }
         }
 
-        private bool ReverseBfSearch(ICube startCube, ICollection<ICube> targetCubes) {
+        private bool BackwardBfSearch(ICube startCube, ICollection<ICube> targetCubes) {
             DateTime startTime = DateTime.Now;
 
             int closedStateCount = 0;
@@ -145,7 +147,7 @@ namespace Cube
             targetStates.Values.ToList().ForEach(targetState => {
                 Console.WriteLine("start cube: {0}", targetState.Cube);
                 Console.WriteLine("solution depth：{0}", targetState.Depth);
-                OutputReversedSolution(startState, targetState);
+                OutputSolutionBackward(startState, targetState);
             });
             Console.WriteLine();
             Console.WriteLine("cubes: {0}, solutions: {1}, closed: {2}, open: {3}", seenCubeStates.Count, targetStates.Count, closedStateCount, openStates.Count);
@@ -153,7 +155,7 @@ namespace Cube
             return true;
         }
 
-        private bool ASearch(ICube startCube, ICube targetCube, CreatePredictor createPredictor) {
+        private bool ForwardSearch(ICube startCube, ICube targetCube, CreatePredictor createPredictor) {
             DateTime startTime = DateTime.Now;
 
             int reopenStateCount = 0;
@@ -161,13 +163,15 @@ namespace Cube
             int totalEdgeCount = 0;
             int netEdgeCount = 0;
 
-            SortedSet<AState> openStates = new SortedSet<AState>();
-            Dictionary<ICube, AState> seenCubeStates = new Dictionary<ICube, AState>();
-            AState startState = new AState(startCube, seenCubeStates.Count);
-            openStates.Add(startState);
-            seenCubeStates.Add(startCube, startState);
             IPredictor predictor = createPredictor(targetCube);
             AState targetState = null;
+
+            SortedSet<AState> openStates = new SortedSet<AState>();
+            Dictionary<ICube, AState> seenCubeStates = new Dictionary<ICube, AState>();
+            int forwardCost = (mode == Mode.BfSearch)? 0 : predictor.PredictCost(startCube);
+            AState startState = new AState(startCube, seenCubeStates.Count, forwardCost);
+            openStates.Add(startState);
+            seenCubeStates.Add(startCube, startState);
 
             bool completed = false;
             bool needStop = false;
@@ -201,7 +205,7 @@ namespace Cube
                     } else {
                         // new cube
                         int nextCubeId = seenCubeStates.Count;
-                        int predictedCost = predictor.PredictCost(nextCube);
+                        int predictedCost = (mode == Mode.BfSearch)? 0 : predictor.PredictCost(nextCube);
                         AState nextState = new AState(nextCube, nextCubeId, predictedCost, state, rotation);
                         netEdgeCount++;
 
@@ -261,20 +265,22 @@ namespace Cube
             int netEdgeCount = 0;
 
             // set start state
+            IPredictor forwardPredictor = createPredictor(targetCube);
             SortedSet<AState> openStates = new SortedSet<AState>();
             Dictionary<ICube, AState> seenCubeStates = new Dictionary<ICube, AState>();
-            AState startState = new AState(startCube, startCube, seenCubeStates.Count);
+            int forwardCost = (mode == Mode.BidiBfSearch)? 0 : forwardPredictor.PredictCost(startCube);
+            AState startState = new AState(startCube, startCube, seenCubeStates.Count, forwardCost);
             openStates.Add(startState);
             seenCubeStates.Add(startCube, startState);
             startStateCount++;
-            IPredictor forwardPredictor = createPredictor(targetCube);
 
             // set target state
-            AState targetState = new AState(targetCube, targetCube, seenCubeStates.Count);
+            IPredictor backwardPredictor = createPredictor(startCube);
+            int backwardCost = (mode == Mode.BidiBfSearch)? 0 : backwardPredictor.PredictCost(startCube);
+            AState targetState = new AState(targetCube, targetCube, seenCubeStates.Count, backwardCost);
             openStates.Add(targetState);
             seenCubeStates.Add(targetCube, targetState);
             targetStateCount++;
-            IPredictor backwardPredictor = createPredictor(startCube);
 
             // solution for Bidi Search
             AState midStateFromStart = null;
@@ -314,7 +320,14 @@ namespace Cube
                         } else {
                             // meet from two different ways !!!
                             int nextCubeId = existingState.CubeId;
-                            int predictedCost = existingState.Depth;
+                            int predictedCost = 0;
+                            if (mode == Mode.BidiASearch) {
+                                if (state.StartCube == startCube) {
+                                    predictedCost = forwardPredictor.PredictCost(nextCube);
+                                } else {
+                                    predictedCost = backwardPredictor.PredictCost(nextCube);
+                                }
+                            }
                             AState nextState = new AState(state.StartCube, nextCube, nextCubeId, predictedCost, state, rotation);
                             netEdgeCount++;
 
@@ -389,7 +402,7 @@ namespace Cube
             Console.WriteLine("start cube: {0}", startState.Cube);
             Console.WriteLine("solution depth：{0}", midStateFromStart.Depth + midStateFromTarget.Depth);
             OutputSolution(startState, midStateFromStart, outputTargetCube:false);
-            OutputReversedSolution(targetState, midStateFromTarget);
+            OutputSolutionBackward(targetState, midStateFromTarget);
             Console.WriteLine();
             Console.WriteLine("cubes: {0}, closed: {1}, open: {2}", seenCubeStates.Count, closedStateCount, openStates.Count);
             Console.WriteLine("edges: {0}, net: {1}", totalEdgeCount, netEdgeCount);
@@ -405,22 +418,26 @@ namespace Cube
             while (solutionPath.Count > 0) {
                 AState state = solutionPath.Pop();
                 Console.WriteLine(
-                    " ==> {0} | {1}", 
+                    " ==> {0} | g:{1} | h:{2} | No.{3}", 
                     state.FromRotation,
+                    state.FromState.Depth,
+                    state.FromState.PredictedCost,
                     state.FromState.CubeId
                     );
             }
             if (outputTargetCube) {
                 Console.WriteLine(
-                    " ==> {0} | {1}", 
+                    " ==> {0} | g:{1} | h:{2} | No.{3}", 
                     targetState.Cube,
+                    targetState.Depth,
+                    targetState.PredictedCost,
                     targetState.CubeId
                     );
                 Console.WriteLine();
             }
         }
 
-        private void OutputReversedSolution(AState startState, AState targetState) {
+        private void OutputSolutionBackward(AState startState, AState targetState) {
             AState state = targetState;
             do {
                 AState fromState = state.FromState;
@@ -429,15 +446,19 @@ namespace Cube
                 // todo: consider up/down reverse situation if necessary
                 // todo: consider change case 301-0101 to 0101-301
                 Console.WriteLine(
-                    " ==> {0} | {1}", 
+                    " ==> {0} | g:{1} | h:{2} | No.{3}", 
                     fromRotation.GetReversedRotation(),
+                    state.Depth,
+                    state.PredictedCost,
                     state.CubeId
                     );
                 state = fromState;
             } while (state.FromRotation != null);
             Console.WriteLine(
-                " ==> {0} | {1}", 
+                " ==> {0} | g:{1} | h:{2} | No.{3}", 
                 startState.Cube,
+                startState.Depth,
+                startState.PredictedCost,
                 startState.CubeId
                 );
             Console.WriteLine();

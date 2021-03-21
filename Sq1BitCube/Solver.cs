@@ -9,8 +9,9 @@ namespace Cube.Sq1BitCube
             DateTime startTime = DateTime.Now;
             bool successful = true;
 
-            successful &= DoASolve(Goal.SwapCell46, mode);
-            //successful &= DoASolve(Goal.SwapCell57, mode);
+            successful &= DoASolve(Cube.CellDepth6, mode);
+            //successful &= DoASolve(Cube.Cell46Swapped, mode);
+            //successful &= DoASolve(Cube.Cell57Swapped, mode);
 
             Console.WriteLine("total seconds: {0:0.00}, successful: {1}", 
                 DateTime.Now.Subtract(startTime).TotalSeconds,
@@ -19,33 +20,21 @@ namespace Cube.Sq1BitCube
             return successful;
         }
 
-        private static bool DoASolve(Goal goal, ASolver.Mode mode) {
-            return DoASolve(goal, mode, int.MaxValue);
+        private static bool DoASolve(Cube cube, ASolver.Mode mode) {
+            return DoASolve(cube, mode, int.MaxValue);
         }
 
-        private static bool DoASolve(Goal goal, ASolver.Mode mode, int maxStateCount) {
-            Console.WriteLine("start {0} ...", goal);
+        private static bool DoASolve(Cube cube, ASolver.Mode mode, int maxStateCount) {
+            Console.WriteLine("start solving {0} ...", cube);
             
-            bool successful = DoASolve(new ASolver(mode, maxStateCount), goal);
+            ASolver.CreatePredictor createPredictor = (targetCube => new Predictor(targetCube));
+            ASolver solver = new ASolver(mode, maxStateCount);
+            bool successful = solver.Solve(cube, Cube.Solved, createPredictor);
 
-            Console.WriteLine("end {0}, successful: {1}", goal, successful);
+            Console.WriteLine("end solving {0}, successful: {1}", cube, successful);
             Console.WriteLine("############################################");
             Console.WriteLine();
             return successful;
-        }
-
-        private static bool DoASolve(ASolver solver, Goal goal) {
-            ASolver.CreatePredictor createPredictor = (targetCube => new Predictor(targetCube));
-
-            switch (goal)
-            {
-                case Goal.SwapCell46:
-                    return solver.Solve(Cube.Cell46Swapped, Cube.Solved, createPredictor);
-
-                case Goal.SwapCell57:
-                    return solver.Solve(Cube.Cell57Swapped, Cube.Solved, createPredictor);
-            }
-            return false;
         }
     }
 }
