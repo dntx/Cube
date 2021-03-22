@@ -14,6 +14,15 @@ namespace Cube.Sq1BitCube
         public override string ToString() {
             return string.Format("{0}-{1}", UpRightStart, DownRightStart);
         }
+
+        public string ToString(ICube baseCube) {
+            Cube cube = baseCube as Cube;
+            uint upCode = Layer.RotateLeft(cube.Up.Code, UpRightStart);
+            uint downCode = Layer.RotateLeft(cube.Down.Code, DownRightStart);
+
+            return string.Format("{0},{1}", Layer.CodeToString(upCode), Layer.CodeToString(downCode));
+        }
+
         public IRotation GetReversedRotation() {
             return this;
         }

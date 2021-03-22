@@ -11,7 +11,7 @@ namespace Cube
             //successful &= Sq1List16Cube.Solver.SolveEasy(ASolver.Mode.BidiBfSearch);
             //successful &= Sq1List16Cube.Solver.SolveEasy(ASolver.Mode.BidiASearch); // solutions may not optimal
             //successful &= Sq1List16Cube.Solver.SolveHard(ASolver.Mode.BidiASearch);
-            successful &= Sq1BitCube.Solver.Solve(ASolver.Mode.BidiASearch);
+            successful &= Sq1BitCube.Solver.Solve(ASolver.Mode.BidiBfSearch);
             Console.WriteLine("overall successful: {0}", successful);
             Console.WriteLine();
         }

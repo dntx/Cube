@@ -12,6 +12,11 @@ namespace Cube.Sq1List16Cube
         public override string ToString() {
             return string.Format("{0},{1}", Up, Down);
         }
+
+        public string ToString(ICube baseCube) {
+            return ToString();
+        }
+
         public IRotation GetReversedRotation() {
             Division reversedUp = new Division(Up.Left, Down.Right);
             Division reversedDown = new Division(Down.Left, Up.Right);

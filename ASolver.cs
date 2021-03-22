@@ -419,7 +419,7 @@ namespace Cube
                 AState state = solutionPath.Pop();
                 Console.WriteLine(
                     " ==> {0} | g:{1} | h:{2} | No.{3}", 
-                    state.FromRotation,
+                    state.FromRotation.ToString(state.FromState.Cube),
                     state.FromState.Depth,
                     state.FromState.PredictedCost,
                     state.FromState.CubeId
@@ -447,7 +447,7 @@ namespace Cube
                 // todo: consider change case 301-0101 to 0101-301
                 Console.WriteLine(
                     " ==> {0} | g:{1} | h:{2} | No.{3}", 
-                    fromRotation.GetReversedRotation(),
+                    fromRotation.GetReversedRotation().ToString(fromState.Cube),
                     state.Depth,
                     state.PredictedCost,
                     state.CubeId

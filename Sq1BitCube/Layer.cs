@@ -7,8 +7,8 @@ namespace Cube.Sq1BitCube
     class Layer {
         public uint Code { get; }
 
-        public Layer(uint rawCode) {
-            Code = GetMinPermutedCode(rawCode);
+        public Layer(uint code) {
+            Code = GetMinPermutedCode(code);
         }
 
         public Layer(params uint[] cells) : this(GetCode(cells)) {}
@@ -45,8 +45,11 @@ namespace Cube.Sq1BitCube
         }
 
         public override string ToString() {
+            return CodeToString(Code);
+        }
+
+        public static string CodeToString(uint code) {
             StringBuilder sb = new StringBuilder();
-            uint code = Code;
             for (int i = 0; i < 8; i++) {
                 if (i == 4) {
                     sb.Insert(0, "-");
