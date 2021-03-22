@@ -3,24 +3,25 @@ using System.Collections.Generic;
 namespace Cube.Sq1BitCube
 {
     class Rotation : IRotation {
-        public int UpRightStart { get; }
-        public int DownRightStart { get; }
+        public int UpLeftStart { get; }
+        public int DownLeftStart { get; }
 
-        public Rotation(int upRightStart, int downRightStart) {
-            UpRightStart = upRightStart;
-            DownRightStart = downRightStart;
+        public Rotation(int upLeftStart, int downLeftStart) {
+            UpLeftStart = upLeftStart;
+            DownLeftStart = downLeftStart;
         }
 
         public override string ToString() {
-            return string.Format("{0}-{1}", UpRightStart, DownRightStart);
+            return string.Format("{0}-{1}", UpLeftStart, DownLeftStart);
         }
 
         public string ToString(ICube baseCube) {
             Cube cube = baseCube as Cube;
-            uint upCode = Layer.RotateLeft(cube.Up.Code, UpRightStart);
-            uint downCode = Layer.RotateLeft(cube.Down.Code, DownRightStart);
 
-            return string.Format("{0},{1}", Layer.CodeToString(upCode), Layer.CodeToString(downCode));
+            Cells up = cube.Up.RotateLeft(UpLeftStart);
+            Cells down = cube.Down.RotateLeft(DownLeftStart);
+
+            return string.Format("{0},{1}", up, down);
         }
 
         public IRotation GetReversedRotation() {

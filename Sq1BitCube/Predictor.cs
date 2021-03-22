@@ -40,7 +40,7 @@ namespace Cube.Sq1BitCube
             int solvedCount = 0;
             uint code = layer.Code;
             if (startDegree == 30) {
-                code = Layer.RotateLeft(code, 1);
+                code = Cells.RotateCodeLeft(code, 1);
             }
  
             for (int i = 0; i < 4; i++) {

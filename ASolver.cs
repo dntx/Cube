@@ -418,7 +418,7 @@ namespace Cube
             while (solutionPath.Count > 0) {
                 AState state = solutionPath.Pop();
                 Console.WriteLine(
-                    " ==> {0} | g:{1} | h:{2} | No.{3}", 
+                    " ==> {0} -> | g:{1} | h:{2} | No.{3}", 
                     state.FromRotation.ToString(state.FromState.Cube),
                     state.FromState.Depth,
                     state.FromState.PredictedCost,
@@ -427,7 +427,7 @@ namespace Cube
             }
             if (outputTargetCube) {
                 Console.WriteLine(
-                    " ==> {0} | g:{1} | h:{2} | No.{3}", 
+                    " ==> {0} -> | g:{1} | h:{2} | No.{3}", 
                     targetState.Cube,
                     targetState.Depth,
                     targetState.PredictedCost,
@@ -446,7 +446,7 @@ namespace Cube
                 // todo: consider up/down reverse situation if necessary
                 // todo: consider change case 301-0101 to 0101-301
                 Console.WriteLine(
-                    " ==> {0} | g:{1} | h:{2} | No.{3}", 
+                    " ==> {0} <- | g:{1} | h:{2} | No.{3}", 
                     fromRotation.GetReversedRotation().ToString(fromState.Cube),
                     state.Depth,
                     state.PredictedCost,
@@ -455,7 +455,7 @@ namespace Cube
                 state = fromState;
             } while (state.FromRotation != null);
             Console.WriteLine(
-                " ==> {0} | g:{1} | h:{2} | No.{3}", 
+                " ==> {0} <- | g:{1} | h:{2} | No.{3}", 
                 startState.Cube,
                 startState.Depth,
                 startState.PredictedCost,

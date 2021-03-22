@@ -50,11 +50,11 @@ namespace Cube.Sq1BitCube
         public ICube RotateBy(IRotation iRotation) {
             Rotation rotation = iRotation as Rotation;
             
-            uint upCode = Layer.RotateLeft(Up.Code, rotation.UpRightStart);
-            uint downCode = Layer.RotateLeft(Down.Code, rotation.DownRightStart);
-            
-            uint rotatedUpCode = (downCode & 0xFFFF0000) | (upCode & 0xFFFF);
-            uint rotatedDownCode = (upCode & 0xFFFF0000) | (downCode & 0xFFFF);
+            Cells up = Up.RotateLeft(rotation.UpLeftStart);
+            Cells down = Down.RotateLeft(rotation.DownLeftStart);
+
+            uint rotatedUpCode = (up.Code & 0xFFFF0000) | (down.Code & 0xFFFF);
+            uint rotatedDownCode = (down.Code & 0xFFFF0000) | (up.Code & 0xFFFF);
 
             return new Cube(new Layer(rotatedUpCode), new Layer(rotatedDownCode));
         }
@@ -68,6 +68,7 @@ namespace Cube.Sq1BitCube
         public static Cube Cell46Swapped = new Cube(new Layer(0, 1, 2, 3, 6, 5, 4, 7), Layer.WhiteL1);
         public static Cube Cell57Swapped = new Cube(new Layer(0, 1, 2, 3, 4, 7, 6, 5), Layer.WhiteL1);
 
+        public static Cube CellDepth1 = new Cube(new Layer(0, 1, 2, 3, 0xC, 0xD, 0xE, 0xF), new Layer(0x8, 0x9, 0xA, 0xB, 4, 5, 6, 7));
         public static Cube CellDepth6 = new Cube(new Layer(0, 5, 0x8, 7, 6, 0xB, 2, 0xD), new Layer(4, 0x9, 0xA, 0xF, 0xE, 1, 0xC, 3));
     }
 }

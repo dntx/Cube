@@ -9,6 +9,7 @@ namespace Cube.Sq1BitCube
             DateTime startTime = DateTime.Now;
             bool successful = true;
 
+            //successful &= DoASolve(Cube.CellDepth1, mode);
             successful &= DoASolve(Cube.CellDepth6, mode);
             //successful &= DoASolve(Cube.Cell46Swapped, mode);
             //successful &= DoASolve(Cube.Cell57Swapped, mode);
