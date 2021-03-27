@@ -20,15 +20,24 @@ namespace Cube.Sq1BitCube
             return code;
         }
 
-        public override string ToString() {
+        public IList<uint> ToList() {
+            uint[] cells = new uint[8];
             uint code = Code;
+            for (int i = 0; i < 8; i++) {
+                cells[7-i] = code & 0xF;
+                code >>= 4;
+            }
+            return cells;
+        }
+
+        public override string ToString() {
+            var cells = ToList();
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < 8; i++) {
                 if (i == 4) {
-                    sb.Insert(0, "-");
+                    sb.Append("-");
                 }
-                sb.Insert(0, string.Format("{0:X}", code & 0xF));
-                code >>= 4;
+                sb.AppendFormat("{0:X}", cells[i]);
             }
             return sb.ToString();
         }
@@ -63,6 +72,20 @@ namespace Cube.Sq1BitCube
 
         public Cells RotateRight(int shift) {
             return new Cells(RotateCodeRight(Code, shift));
+        }
+
+        public Cells PermuteBy(Permutation permutation) {
+            uint mask = 0xF0000000;
+            uint code = Code;
+            for (int shift = 7; shift >= 0; shift--) {
+                uint cell = (code & mask) >> (4 * shift);
+                if (permutation.Map.ContainsKey(cell)) {
+                    uint newCell = permutation.Map[cell];
+                    code ^= (cell ^ newCell) << (4 * shift);
+                }
+                mask >>= 4;
+            }
+            return new Cells(code);
         }
 
         public static bool operator == (Cells lhs, Cells rhs) {

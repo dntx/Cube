@@ -24,7 +24,7 @@ namespace Cube.Sq1BitCube
             return string.Format("{0},{1}", up, down);
         }
 
-        public IRotation GetReversedRotation() {
+        public IRotation GetInverseRotation() {
             return this;
         }
 

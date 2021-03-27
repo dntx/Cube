@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -62,6 +63,13 @@ namespace Cube.Sq1List16Cube
             Layer down = new Layer(rotation.Down.Left.Concat(rotation.Up.Right));
 
             return new Cube(up, down);
+        }
+
+        public ICube PermuteBy(IPermutation permutation) {
+            if (permutation == null) {
+                return this;
+            }
+            throw new NotSupportedException();
         }
 
         public override string ToString()

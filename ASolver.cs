@@ -10,7 +10,9 @@ namespace Cube
             ASearch,
             BackwardBfSearch,
             BidiBfSearch,
-            BidiASearch
+            BidiASearch,
+            PermuteBfSearch,
+            PermuteASearch
         }
 
         private Mode mode;
@@ -32,10 +34,13 @@ namespace Cube
                     return BackwardBfSearch(targetCube, new HashSet<ICube>{startCube});
                 case Mode.BfSearch:
                 case Mode.ASearch:
-                    return ForwardSearch(startCube, targetCube, createPredictor);
+                    return ForwardSearch(startCube, targetCube, createPredictor, (mode == Mode.BfSearch));
+                case Mode.PermuteBfSearch:
+                case Mode.PermuteASearch:
+                    return PermuteSearch(startCube, targetCube, createPredictor, (mode == Mode.PermuteBfSearch));
                 case Mode.BidiBfSearch:
                 case Mode.BidiASearch:
-                    return BidiSearch(startCube, targetCube, createPredictor);
+                    return BidiSearch(startCube, targetCube, createPredictor, (mode == Mode.BidiBfSearch));
             }
 
             throw new Exception(string.Format("Mode {0} is not recognized", mode));
@@ -147,7 +152,7 @@ namespace Cube
             targetStates.Values.ToList().ForEach(targetState => {
                 Console.WriteLine("start cube: {0}", targetState.Cube);
                 Console.WriteLine("solution depth：{0}", targetState.Depth);
-                OutputSolutionBackward(startState, targetState);
+                OutputSolutionBackward(targetState);
             });
             Console.WriteLine();
             Console.WriteLine("cubes: {0}, solutions: {1}, closed: {2}, open: {3}", seenCubeStates.Count, targetStates.Count, closedStateCount, openStates.Count);
@@ -155,7 +160,7 @@ namespace Cube
             return true;
         }
 
-        private bool ForwardSearch(ICube startCube, ICube targetCube, CreatePredictor createPredictor) {
+        private bool ForwardSearch(ICube startCube, ICube targetCube, CreatePredictor createPredictor, bool isBfSearch) {
             DateTime startTime = DateTime.Now;
 
             int reopenStateCount = 0;
@@ -205,7 +210,7 @@ namespace Cube
                     } else {
                         // new cube
                         int nextCubeId = seenCubeStates.Count;
-                        int predictedCost = (mode == Mode.BfSearch)? 0 : predictor.PredictCost(nextCube);
+                        int predictedCost = isBfSearch? 0 : predictor.PredictCost(nextCube);
                         AState nextState = new AState(nextCube, nextCubeId, predictedCost, state, rotation);
                         netEdgeCount++;
 
@@ -247,14 +252,120 @@ namespace Cube
 
             Console.WriteLine("start cube: {0}", startState.Cube);
             Console.WriteLine("solution depth：{0}", targetState.Depth);
-            OutputSolution(startState, targetState, outputTargetCube:true);
+            OutputSolution(targetState, outputTargetCube:true);
             Console.WriteLine();
             Console.WriteLine("cubes: {0}, closed: {1}, open: {2}", seenCubeStates.Count, closedStateCount, openStates.Count);
             Console.WriteLine("edges: {0}, net: {1}", totalEdgeCount, netEdgeCount);
             return true;
         }
 
-        private bool BidiSearch(ICube startCube, ICube targetCube, CreatePredictor createPredictor) {
+        private bool PermuteSearch(ICube startCube, ICube targetCube, CreatePredictor createPredictor, bool isBfSearch) {
+            DateTime startTime = DateTime.Now;
+
+            int reopenStateCount = 0;
+            int closedStateCount = 0;
+            int totalEdgeCount = 0;
+            int netEdgeCount = 0;
+
+            IPredictor predictor = createPredictor(targetCube);
+            IPermutation permutation = predictor.CalcPermutation(startCube);
+
+            SortedSet<AState> openStates = new SortedSet<AState>();
+            Dictionary<ICube, AState> seenCubeStates = new Dictionary<ICube, AState>();
+            int forwardCost = (mode == Mode.BfSearch)? 0 : predictor.PredictCost(startCube);
+            AState startState = new AState(startCube, seenCubeStates.Count, forwardCost);
+            openStates.Add(startState);
+            seenCubeStates.Add(startCube, startState);
+
+            bool completed = false;
+            bool needStop = false;
+            AState midState = null;
+            AState midPermutedState = null;
+            do {
+                AState state = openStates.Min;
+                openStates.Remove(state);
+                state.IsClosed = true;
+
+                ICube cube = state.Cube;
+                ICollection<IRotation> rotations = cube.GetRotations();
+
+                int nextDepth = state.Depth + 1;
+                foreach (IRotation rotation in rotations) {
+                    ICube nextCube = cube.RotateBy(rotation);
+                    totalEdgeCount++;
+                    if (seenCubeStates.ContainsKey(nextCube)) {
+                        // existing cube
+                        AState existingState = seenCubeStates[nextCube];
+                        if (nextDepth < existingState.Depth) {
+                            // a better path found
+                            if (existingState.IsClosed) {
+                                existingState.IsClosed = false;
+                                closedStateCount--;
+                                reopenStateCount++;
+                            } else {
+                                openStates.Remove(existingState);
+                            }
+                            existingState.UpdateFrom(state, rotation);
+                            openStates.Add(existingState);
+                        }
+                    } else {
+                        // new cube
+                        int nextCubeId = seenCubeStates.Count;
+                        int predictedCost = isBfSearch? 0 : predictor.PredictCost(nextCube);
+                        AState nextState = new AState(nextCube, nextCubeId, predictedCost, state, rotation);
+                        netEdgeCount++;
+
+                        openStates.Add(nextState);
+                        seenCubeStates.Add(nextCube, nextState);
+
+                        // check permutation
+                        ICube nextPermutedCube = nextCube.PermuteBy(permutation);
+                        if (seenCubeStates.ContainsKey(nextPermutedCube)) {
+                            // meet from perumuted way !!!
+                            midState = nextState;
+                            midPermutedState = seenCubeStates[nextPermutedCube];
+                            completed = true;
+                            break;
+                        }
+                    }
+                }
+
+                closedStateCount++;
+                needStop = completed || openStates.Count == 0 || (closedStateCount + openStates.Count) >= maxStateCount;
+                if (needStop || closedStateCount % 1000 == 0) {
+                    int totalCount = closedStateCount + openStates.Count;
+                    Console.WriteLine(
+                        "sec: {0:0.00}, {1}, g: {2}, h: {3}, closed: {4}({5:p}), open: {6}({7:p}), reopened: {8}({9:p})", 
+                        DateTime.Now.Subtract(startTime).TotalSeconds,
+                        state.Cube,
+                        state.Depth,
+                        state.PredictedCost, 
+                        closedStateCount, 
+                        (float)closedStateCount / totalCount,
+                        openStates.Count,
+                        (float)openStates.Count / totalCount,
+                        reopenStateCount,
+                        (float)reopenStateCount / openStates.Count
+                        );
+                }
+            } while (!needStop);
+            Console.WriteLine();
+
+            if (!completed) {
+                return false;
+            }
+
+            Console.WriteLine("start cube: {0}", startState.Cube);
+            Console.WriteLine("solution depth：{0}", midState.Depth + midPermutedState.Depth);
+            OutputSolution(midState, outputTargetCube:false);
+            OutputSolutionBackward(midPermutedState, permutation);
+            Console.WriteLine();
+            Console.WriteLine("cubes: {0}, closed: {1}, open: {2}", seenCubeStates.Count, closedStateCount, openStates.Count);
+            Console.WriteLine("edges: {0}, net: {1}", totalEdgeCount, netEdgeCount);
+            return true;
+        }
+
+        private bool BidiSearch(ICube startCube, ICube targetCube, CreatePredictor createPredictor, bool isBfSearch) {
             DateTime startTime = DateTime.Now;
 
             int startStateCount = 0;
@@ -321,7 +432,7 @@ namespace Cube
                             // meet from two different ways !!!
                             int nextCubeId = existingState.CubeId;
                             int predictedCost = 0;
-                            if (mode == Mode.BidiASearch) {
+                            if (!isBfSearch) {
                                 if (state.StartCube == startCube) {
                                     predictedCost = forwardPredictor.PredictCost(nextCube);
                                 } else {
@@ -352,7 +463,7 @@ namespace Cube
                         // new cube
                         int nextCubeId = seenCubeStates.Count;
                         int predictedCost = 0;
-                        if (mode == Mode.BidiASearch) {
+                        if (!isBfSearch) {
                             if (state.StartCube == startCube) {
                                 predictedCost = forwardPredictor.PredictCost(nextCube);
                             } else {
@@ -401,15 +512,15 @@ namespace Cube
 
             Console.WriteLine("start cube: {0}", startState.Cube);
             Console.WriteLine("solution depth：{0}", midStateFromStart.Depth + midStateFromTarget.Depth);
-            OutputSolution(startState, midStateFromStart, outputTargetCube:false);
-            OutputSolutionBackward(targetState, midStateFromTarget);
+            OutputSolution(midStateFromStart, outputTargetCube:false);
+            OutputSolutionBackward(midStateFromTarget);
             Console.WriteLine();
             Console.WriteLine("cubes: {0}, closed: {1}, open: {2}", seenCubeStates.Count, closedStateCount, openStates.Count);
             Console.WriteLine("edges: {0}, net: {1}", totalEdgeCount, netEdgeCount);
             return true;
         }
 
-        private void OutputSolution(AState startState, AState targetState, bool outputTargetCube) {
+        private void OutputSolution(AState targetState, bool outputTargetCube) {
             Stack<AState> solutionPath = new Stack<AState>();
             for (AState state = targetState; state.FromState != null; state = state.FromState) {
                 solutionPath.Push(state);
@@ -417,12 +528,15 @@ namespace Cube
 
             while (solutionPath.Count > 0) {
                 AState state = solutionPath.Pop();
+                AState fromState = state.FromState;
+                IRotation fromRotation = state.FromRotation;
+
                 Console.WriteLine(
                     " ==> {0} -> | g:{1} | h:{2} | No.{3}", 
-                    state.FromRotation.ToString(state.FromState.Cube),
-                    state.FromState.Depth,
-                    state.FromState.PredictedCost,
-                    state.FromState.CubeId
+                    fromRotation.ToString(fromState.Cube),
+                    fromState.Depth,
+                    fromState.PredictedCost,
+                    fromState.CubeId
                     );
             }
             if (outputTargetCube) {
@@ -437,7 +551,11 @@ namespace Cube
             }
         }
 
-        private void OutputSolutionBackward(AState startState, AState targetState) {
+        private void OutputSolutionBackward(AState targetState) {
+            OutputSolutionBackward(targetState, null);
+        }
+
+        private void OutputSolutionBackward(AState targetState, IPermutation permutation) {
             AState state = targetState;
             do {
                 AState fromState = state.FromState;
@@ -447,20 +565,13 @@ namespace Cube
                 // todo: consider change case 301-0101 to 0101-301
                 Console.WriteLine(
                     " ==> {0} <- | g:{1} | h:{2} | No.{3}", 
-                    fromRotation.GetReversedRotation().ToString(fromState.Cube),
+                    (fromRotation == null)? state.Cube.PermuteBy(permutation) : fromRotation.GetInverseRotation().ToString(fromState.Cube.PermuteBy(permutation)),
                     state.Depth,
                     state.PredictedCost,
                     state.CubeId
                     );
                 state = fromState;
-            } while (state.FromRotation != null);
-            Console.WriteLine(
-                " ==> {0} <- | g:{1} | h:{2} | No.{3}", 
-                startState.Cube,
-                startState.Depth,
-                startState.PredictedCost,
-                startState.CubeId
-                );
+            } while (state != null);
             Console.WriteLine();
         }
    }

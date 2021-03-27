@@ -6,5 +6,7 @@ namespace Cube
         ICollection<IRotation> GetRotations();
 
         ICube RotateBy(IRotation rotation);
+
+        ICube PermuteBy(IPermutation permutation);
     }
 }

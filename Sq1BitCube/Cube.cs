@@ -59,6 +59,19 @@ namespace Cube.Sq1BitCube
             return new Cube(new Layer(rotatedUpCode), new Layer(rotatedDownCode));
         }
 
+        public ICube PermuteBy(IPermutation iPermutation) {
+            if (iPermutation == null) {
+                return this;
+            }
+            
+            Permutation permutation = iPermutation as Permutation;
+
+            Cells permutedUp = Up.PermuteBy(permutation);
+            Cells permutedDown = Down.PermuteBy(permutation);
+
+            return new Cube(new Layer(permutedUp.Code), new Layer(permutedDown.Code));
+        }
+
         public override string ToString()
         {
             return string.Format("{0,9},{1,-9}", Up, Down);

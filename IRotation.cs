@@ -1,7 +1,7 @@
 namespace Cube
 {
     interface IRotation {
-        IRotation GetReversedRotation();
+        IRotation GetInverseRotation();
 
         string ToString(ICube baseCube);
     }

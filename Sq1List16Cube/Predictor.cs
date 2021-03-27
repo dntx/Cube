@@ -18,6 +18,10 @@ namespace Cube.Sq1List16Cube
                     .ToDictionary(pair => pair.Key, pair => pair.Sum(pair => pair.Value));
         }
         
+        public IPermutation CalcPermutation(ICube cube) {
+            throw new NotSupportedException();
+        }
+
         public int PredictCost(ICube iCube) {
             Cube cube = iCube as Cube;
             int unsolvedUpCount = GetUnsolvedQuarterCount(cube.Up);

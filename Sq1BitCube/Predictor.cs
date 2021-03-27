@@ -4,12 +4,32 @@ using System.Collections.Generic;
 namespace Cube.Sq1BitCube
 {
     class Predictor : IPredictor {
+        Cube TargetCube { get; }
         ISet<uint> TargetQuarters { get; }
 
         public Predictor(ICube targetCube) {
-            TargetQuarters = BreakCubeToQuarters(targetCube as Cube);
+            TargetCube = targetCube as Cube;
+            TargetQuarters = BreakCubeToQuarters(TargetCube);
         }
         
+        public IPermutation CalcPermutation(ICube iCube) {
+            Cube startCube = iCube as Cube;
+            var map = new Dictionary<uint, uint>();
+            var upStartCells = startCube.Up.ToList();
+            var upTargetCells = TargetCube.Up.ToList();
+            var downStartCells = startCube.Down.ToList();
+            var downTargetCells = TargetCube.Down.ToList();
+            for (int i = 0; i < 8; i++) {
+                if (upStartCells[i] != upTargetCells[i]) {
+                    map.Add(upStartCells[i], upTargetCells[i]);
+                }
+                if (downStartCells[i] != downTargetCells[i]) {
+                    map.Add(downStartCells[i], downTargetCells[i]);
+                }
+            }
+            return new Permutation(map);
+        }
+
         public int PredictCost(ICube cube) {
             //return PredictByUnsolvedQuarterCount(cube as Cube);
             return PredictByQuarterState(cube as Cube);

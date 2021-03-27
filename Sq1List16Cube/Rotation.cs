@@ -17,10 +17,10 @@ namespace Cube.Sq1List16Cube
             return ToString();
         }
 
-        public IRotation GetReversedRotation() {
-            Division reversedUp = new Division(Up.Left, Down.Right);
-            Division reversedDown = new Division(Down.Left, Up.Right);
-            return new Rotation(reversedUp, reversedDown);
+        public IRotation GetInverseRotation() {
+            Division rotatedUp = new Division(Up.Left, Down.Right);
+            Division rotatedDown = new Division(Down.Left, Up.Right);
+            return new Rotation(rotatedUp, rotatedDown);
         }
     }
 }
