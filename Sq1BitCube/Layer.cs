@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Cube.Sq1BitCube
 {
     class Layer : Cells {
@@ -22,6 +24,15 @@ namespace Cube.Sq1BitCube
                 code >>= 4;
             }
             Code = RotateCodeLeft(Code, minIndex);
+        }
+
+        public Dictionary<int, Cells> GetDivisions(int maxIndex) {
+            var divisions = new Dictionary<int, Cells>();
+            for (int index = 0; index < maxIndex; index++) {
+                Cells division = new Cells(RotateCodeLeft(Code, index));
+                divisions.Add(index, division);
+            }
+            return divisions;
         }
 
         public static Layer WhiteL1 = new Layer(0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF);

@@ -13,10 +13,6 @@ namespace Cube.Sq1List16Cube
             return string.Format("{0},{1}", Up, Down);
         }
 
-        public string ToString(ICube baseCube) {
-            return ToString();
-        }
-
         public IRotation GetInverseRotation() {
             Division rotatedUp = new Division(Up.Left, Down.Right);
             Division rotatedDown = new Division(Down.Left, Up.Right);

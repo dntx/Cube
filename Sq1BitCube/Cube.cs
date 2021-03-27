@@ -44,17 +44,27 @@ namespace Cube.Sq1BitCube
         }
 
         public ICollection<IRotation> GetRotations() {
-            return Rotation.AllRotations;
+            var rotations = new List<IRotation>();
+            int maxUpIndex = 4;
+            int maxDownIndex = 8;
+            var upDivisions = Up.GetDivisions(maxUpIndex);
+            var downDivisions = Down.GetDivisions(maxDownIndex);
+
+            // i and j should have the same odevity
+            for (int i = 0; i < maxUpIndex; i++) {
+                for (int j = i % 2; j < maxDownIndex; j += 2) {
+                    Rotation rotation = new Rotation(upDivisions[i], downDivisions[j]);
+                    rotations.Add(rotation);
+                }
+            }
+
+            return rotations;
         }
 
         public ICube RotateBy(IRotation iRotation) {
             Rotation rotation = iRotation as Rotation;
-            
-            Cells up = Up.RotateLeft(rotation.UpLeftStart);
-            Cells down = Down.RotateLeft(rotation.DownLeftStart);
-
-            uint rotatedUpCode = (up.Code & 0xFFFF0000) | (down.Code & 0xFFFF);
-            uint rotatedDownCode = (down.Code & 0xFFFF0000) | (up.Code & 0xFFFF);
+            uint rotatedUpCode = (rotation.Up.Code & 0xFFFF0000) | (rotation.Down.Code & 0xFFFF);
+            uint rotatedDownCode = (rotation.Down.Code & 0xFFFF0000) | (rotation.Up.Code & 0xFFFF);
 
             return new Cube(new Layer(rotatedUpCode), new Layer(rotatedDownCode));
         }

@@ -533,7 +533,7 @@ namespace Cube
 
                 Console.WriteLine(
                     " ==> {0} -> | g:{1} | h:{2} | No.{3}", 
-                    fromRotation.ToString(fromState.Cube),
+                    fromRotation,
                     fromState.Depth,
                     fromState.PredictedCost,
                     fromState.CubeId
@@ -565,7 +565,7 @@ namespace Cube
                 // todo: consider change case 301-0101 to 0101-301
                 Console.WriteLine(
                     " ==> {0} <- | g:{1} | h:{2} | No.{3}", 
-                    (fromRotation == null)? state.Cube.PermuteBy(permutation) : fromRotation.GetInverseRotation().ToString(fromState.Cube.PermuteBy(permutation)),
+                    (fromRotation == null)? state.Cube.PermuteBy(permutation) : fromRotation.GetInverseRotation(),
                     state.Depth,
                     state.PredictedCost,
                     state.CubeId
