@@ -81,12 +81,13 @@ namespace Cube.Sq1BitCube
             return string.Format("{0,9},{1,-9}", Up, Down);
         }
 
-        public static Cube Solved = new Cube(new Layer(0, 1, 2, 3, 4, 5, 6, 7), Layer.WhiteL1);
-        public static Cube Cell46Swapped = new Cube(new Layer(0, 1, 2, 3, 6, 5, 4, 7), Layer.WhiteL1);
-        public static Cube Cell57Swapped = new Cube(new Layer(0, 1, 2, 3, 4, 7, 6, 5), Layer.WhiteL1);
+        public static Cube Solved = new Cube(new Layer(0x01234567), Layer.WhiteL1);
+        public static Cube Cell46Swapped = new Cube(new Layer(0x01236547), Layer.WhiteL1);
+        public static Cube Cell57Swapped = new Cube(new Layer(0x01234765), Layer.WhiteL1);
 
-        public static Cube CellDepth1 = new Cube(new Layer(0, 1, 2, 3, 0xC, 0xD, 0xE, 0xF), new Layer(0x8, 0x9, 0xA, 0xB, 4, 5, 6, 7));
-        public static Cube CellDepth2 = new Cube(new Layer(0, 1, 0xA, 0xB, 4, 5, 0xE, 0xF), new Layer(0x8, 0x9, 2, 3, 0xC, 0xD, 6, 7));
-        public static Cube CellDepth6 = new Cube(new Layer(0, 5, 0x8, 7, 6, 0xB, 2, 0xD), new Layer(4, 0x9, 0xA, 0xF, 0xE, 1, 0xC, 3));
+        public static Cube CellDepth1 = new Cube(new Layer(0x123CDEF), new Layer(0x89AB4567));
+        public static Cube CellDepth2 = new Cube(new Layer(0x01AB45EF), new Layer(0x8923CD67));
+        public static Cube CellDepth6 = new Cube(new Layer(0x05876B2D), new Layer(0x49AFE1C3));
+        public static Cube CellDepth8 = new Cube(new Layer(0x09A1256F), new Layer(0x438BEDC7));
     }
 }

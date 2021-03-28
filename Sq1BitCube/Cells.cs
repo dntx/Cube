@@ -10,16 +10,6 @@ namespace Cube.Sq1BitCube
             Code = code;
         }
 
-        public Cells(params uint[] cells) : this(GetCode(cells)) {}
-        
-        protected static uint GetCode(IEnumerable<uint> cells) {
-            uint code = 0;
-            foreach (uint cell in cells) {
-                code = (code << 4) | cell;
-            }
-            return code;
-        }
-
         public IList<uint> ToList() {
             uint[] cells = new uint[8];
             uint code = Code;

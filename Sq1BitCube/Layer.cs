@@ -7,10 +7,6 @@ namespace Cube.Sq1BitCube
             Normalize();
         }
 
-        public Layer(params uint[] cells) : base(cells) {
-            Normalize();
-        }
-        
         private void Normalize() {
             uint minCell = uint.MaxValue;
             int minIndex = -1;
@@ -35,6 +31,6 @@ namespace Cube.Sq1BitCube
             return divisions;
         }
 
-        public static Layer WhiteL1 = new Layer(0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF);
+        public static Layer WhiteL1 = new Layer(0x89ABCDEF);
     }
 }

@@ -21,6 +21,7 @@ namespace Cube
             //successful &= Sq1BitCube.Solver.SolveEasy(ASolver.Mode.PermuteASearch);   // solution may not be optimal
 
             //successful &= Sq1BitCube.Solver.SolveHard(ASolver.Mode.BidiBfSearch);     // solution must be optimal
+            //successful &= Sq1BitCube.Solver.SolveHard(ASolver.Mode.BidiASearch);      // solution may not be optimal
             //successful &= Sq1BitCube.Solver.SolveHard(ASolver.Mode.PermuteASearch);   // solution may not be optimal
             
             Console.WriteLine("overall successful: {0}", successful);
