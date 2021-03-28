@@ -65,7 +65,7 @@ namespace Cube.Sq1BitCube
  
             for (int i = 0; i < 4; i++) {
                 uint quarter = code & 0xFF;
-                code <<= 8;
+                code >>= 8;
  
                 if (TargetQuarters.Contains(quarter)) {
                     isSolved[i] = true;
@@ -97,16 +97,20 @@ namespace Cube.Sq1BitCube
             //   13 => 
             //  123 => 13
             // 1234 => 13
+            if (upState == QuarterState.Solved1234 && downState == QuarterState.Solved1234) {
+                return 0;
+            }
+
+            if (upState == QuarterState.Solved13 && downState == QuarterState.Solved13) {
+                return 1;
+            }
+
             if (upState == QuarterState.Solved12 || downState == QuarterState.Solved12) {
                 return 4;
             }
 
             if (upState == QuarterState.Solved1 || downState == QuarterState.Solved1) {
                 return 3;
-            }
-
-            if (upState == QuarterState.Solved13 && downState == QuarterState.Solved13) {
-                return 1;
             }
 
             return 2;

@@ -388,7 +388,7 @@ namespace Cube
 
             // set target state
             IPredictor backwardPredictor = createPredictor(startCube);
-            int backwardCost = isBfSearch? 0 : backwardPredictor.PredictCost(startCube);
+            int backwardCost = isBfSearch? 0 : backwardPredictor.PredictCost(targetCube);
             AState targetState = new AState(targetCube, targetCube, seenCubeStates.Count, backwardCost);
             openStates.Add(targetState);
             seenCubeStates.Add(targetCube, targetState);
