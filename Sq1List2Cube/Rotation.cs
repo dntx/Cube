@@ -1,3 +1,5 @@
+using System;
+
 namespace Cube.Sq1List2Cube
 {
     class Rotation : IRotation {
@@ -18,6 +20,9 @@ namespace Cube.Sq1List2Cube
             Division rotatedDown = new Division(Down.Left, Up.Right);
             return new Rotation(rotatedUp, rotatedDown);
         }
-    }
 
+        public IRotation PermuteBy(IPermutation permutation) {
+            throw new NotSupportedException();
+        }
+    }
 }

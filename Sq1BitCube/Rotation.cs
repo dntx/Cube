@@ -21,5 +21,12 @@ namespace Cube.Sq1BitCube
 
             return new Rotation(new Cells(rotatedUpCode), new Cells(rotatedDownCode));
         }
+
+        public IRotation PermuteBy(IPermutation iPermutation) {
+            Permutation permutation = iPermutation as Permutation;
+            Cells permutedUp = Up.PermuteBy(permutation);
+            Cells permutedDown = Down.PermuteBy(permutation);
+            return new Rotation(permutedUp, permutedDown);
+        }
     }
 }

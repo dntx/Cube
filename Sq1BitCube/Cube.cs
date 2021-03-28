@@ -70,15 +70,9 @@ namespace Cube.Sq1BitCube
         }
 
         public ICube PermuteBy(IPermutation iPermutation) {
-            if (iPermutation == null) {
-                return this;
-            }
-            
             Permutation permutation = iPermutation as Permutation;
-
             Cells permutedUp = Up.PermuteBy(permutation);
             Cells permutedDown = Down.PermuteBy(permutation);
-
             return new Cube(new Layer(permutedUp.Code), new Layer(permutedDown.Code));
         }
 
@@ -92,6 +86,7 @@ namespace Cube.Sq1BitCube
         public static Cube Cell57Swapped = new Cube(new Layer(0, 1, 2, 3, 4, 7, 6, 5), Layer.WhiteL1);
 
         public static Cube CellDepth1 = new Cube(new Layer(0, 1, 2, 3, 0xC, 0xD, 0xE, 0xF), new Layer(0x8, 0x9, 0xA, 0xB, 4, 5, 6, 7));
+        public static Cube CellDepth2 = new Cube(new Layer(0, 1, 0xA, 0xB, 4, 5, 0xE, 0xF), new Layer(0x8, 0x9, 2, 3, 0xC, 0xD, 6, 7));
         public static Cube CellDepth6 = new Cube(new Layer(0, 5, 0x8, 7, 6, 0xB, 2, 0xD), new Layer(4, 0x9, 0xA, 0xF, 0xE, 1, 0xC, 3));
     }
 }

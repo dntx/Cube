@@ -4,14 +4,28 @@ namespace Cube.Sq1BitCube
 {
     class Solver
     {
-        public static bool Solve(ASolver.Mode mode)
+        public static bool SolveEasy(ASolver.Mode mode)
         {
             DateTime startTime = DateTime.Now;
             bool successful = true;
 
-            //successful &= DoASolve(Cube.CellDepth1, mode);
+            successful &= DoASolve(Cube.CellDepth1, mode);
+            successful &= DoASolve(Cube.CellDepth2, mode);
             successful &= DoASolve(Cube.CellDepth6, mode);
-            //successful &= DoASolve(Cube.Cell46Swapped, mode);
+
+            Console.WriteLine("total seconds: {0:0.00}, successful: {1}", 
+                DateTime.Now.Subtract(startTime).TotalSeconds,
+                successful);
+            Console.WriteLine();
+            return successful;
+        }
+
+        public static bool SolveHard(ASolver.Mode mode)
+        {
+            DateTime startTime = DateTime.Now;
+            bool successful = true;
+
+            successful &= DoASolve(Cube.Cell46Swapped, mode);
             //successful &= DoASolve(Cube.Cell57Swapped, mode);
 
             Console.WriteLine("total seconds: {0:0.00}, successful: {1}", 

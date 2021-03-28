@@ -66,9 +66,6 @@ namespace Cube.Sq1List16Cube
         }
 
         public ICube PermuteBy(IPermutation permutation) {
-            if (permutation == null) {
-                return this;
-            }
             throw new NotSupportedException();
         }
 

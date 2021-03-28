@@ -173,7 +173,7 @@ namespace Cube
 
             SortedSet<AState> openStates = new SortedSet<AState>();
             Dictionary<ICube, AState> seenCubeStates = new Dictionary<ICube, AState>();
-            int forwardCost = (mode == Mode.BfSearch)? 0 : predictor.PredictCost(startCube);
+            int forwardCost = isBfSearch? 0 : predictor.PredictCost(startCube);
             AState startState = new AState(startCube, seenCubeStates.Count, forwardCost);
             openStates.Add(startState);
             seenCubeStates.Add(startCube, startState);
@@ -269,10 +269,11 @@ namespace Cube
 
             IPredictor predictor = createPredictor(targetCube);
             IPermutation permutation = predictor.CalcPermutation(startCube);
+            IPermutation inversePermutation = permutation.GetInversePermutation();
 
             SortedSet<AState> openStates = new SortedSet<AState>();
             Dictionary<ICube, AState> seenCubeStates = new Dictionary<ICube, AState>();
-            int forwardCost = (mode == Mode.BfSearch)? 0 : predictor.PredictCost(startCube);
+            int forwardCost = isBfSearch? 0 : predictor.PredictCost(startCube);
             AState startState = new AState(startCube, seenCubeStates.Count, forwardCost);
             openStates.Add(startState);
             seenCubeStates.Add(startCube, startState);
@@ -319,7 +320,7 @@ namespace Cube
                         seenCubeStates.Add(nextCube, nextState);
 
                         // check permutation
-                        ICube nextPermutedCube = nextCube.PermuteBy(permutation);
+                        ICube nextPermutedCube = nextCube.PermuteBy(inversePermutation);
                         if (seenCubeStates.ContainsKey(nextPermutedCube)) {
                             // meet from perumuted way !!!
                             midState = nextState;
@@ -379,7 +380,7 @@ namespace Cube
             IPredictor forwardPredictor = createPredictor(targetCube);
             SortedSet<AState> openStates = new SortedSet<AState>();
             Dictionary<ICube, AState> seenCubeStates = new Dictionary<ICube, AState>();
-            int forwardCost = (mode == Mode.BidiBfSearch)? 0 : forwardPredictor.PredictCost(startCube);
+            int forwardCost = isBfSearch? 0 : forwardPredictor.PredictCost(startCube);
             AState startState = new AState(startCube, startCube, seenCubeStates.Count, forwardCost);
             openStates.Add(startState);
             seenCubeStates.Add(startCube, startState);
@@ -387,7 +388,7 @@ namespace Cube
 
             // set target state
             IPredictor backwardPredictor = createPredictor(startCube);
-            int backwardCost = (mode == Mode.BidiBfSearch)? 0 : backwardPredictor.PredictCost(startCube);
+            int backwardCost = isBfSearch? 0 : backwardPredictor.PredictCost(startCube);
             AState targetState = new AState(targetCube, targetCube, seenCubeStates.Count, backwardCost);
             openStates.Add(targetState);
             seenCubeStates.Add(targetCube, targetState);
@@ -552,7 +553,22 @@ namespace Cube
         }
 
         private void OutputSolutionBackward(AState targetState) {
-            OutputSolutionBackward(targetState, null);
+            AState state = targetState;
+            do {
+                AState fromState = state.FromState;
+                IRotation fromRotation = state.FromRotation;
+
+                // todo: consider change case 301-0101 to 0101-301
+                Console.WriteLine(
+                    " ==> {0} <- | g:{1} | h:{2} | No.{3}", 
+                    (fromRotation == null)? state.Cube : fromRotation.GetInverseRotation(),
+                    state.Depth,
+                    state.PredictedCost,
+                    state.CubeId
+                    );
+                state = fromState;
+            } while (state != null);
+            Console.WriteLine();
         }
 
         private void OutputSolutionBackward(AState targetState, IPermutation permutation) {
@@ -562,10 +578,9 @@ namespace Cube
                 IRotation fromRotation = state.FromRotation;
 
                 // todo: consider up/down reverse situation if necessary
-                // todo: consider change case 301-0101 to 0101-301
                 Console.WriteLine(
-                    " ==> {0} <- | g:{1} | h:{2} | No.{3}", 
-                    (fromRotation == null)? state.Cube.PermuteBy(permutation) : fromRotation.GetInverseRotation(),
+                    " ==> {0} <- | g:{1} | h:{2} | No.{3}'", 
+                    (fromRotation == null)? state.Cube.PermuteBy(permutation) : fromRotation.GetInverseRotation().PermuteBy(permutation),
                     state.Depth,
                     state.PredictedCost,
                     state.CubeId

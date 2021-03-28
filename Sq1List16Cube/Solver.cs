@@ -28,7 +28,7 @@ namespace Cube.Sq1List16Cube
             DateTime startTime = DateTime.Now;
             bool successful = true;
 
-            successful &= DoASolve(Goal.SolveL3Cell57Then, mode, 1000000);
+            successful &= DoASolve(Goal.SolveL3Cell57Then, mode, 10^7);
             
             Console.WriteLine("total seconds: {0:0.00}, successful: {1}", 
                 DateTime.Now.Subtract(startTime).TotalSeconds,
