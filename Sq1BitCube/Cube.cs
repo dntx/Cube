@@ -88,6 +88,8 @@ namespace Cube.Sq1BitCube
         public static Cube CellDepth1 = new Cube(new Layer(0x123CDEF), new Layer(0x89AB4567));
         public static Cube CellDepth2 = new Cube(new Layer(0x01AB45EF), new Layer(0x8923CD67));
         public static Cube CellDepth6 = new Cube(new Layer(0x05876B2D), new Layer(0x49AFE1C3));
-        public static Cube CellDepth8 = new Cube(new Layer(0x09A1256F), new Layer(0x438BEDC7));
+        public static Cube CellDepth7 = new Cube(new Layer(0x01C96325), new Layer(0x478BEFAD));
+        public static Cube CellDepthX = new Cube(new Layer(0x01A5EF2B), new Layer(0x47CD6389));
+        public static Cube CellDepthY = new Cube(new Layer(0x09A1256F), new Layer(0x438BEDC7));
     }
 }

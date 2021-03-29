@@ -15,11 +15,12 @@ namespace Cube
 
             //successful &= Sq1List16Cube.Solver.SolveHard(ASolver.Mode.BidiASearch);   // can't find the solution in 5 minutes
 
-            //successful &= Sq1BitCube.Solver.SolveEasy(ASolver.Mode.BidiBfSearch);     // solution must be optimal
-            successful &= Sq1BitCube.Solver.SolveEasy(ASolver.Mode.BidiASearch);      // solution may not be optimal
             //successful &= Sq1BitCube.Solver.SolveEasy(ASolver.Mode.ASearch);          // solution may not be optimal
+            successful &= Sq1BitCube.Solver.SolveEasy(ASolver.Mode.BidiBfSearch);     // solution must be optimal
+            //successful &= Sq1BitCube.Solver.SolveEasy(ASolver.Mode.BidiASearch);      // solution may not be optimal
             //successful &= Sq1BitCube.Solver.SolveEasy(ASolver.Mode.PermuteASearch);   // solution may not be optimal
 
+            //successful &= Sq1BitCube.Solver.SolveHard(ASolver.Mode.ASearch);          // solution may not be optimal
             //successful &= Sq1BitCube.Solver.SolveHard(ASolver.Mode.BidiBfSearch);     // solution must be optimal
             //successful &= Sq1BitCube.Solver.SolveHard(ASolver.Mode.BidiASearch);      // solution may not be optimal
             //successful &= Sq1BitCube.Solver.SolveHard(ASolver.Mode.PermuteASearch);   // solution may not be optimal

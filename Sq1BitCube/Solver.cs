@@ -12,6 +12,7 @@ namespace Cube.Sq1BitCube
             successful &= DoASolve(Cube.CellDepth1, mode);
             successful &= DoASolve(Cube.CellDepth2, mode);
             successful &= DoASolve(Cube.CellDepth6, mode);
+            successful &= DoASolve(Cube.CellDepth7, mode);
 
             Console.WriteLine("total seconds: {0:0.00}, successful: {1}", 
                 DateTime.Now.Subtract(startTime).TotalSeconds,
@@ -25,7 +26,8 @@ namespace Cube.Sq1BitCube
             DateTime startTime = DateTime.Now;
             bool successful = true;
 
-            successful &= DoASolve(Cube.CellDepth8, mode);
+            successful &= DoASolve(Cube.CellDepthX, mode);
+            //successful &= DoASolve(Cube.CellDepthY, mode);
             //successful &= DoASolve(Cube.Cell46Swapped, mode);
             //successful &= DoASolve(Cube.Cell57Swapped, mode);
 
