@@ -92,7 +92,7 @@ namespace Cube.Sq1BitCube
             // transition table:
             //
             // none => 13
-            //    1 => 123, none
+            //    1 => 13
             //   12 => 1
             //   13 => 
             //  123 => 13
@@ -103,14 +103,6 @@ namespace Cube.Sq1BitCube
 
             if (upState == QuarterState.Solved13 && downState == QuarterState.Solved13) {
                 return 1;
-            }
-
-            if (upState == QuarterState.Solved12 || downState == QuarterState.Solved12) {
-                return 4;
-            }
-
-            if (upState == QuarterState.Solved1 || downState == QuarterState.Solved1) {
-                return 3;
             }
 
             return 2;

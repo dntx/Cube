@@ -48,11 +48,12 @@ namespace Cube {
             }
 
             if (Depth != other.Depth) {
-                // prefer deeper cube / new cube
+                // prefer deeper cube
                 return -Depth.CompareTo(other.Depth);
             }
 
-            return CubeId.CompareTo(other.CubeId);
+            // prefer new cube
+            return -CubeId.CompareTo(other.CubeId);
         }
 
         public static bool operator == (AState lhs, AState rhs) {
